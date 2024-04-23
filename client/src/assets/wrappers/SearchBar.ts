@@ -18,7 +18,7 @@ const Wrapper = styled.div`
     outline: transparent;
   }
   button {
-    color: var(--textColor);
+    color: var(--grey-800);
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -29,9 +29,13 @@ const Wrapper = styled.div`
     font-size: 1rem;
     padding: 0px 10px;
     height: 100%;
-  }
-  button:hover {
-    color: var(--grey-50);
+    &:hover {
+      color: var(--grey-50);
+    }
+    &:disabled {
+      color: var(--grey-900);
+      cursor: default;
+    }
   }
 `;
 

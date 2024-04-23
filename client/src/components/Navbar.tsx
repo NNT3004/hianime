@@ -3,18 +3,19 @@ import { FaBars } from 'react-icons/fa';
 import Logo from './Logo';
 import SearchBar from './SearchBar';
 import PrimaryButton from './PrimaryButton';
+import React from 'react';
 
-function NavBar() {
+const NavBar: React.FC = () => {
   return (
     <Wrapper>
       <FaBars className='menu' />
       <div className='center'>
         <Logo />
-        <SearchBar className='search'/>
+        <SearchBar className='search' />
       </div>
       <PrimaryButton>Sign in</PrimaryButton>
     </Wrapper>
   );
-}
+};
 
 export default NavBar;

@@ -31,9 +31,9 @@ const Wrapper = styled.button`
   }
 
   &:disabled {
-    background-color: var(--grey-900);
-    color: var(--grey-800);
-    cursor: not-allowed;
+    background-color: var(--grey-800);
+    color: var(--grey-900);
+    cursor: default;
   }
 
 `;

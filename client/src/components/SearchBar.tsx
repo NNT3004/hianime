@@ -1,3 +1,4 @@
+import React from 'react';
 import Wrapper from '../assets/wrappers/SearchBar';
 import { FaRegTimesCircle } from 'react-icons/fa';
 import { FaSearch } from 'react-icons/fa';
@@ -6,8 +7,7 @@ interface SearchBarProps {
   className?: string;
 }
 
-function SearchBar(props: SearchBarProps) {
-  const { className } = props;
+const SearchBar: React.FC<SearchBarProps> = ({ className }) => {
   return (
     <Wrapper {...{ className }}>
       <button>
@@ -19,6 +19,6 @@ function SearchBar(props: SearchBarProps) {
       </button>
     </Wrapper>
   );
-}
+};
 
 export default SearchBar;

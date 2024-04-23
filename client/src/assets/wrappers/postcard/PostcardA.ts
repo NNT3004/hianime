@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-const Wrapper = styled.article<{ imgUrl: string }>`
+const Wrapper = styled.article<{ $imgUrl: string }>`
   background-color: var(--backgroundColor);
-  background-image: url(${(props) => props.imgUrl});
+  background-image: url(${(props) => props.$imgUrl});
   background-repeat: no-repeat;
   background-size: cover;
   background-position: right;
@@ -10,7 +10,7 @@ const Wrapper = styled.article<{ imgUrl: string }>`
   .shadow {
     display: flex;
     flex-direction: column-reverse;
-    box-shadow: inset 0 0 100px 120px rgba(0, 0, 0, 0.9);
+    box-shadow: inset 100px -40px 100px 120px var(--black);
     width: 100%;
     height: 100%;
     padding: 50px;

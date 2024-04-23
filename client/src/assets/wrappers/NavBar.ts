@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   display: flex;
+  z-index: 999;
   align-items: center;
   justify-content: space-between;
   height: 60px;

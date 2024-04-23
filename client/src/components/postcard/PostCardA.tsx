@@ -1,12 +1,12 @@
 import React from 'react';
-import Wrapper from '../../assets/wrappers/postcard/PostcardA';
+import Wrapper from '../../assets/wrappers/postcard/PostCardA';
 import { FaCalendarTimes } from 'react-icons/fa';
 
 interface PostCardAProps {
   title: string;
   description: string;
   airedDate: string;
-  imgUrl: string;
+  $imgUrl: string;
   className?: string;
 }
 
@@ -15,10 +15,10 @@ const PostCardA: React.FC<PostCardAProps> = ({
   description,
   airedDate,
   className,
-  imgUrl,
+  $imgUrl,
 }) => {
   return (
-    <Wrapper {...{ className, imgUrl }}>
+    <Wrapper {...{ className, $imgUrl }}>
       <div className='shadow'>
         <div className='content'>
           <h1 className='title'>{title}</h1>

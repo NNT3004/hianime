@@ -1,7 +1,8 @@
+import React from 'react';
 import logo from '../assets/images/logo.svg';
 
-function Logo() {
+const Logo: React.FC = () => {
   return <img src={logo} alt='logo' className='logo' />;
-}
+};
 
 export default Logo;
