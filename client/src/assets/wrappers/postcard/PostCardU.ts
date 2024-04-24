@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   height: 100px;
-  width: 200px;
+  width: 100%;
   display: flex;
   justify-content: left;
   img {

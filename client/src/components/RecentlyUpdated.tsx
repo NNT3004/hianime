@@ -4,7 +4,7 @@ import { FaAngleLeft } from 'react-icons/fa6';
 import { FaAngleRight } from 'react-icons/fa6';
 import PostCardI from './postcard/PostCardI';
 
-const dump = Array.from(Array(8).keys());
+const dump = Array.from(Array(9).keys());
 
 const RecentlyUpdated: React.FC = () => {
   return (
