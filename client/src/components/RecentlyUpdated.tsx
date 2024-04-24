@@ -6,9 +6,13 @@ import PostCardI from './postcard/PostCardI';
 
 const dump = Array.from(Array(9).keys());
 
-const RecentlyUpdated: React.FC = () => {
+interface RecentlyUpdatedProps {
+  className?: string;
+}
+
+const RecentlyUpdated: React.FC<RecentlyUpdatedProps> = ({ className }) => {
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       <header>
         <p>recently updated</p>
         <nav>

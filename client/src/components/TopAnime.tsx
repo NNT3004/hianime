@@ -4,9 +4,13 @@ import PostCardU from './postcard/PostCardU';
 
 const dump = Array.from(Array(9).keys());
 
-const TopAnime: React.FC = () => {
+interface TopAnimeProps {
+  className?: string;
+}
+
+const TopAnime: React.FC<TopAnimeProps> = ({ className }) => {
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       <header>
         <p>Top Anime</p>
         <span>

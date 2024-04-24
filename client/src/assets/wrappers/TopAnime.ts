@@ -6,11 +6,11 @@ const Wrapper = styled.aside`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
+    padding: 10px;
     p {
-      font-size: 1.3rem;
+      font-size: 1.5rem;
       margin: 0;
-      color: white;
+      text-transform: capitalize;
     }
     span {
       background-color: black;
@@ -21,7 +21,7 @@ const Wrapper = styled.aside`
         &:nth-child(2) {
           margin: 0 3px;
         }
-        padding: 3px;
+        padding: 10px 0;
         background-color: transparent;
         border: none;
         border-radius: 3px;
@@ -31,7 +31,7 @@ const Wrapper = styled.aside`
         align-items: center;
         justify-content: center;
         transition: color 100ms;
-        width: 50px;
+        width: 45px;
         &:hover {
           background-color: var(--grey-500);
         }
@@ -51,6 +51,7 @@ const Wrapper = styled.aside`
       border-radius: 8px;
       background-color: black;
       transition: background-color 100ms;
+      margin: 10px 0;
       .rank {
         font-family: var(--outlineFont);
         width: 40px;
@@ -62,9 +63,6 @@ const Wrapper = styled.aside`
         width: 280px;
         margin-top: auto;
         margin-bottom: auto;
-      }
-      &:not(:first-child) {
-        margin-top: 8px;
       }
       &:hover {
         background-color: var(--grey-900);

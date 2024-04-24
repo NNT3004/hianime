@@ -11,7 +11,7 @@ const Wrapper = styled.button`
   justify-content: center;
   font-size: var(--small-text);
   padding: 0px 12px;
-  transition: color 100ms;
+  transition: background-color 100ms;
   font-family: var(--bodyFont);
   height: 36px;
 
