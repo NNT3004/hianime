@@ -30,7 +30,7 @@ const RecentlyUpdated: React.FC<RecentlyUpdatedProps> = ({ className }) => {
             <PostCardI
               duration='23m'
               episodeCount={12 + index}
-              imgUrl={process.env.PUBLIC_URL + '99225206_p0.png'}
+              imgUrl={process.env.PUBLIC_URL + '98240316_p0.png'}
               title='Kore kara watashi tachi ha'
               type='TV'
               className='post'

@@ -26,7 +26,7 @@ const TopAnime: React.FC<TopAnimeProps> = ({ className }) => {
               <span className='rank'>{index + 1}</span>
               <PostCardU
                 episodeCount={12 + index}
-                imgUrl={process.env.PUBLIC_URL + '99225206_p0.png'}
+                imgUrl={process.env.PUBLIC_URL + '98240316_p0.png'}
                 title='Kore kara watashi tachi ha'
                 type='TV'
                 className='post'

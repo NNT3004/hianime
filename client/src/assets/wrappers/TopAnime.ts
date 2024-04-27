@@ -21,23 +21,25 @@ const Wrapper = styled.aside`
         &:nth-child(2) {
           margin: 0 3px;
         }
+        color: var(--grey-800);
         padding: 10px 0;
         background-color: transparent;
         border: none;
         border-radius: 3px;
-        color: var(--white);
         cursor: pointer;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        transition: color 100ms;
+        transition: background-color 100ms;
         width: 45px;
         &:hover {
-          background-color: var(--grey-500);
+          background-color: var(--grey-900);
+          color: var(--grey-50);
         }
       }
       button.activate {
         background-color: var(--primary-500);
+        color: var(--white);
       }
     }
   }
@@ -52,6 +54,7 @@ const Wrapper = styled.aside`
       background-color: black;
       transition: background-color 100ms;
       margin: 10px 0;
+      cursor: pointer;
       .rank {
         font-family: var(--outlineFont);
         width: 40px;
