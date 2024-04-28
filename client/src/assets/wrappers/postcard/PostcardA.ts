@@ -40,6 +40,28 @@ const Wrapper = styled.article<{ $imgUrl: string }>`
       margin-left: 24px;
     }
   }
+  .nav-container {
+      margin: 30px 0;
+      display: flex;
+      align-items: center;
+      .nav {
+        border-radius: 21px;
+        margin-right: 20px;
+        font-size: 1.1rem;
+        height: 42px;
+        padding: 0 18px;
+        .nav__start-icon {
+          font-size: 0.865rem;
+        }
+      }
+      .nav-white {
+        background-color: var(--white);
+        color: var(--black);
+        &:hover {
+          background-color: var(--grey-500);;
+        }
+      }
+    }
   .description {
     display: -webkit-box;
     -webkit-line-clamp: 2;

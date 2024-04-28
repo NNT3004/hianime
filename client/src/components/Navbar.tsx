@@ -4,13 +4,15 @@ import Logo from './Logo';
 import SearchBar from './SearchBar';
 import PrimaryButton from './PrimaryButton';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const NavBar: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <Wrapper>
       <FaBars className='menu' />
       <div className='center'>
-        <Logo />
+        <Logo onClick={() => {navigate('/home')}}/>
         <SearchBar className='search' />
       </div>
       <PrimaryButton>Sign in</PrimaryButton>

@@ -4,6 +4,7 @@ const Wrapper = styled.aside`
   display: flex;
   justify-content: space-between;
   padding: 10px 10px;
+  user-select: none;
   li {
     list-style-type: none;
     display: flex;

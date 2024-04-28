@@ -1,15 +1,17 @@
+import { ReactElement } from 'react';
 import Wrapper from '../../assets/wrappers/postcard/PostCardI';
 import { FaPlay } from 'react-icons/fa';
 import { FaClosedCaptioning } from 'react-icons/fa';
 import { FaDotCircle } from 'react-icons/fa';
 
 interface PostCardIProps {
-  title: string;
+  title: string | ReactElement;
   imgUrl: string;
   episodeCount: number;
   className?: string;
   type: string;
   duration: string;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 const PostCardI: React.FC<PostCardIProps> = ({
@@ -19,10 +21,11 @@ const PostCardI: React.FC<PostCardIProps> = ({
   episodeCount,
   type,
   duration,
+  onClick,
 }) => {
   return (
     <Wrapper className={className}>
-      <div className='poster'>
+      <div className='poster' onClick={onClick}>
         <img src={imgUrl} alt='poster' />
         <FaPlay className='play-icon' />
         <div className='count'>
@@ -32,7 +35,7 @@ const PostCardI: React.FC<PostCardIProps> = ({
           </span>
         </div>
       </div>
-      <p className='title'>{title}</p>
+      <p className='title' onClick={onClick}>{title}</p>
       <p className='meta-info'>
         {type}
         <FaDotCircle className='sep' />

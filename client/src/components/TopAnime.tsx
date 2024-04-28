@@ -1,6 +1,7 @@
 import React from 'react';
 import Wrapper from '../assets/wrappers/TopAnime';
 import PostCardU from './postcard/PostCardU';
+import { useNavigate } from 'react-router-dom';
 
 const dump = Array.from(Array(9).keys());
 
@@ -9,6 +10,7 @@ interface TopAnimeProps {
 }
 
 const TopAnime: React.FC<TopAnimeProps> = ({ className }) => {
+  const navigate = useNavigate();
   return (
     <Wrapper className={className}>
       <header>
@@ -30,6 +32,7 @@ const TopAnime: React.FC<TopAnimeProps> = ({ className }) => {
                 title='Kore kara watashi tachi ha'
                 type='TV'
                 className='post'
+                onClick={() => {navigate('/posts/1')}}
               />
             </div>
           );

@@ -8,6 +8,7 @@ interface PostCardUProps {
   title: string;
   episodeCount: number;
   type: string;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 const PostCardU: React.FC<PostCardUProps> = ({
@@ -16,9 +17,10 @@ const PostCardU: React.FC<PostCardUProps> = ({
   imgUrl,
   title,
   type,
+  onClick,
 }) => {
   return (
-    <Wrapper className={className}>
+    <Wrapper className={className} onClick={onClick}>
       <img src={imgUrl} alt='poster' />
       <div className='info'>
         <div className='title'>{title}</div>

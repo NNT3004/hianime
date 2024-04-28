@@ -3,6 +3,7 @@ import Wrapper from '../../assets/wrappers/PostInfo';
 import { GoDotFill } from 'react-icons/go';
 import { FaClosedCaptioning, FaPlay, FaPlus } from 'react-icons/fa';
 import PrimaryButton from '../../components/PrimaryButton';
+import { useNavigate } from 'react-router-dom';
 
 interface PostInfoProps {
   imgUrl: string;
@@ -31,6 +32,7 @@ const PostInfo: React.FC<PostInfoProps> = ({
   title,
   type,
 }) => {
+  const navigate = useNavigate();
   return (
     <Wrapper>
       <div className='poster'>
@@ -56,7 +58,7 @@ const PostInfo: React.FC<PostInfoProps> = ({
           <span>{duration}</span>
         </div>
         <div className='btn-container'>
-          <PrimaryButton startIcon={FaPlay} className='btn'>
+          <PrimaryButton startIcon={FaPlay} className='btn' onClick={() => {navigate('/posts/1/episodes/1')}}>
             Watch now
           </PrimaryButton>
           <PrimaryButton startIcon={FaPlus} className='btn-white btn'>

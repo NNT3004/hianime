@@ -16,6 +16,7 @@ const Wrapper = styled.div`
   .logo {
     height: 40px;
     margin: 0 10px 0 30px;
+    cursor: pointer;
   };
   .search {
     margin: 0 20px;

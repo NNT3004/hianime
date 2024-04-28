@@ -8,7 +8,7 @@ const RatingContainer: React.FC = () => {
   return (
     <Wrapper>
       <div className='poster'>
-        <img alt='poster' src={process.env.PUBLIC_URL + '98240316_p0.png'} />
+        <img alt='poster' src={process.env.PUBLIC_URL + '/98240316_p0.png'} />
       </div>
       <div className='info'>
         <p className='title'>Jellyfish Can't Swim in the Night</p>
