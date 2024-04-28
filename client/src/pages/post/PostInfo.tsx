@@ -1,5 +1,5 @@
 import React from 'react';
-import Wrapper from '../../components/post/PostInfo';
+import Wrapper from '../../assets/wrappers/PostInfo';
 import { GoDotFill } from 'react-icons/go';
 import { FaClosedCaptioning, FaPlay, FaPlus } from 'react-icons/fa';
 import PrimaryButton from '../../components/PrimaryButton';
