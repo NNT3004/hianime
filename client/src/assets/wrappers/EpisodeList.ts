@@ -26,7 +26,7 @@ const Wrapper = styled.aside`
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: #fff;
+      background-color: #333;
     }
 
     ul {
