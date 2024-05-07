@@ -1,15 +1,34 @@
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
-
+import dotenv from 'dotenv';
 dotenv.config();
 
-const app: Express = express();
-const port = process.env.PORT || 5000;
+import express from 'express';
+const app = express();
+app.use(express.json());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
+// allow throw error to middleware
+import 'express-async-errors';
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+// router
+import authRouter from './routes/authRoutes';
+import errorHandlerMiddleware from './middlewares/error-handler';
+import notFoundMiddleWare from './middlewares/not-found';
+
+app.use('/api/v1/auth', authRouter);
+app.use(notFoundMiddleWare);
+app.use(errorHandlerMiddleware);
+
+import connectDB from './db/connect';
+
+const start = async () => {
+  try {
+    const port = process.env.PORT || 5000;
+    await connectDB(String(process.env.MONGO_URL));
+    app.listen(port, () => {
+      console.log('Listening');
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+start();
