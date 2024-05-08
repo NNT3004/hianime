@@ -7,12 +7,12 @@ interface IPost {
   posterHorizonPath: string;
   description: string;
   type: string;
-  airedFrom: string;
-  airedTo: string;
+  airedFrom: Date;
+  airedTo: Date;
   status: string;
   duration: number;
-  studioId: Types.ObjectId;
-  relationId: Types.ObjectId;
+  studio: Types.ObjectId;
+  relation?: Types.ObjectId;
 }
 
 interface IPostMethods {}
@@ -49,9 +49,17 @@ const schema = new Schema<IPost, PostModel, IPostMethods>({
     enum: ['TV', 'Movie', 'ONA', 'OVA'],
     required: [true, 'what is going on'],
   },
+  airedFrom: {
+    type: Date,
+    required: [true, 'what is going on'],
+  },
+  airedTo: {
+    type: Date,
+    required: [true, 'what is going on'],
+  },
   status: {
     type: String,
-    enum: [],
+    enum: ['Currently Airing'],
     required: [true, 'what is going on'],
   },
   duration: {
@@ -60,15 +68,14 @@ const schema = new Schema<IPost, PostModel, IPostMethods>({
     min: 3,
     max: 300,
   },
-  studioId: {
+  studio: {
     type: Schema.Types.ObjectId,
     ref: 'Studio',
     required: [true, 'what is going on'],
   },
-  relationId: {
+  relation: {
     type: Schema.Types.ObjectId,
     ref: 'Relation',
-    required: [true, 'what is going on'],
   },
 });
 

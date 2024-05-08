@@ -4,10 +4,9 @@ import { StatusCodes } from 'http-status-codes';
 import Studio from '../models/Studio';
 
 export const getStudio = async (req: Request, res: Response) => {
-  const studioId = req.params.id;
-  if (!studioId) throw new BadRequestError('to live a better life');
+  const id = req.params.id;
 
-  const studio = await Studio.findById(studioId);
+  const studio = await Studio.findById(id);
   if (!studio) throw new NotFoundError('i need my love to be here');
 
   res.status(StatusCodes.OK).json({ studio });
@@ -26,14 +25,12 @@ export const getAllStudios = async (req: Request, res: Response) => {
 };
 
 export const updateStudio = async (req: Request, res: Response) => {
-  const { id, name, description } = req.body;
-  if (!id || !name || !description)
-    throw new BadRequestError('making each day of the year');
-  const studio = await Studio.findByIdAndUpdate(
-    id,
-    { name, description },
-    { runValidators: true, new: true }
-  );
+  const id = req.params.id;
+
+  const studio = await Studio.findByIdAndUpdate(id, req.body, {
+    runValidators: true,
+    new: true,
+  });
   res.status(StatusCodes.OK).json({ studio });
 };
 
