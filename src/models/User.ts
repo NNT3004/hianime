@@ -8,7 +8,7 @@ interface IUser {
   email: string;
   password: string;
   role: string;
-  avt_path?: string;
+  avtPath?: string;
 }
 
 interface IUserMethods {
@@ -45,7 +45,7 @@ const schema = new Schema<IUser, UserModel, IUserMethods>({
     default: 'user',
     required: true,
   },
-  avt_path: { type: String, required: false },
+  avtPath: { type: String, required: false },
 });
 
 schema.pre('save', async function () {

@@ -10,10 +10,12 @@ import 'express-async-errors';
 
 // router
 import authRouter from './routes/authRoutes';
+import studiosRouter from './routes/studiosRoutes';
 import errorHandlerMiddleware from './middlewares/error-handler';
 import notFoundMiddleWare from './middlewares/not-found';
 
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/studios', studiosRouter);
 app.use(notFoundMiddleWare);
 app.use(errorHandlerMiddleware);
 
