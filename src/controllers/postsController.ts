@@ -2,6 +2,7 @@ import { NotFoundError } from '../errors';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Post from '../models/Post';
+import { Types } from 'mongoose';
 
 export const createPost = async (req: Request, res: Response) => {
   const post = await Post.create(req.body);
@@ -10,7 +11,7 @@ export const createPost = async (req: Request, res: Response) => {
 };
 
 export const updatePost = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const post = await Post.findByIdAndUpdate(id, req.body, {
     runValidators: true,
     new: true,
@@ -20,24 +21,37 @@ export const updatePost = async (req: Request, res: Response) => {
 };
 
 export const getPost = async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const { studio, relation } = req.query;
+  const { id } = req.params;
 
-  const query = Post.findById(id);
-  if (studio) query.populate('studio');
-  if (relation) query.populate({ path: 'relation', populate: 'posts' });
-
-  const post = await query;
+  const post = await Post.aggregate([
+    {
+      $match: {
+        _id: new Types.ObjectId(id),
+      },
+    },
+    {
+      $lookup: {
+        from: 'posts',
+        localField: 'group',
+        foreignField: 'group',
+        as: 'group',
+      },
+    },
+    {
+      $sort: {
+        airedFrom: 1,
+      },
+    },
+  ]);
 
   res.status(StatusCodes.OK).json({ post });
 };
 
-export const getPosts = async (req: Request, res: Response) => {
-  const { studio, relation } = req.query;
+export const getAllPosts = async (req: Request, res: Response) => {
+  const { studio } = req.query;
 
   const query = Post.find();
   if (studio) query.populate('studio');
-  if (relation) query.populate('relation');
 
   const posts = await query;
 
@@ -45,7 +59,7 @@ export const getPosts = async (req: Request, res: Response) => {
 };
 
 export const deletePost = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const result = await Post.deleteOne({ _id: id });
 
   if (result.deletedCount == 0)

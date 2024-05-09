@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import Studio from '../models/Studio';
 
 export const getStudio = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   const studio = await Studio.findById(id);
   if (!studio) throw new NotFoundError('i need my love to be here');
@@ -25,7 +25,7 @@ export const getAllStudios = async (req: Request, res: Response) => {
 };
 
 export const updateStudio = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   const studio = await Studio.findByIdAndUpdate(id, req.body, {
     runValidators: true,
@@ -36,7 +36,7 @@ export const updateStudio = async (req: Request, res: Response) => {
 
 export const deleteStudio = async (req: Request, res: Response) => {
   const { id } = req.params;
-  if (!id) throw new BadRequestError('making each day of the year');
+  
   const result = await Studio.deleteOne({ _id: id });
 
   if (result.deletedCount == 0)

@@ -12,14 +12,16 @@ import 'express-async-errors';
 import authRouter from './routes/authRoutes';
 import studiosRouter from './routes/studiosRoutes';
 import postsRouter from './routes/postsRoutes';
-import relationsRouter from './routes/relationRoutes';
+import groupsRouter from './routes/groupsRoutes';
+import episodesRouter from './routes/episodesRoutes';
 import errorHandlerMiddleware from './middlewares/error-handler';
 import notFoundMiddleWare from './middlewares/not-found';
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/studios', studiosRouter);
 app.use('/api/v1/posts', postsRouter);
-app.use('/api/v1/relations', relationsRouter);
+app.use('/api/v1/groups', groupsRouter);
+app.use('/api/v1/episodes', episodesRouter);
 app.use(notFoundMiddleWare);
 app.use(errorHandlerMiddleware);
 

@@ -1,15 +1,15 @@
 import { Schema, model, Model, Types } from 'mongoose';
 
-interface IStudio {
+interface IGenre {
   name: string;
   description: string;
 }
 
-interface IStudioMethods {}
+interface IGenreMethods {}
 
-type StudioModel = Model<IStudio, {}, IStudioMethods>;
+type GenreModel = Model<IGenre, {}, IGenreMethods>;
 
-const schema = new Schema<IStudio, StudioModel, IStudioMethods>({
+const schema = new Schema<IGenre, GenreModel, IGenreMethods>({
   name: {
     type: String,
     required: true,
@@ -26,7 +26,7 @@ const schema = new Schema<IStudio, StudioModel, IStudioMethods>({
   },
 });
 
-const Studio = model<IStudio, StudioModel>('Studio', schema);
+const Genre = model<IGenre, GenreModel>('Genre', schema);
 
-export default Studio;
-export { IStudio };
+export default Genre;
+export { IGenre };

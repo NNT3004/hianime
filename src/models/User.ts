@@ -21,20 +21,20 @@ type UserModel = Model<IUser, {}, IUserMethods>;
 const schema = new Schema<IUser, UserModel, IUserMethods>({
   name: {
     type: String,
-    required: [true, 'and i said hey'],
+    required: true,
     minlength: 3,
     maxlength: 20,
     trim: true,
   },
   email: {
     type: String,
-    required: [true, 'what is going on'],
-    validate: [validator.isEmail, 'and i try'],
+    required: true,
+    validate: validator.isEmail,
     unique: true,
   },
   password: {
     type: String,
-    required: [true, 'oh my god, do i try'],
+    required: true,
     minlength: 8,
     maxlength: 25,
     select: false,

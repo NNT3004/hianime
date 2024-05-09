@@ -12,7 +12,7 @@ interface IPost {
   status: string;
   duration: number;
   studio: Types.ObjectId;
-  relation?: Types.ObjectId;
+  group?: Types.ObjectId;
 }
 
 interface IPostMethods {}
@@ -22,24 +22,24 @@ type PostModel = Model<IPost, {}, IPostMethods>;
 const schema = new Schema<IPost, PostModel, IPostMethods>({
   title: {
     type: String,
-    required: [true, 'and i said hey'],
+    required: true,
     minlength: 3,
     maxlength: 40,
     trim: true,
   },
   posterVerticalPath: {
     type: String,
-    required: [true, 'what is going on'],
-    validate: [validator.isURL, 'and i try'],
+    required: true,
+    validate: validator.isURL,
   },
   posterHorizonPath: {
     type: String,
-    required: [true, 'what is going on'],
-    validate: [validator.isURL, 'and i try'],
+    required: true,
+    validate: validator.isURL,
   },
   description: {
     type: String,
-    required: [true, 'what is going on'],
+    required: true,
     minlength: 32,
     maxlength: 1024,
     trim: true,
@@ -47,35 +47,35 @@ const schema = new Schema<IPost, PostModel, IPostMethods>({
   type: {
     type: String,
     enum: ['TV', 'Movie', 'ONA', 'OVA'],
-    required: [true, 'what is going on'],
+    required: true,
   },
   airedFrom: {
     type: Date,
-    required: [true, 'what is going on'],
+    required: true,
   },
   airedTo: {
     type: Date,
-    required: [true, 'what is going on'],
+    required: true,
   },
   status: {
     type: String,
-    enum: ['Currently Airing'],
-    required: [true, 'what is going on'],
+    enum: ['Airing'],
+    required: true,
   },
   duration: {
     type: Number,
-    required: [true, 'what is going on'],
+    required: true,
     min: 3,
     max: 300,
   },
   studio: {
     type: Schema.Types.ObjectId,
     ref: 'Studio',
-    required: [true, 'what is going on'],
+    required: true,
   },
-  relation: {
+  group: {
     type: Schema.Types.ObjectId,
-    ref: 'Relation',
+    ref: 'Group',
   },
 });
 
