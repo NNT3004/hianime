@@ -27,6 +27,8 @@ const schema = new Schema<ICommentVote, CommentVoteModel, ICommentVoteMethods>({
   },
 });
 
+schema.index({ comment: 1, user: 1 }, { unique: true });
+
 const CommentVote = model<ICommentVote, CommentVoteModel>(
   'CommentVote',
   schema

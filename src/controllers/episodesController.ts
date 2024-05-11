@@ -7,7 +7,7 @@ export const getEpisode = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const episode = await Episode.findById(id);
-  if (!Episode) throw new NotFoundError('i need my love to be here');
+  if (!episode) throw new NotFoundError('i need my love to be here');
 
   res.status(StatusCodes.OK).json({ episode });
 };
