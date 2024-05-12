@@ -4,6 +4,7 @@ import EpisodeList from '../../components/EpisodeList';
 import PlayerNav from '../../components/PlayerNav';
 import { GoDotFill } from 'react-icons/go';
 import RatingContainer from '../../components/RatingContainer';
+import CommentSection from '../../components/CommentSection';
 
 interface PostMainProps {
   postId: string;
@@ -57,6 +58,7 @@ const PostMain: React.FC<PostMainProps> = ({ curEpisodeId, postId }) => {
         </section>
         <RatingContainer />
       </div>
+      <CommentSection />
     </Wrapper>
   );
 };
