@@ -17,6 +17,7 @@ interface PostInfoProps {
   status: string;
   genres: string[];
   studio: string;
+  className?: string;
 }
 
 const PostInfo: React.FC<PostInfoProps> = ({
@@ -31,10 +32,11 @@ const PostInfo: React.FC<PostInfoProps> = ({
   studio,
   title,
   type,
+  className,
 }) => {
   const navigate = useNavigate();
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       <div className='poster'>
         <img alt='poster' src={imgUrl} />
       </div>
@@ -58,7 +60,13 @@ const PostInfo: React.FC<PostInfoProps> = ({
           <span>{duration}</span>
         </div>
         <div className='btn-container'>
-          <PrimaryButton startIcon={FaPlay} className='btn' onClick={() => {navigate('/posts/1/episodes/1')}}>
+          <PrimaryButton
+            startIcon={FaPlay}
+            className='btn'
+            onClick={() => {
+              navigate('/posts/1/episodes/1');
+            }}
+          >
             Watch now
           </PrimaryButton>
           <PrimaryButton startIcon={FaPlus} className='btn-white btn'>

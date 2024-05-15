@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.footer`
-    padding: 10px;
+  margin-top: 100px;
+  padding: 10px;
   .sep-ver {
     border-right-color: rgba(255, 255, 255, 0.3);
     border-right-width: 1px;
@@ -36,16 +37,16 @@ const Wrapper = styled.footer`
         color: var(--grey-800);
         padding: 6px;
         &:hover {
-            color: var(--grey-50);
+          color: var(--grey-50);
         }
       }
     }
   }
   .bot {
     .slogan {
-        width: 100%;
-        text-align: center;
-        color: var(--grey-800);
+      width: 100%;
+      text-align: center;
+      color: var(--grey-800);
     }
   }
 `;

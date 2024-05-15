@@ -17,7 +17,7 @@ const Wrapper = styled.section`
     }
   }
   .summary {
-    padding: 40px 6px;
+    padding: 40px 40px 40px 6px;
     flex-grow: 1;
     .nav {
       display: flex;
@@ -98,6 +98,7 @@ const Wrapper = styled.section`
         height: 24px;
         padding: 0 8px;
         margin-right: 4px;
+        margin: 4px 0 4px 4px;
         cursor: pointer;
         &:hover {
           color: var(--primary-500);

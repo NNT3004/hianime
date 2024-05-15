@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Wrapper from '../assets/wrappers/RecentlyUpdated';
 import { FaAngleLeft } from 'react-icons/fa6';
 import { FaAngleRight } from 'react-icons/fa6';
 import PostCardI from './postcard/PostCardI';
 import { useNavigate } from 'react-router-dom';
+import Pagination from './Pagination';
 
 const dump = Array.from(Array(9).keys());
 
@@ -13,6 +14,7 @@ interface RecentlyUpdatedProps {
 
 const RecentlyUpdated: React.FC<RecentlyUpdatedProps> = ({ className }) => {
   const navigate = useNavigate();
+  const [curPage, setCurPage] = useState<number>(1);
   return (
     <Wrapper className={className}>
       <header>
@@ -37,11 +39,14 @@ const RecentlyUpdated: React.FC<RecentlyUpdatedProps> = ({ className }) => {
               type='TV'
               className='post'
               key={index}
-              onClick={() => {navigate('/posts/1')}}
+              onClick={() => {
+                navigate('/posts/1');
+              }}
             />
           );
         })}
       </div>
+      <Pagination curPage={curPage} totalPages={20} setCurPage={setCurPage} />
     </Wrapper>
   );
 };

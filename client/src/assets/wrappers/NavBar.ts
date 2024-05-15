@@ -19,7 +19,7 @@ const Wrapper = styled.div`
     cursor: pointer;
   };
   .search {
-    margin: 0 20px;
+    margin: 0 100px;
     flex-grow: 1;
     max-width: 600px;
   };

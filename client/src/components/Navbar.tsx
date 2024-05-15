@@ -8,12 +8,16 @@ import { useNavigate } from 'react-router-dom';
 import Modal from './Modal';
 import AuthForm from './AuthForm';
 
-const NavBar: React.FC = () => {
+interface NavBarProps {
+  onMenuClick?: (e: React.MouseEvent<SVGElement>) => void;
+}
+
+const NavBar: React.FC<NavBarProps> = ({ onMenuClick }) => {
   const navigate = useNavigate();
   const [showAuthForm, setShowAuthFrom] = useState<boolean>(false);
   return (
     <Wrapper>
-      <FaBars className='menu' />
+      <FaBars className='menu' onClick={onMenuClick} />
       <div className='center'>
         <Logo
           onClick={() => {

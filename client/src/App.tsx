@@ -1,9 +1,12 @@
 import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import SharedLayout from './pages/SharedLayout';
+import SharedAdminLayout from './pages/admin/SharedLayout';
+import AllPosts from './pages/admin/AllPosts';
 import PostInfo from './pages/post/PostInfo';
 import PostMain from './pages/post/PostMain';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Post from './pages/admin/Post';
 
 function App() {
   return (
@@ -35,6 +38,10 @@ function App() {
               path='posts/:post-id/episodes/:episode-id'
               element={<PostMain curEpisodeId='' postId='' />}
             />
+          </Route>
+          <Route path='/admin' element={<SharedAdminLayout />}>
+            <Route path='posts' element={<AllPosts />} />
+            <Route path='posts/:post-id' element={<Post />} />
           </Route>
         </Routes>
       </ScrollToTop>

@@ -1,8 +1,9 @@
 import { ReactElement } from 'react';
-import Wrapper from '../../assets/wrappers/postcard/PostCardI';
-import { FaPlay, FaDotCircle, FaClosedCaptioning } from 'react-icons/fa';
+import Wrapper from '../../assets/wrappers/postcard/PostCardE';
+import { FaCircleInfo } from "react-icons/fa6";
+import { FaClosedCaptioning, FaDotCircle } from 'react-icons/fa';
 
-interface PostCardIProps {
+interface PostCardEProps {
   title: string | ReactElement;
   imgUrl: string;
   episodeCount: number;
@@ -12,7 +13,7 @@ interface PostCardIProps {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-const PostCardI: React.FC<PostCardIProps> = ({
+const PostCardE: React.FC<PostCardEProps> = ({
   title,
   className,
   imgUrl,
@@ -25,7 +26,7 @@ const PostCardI: React.FC<PostCardIProps> = ({
     <Wrapper className={className}>
       <div className='poster' onClick={onClick}>
         <img src={imgUrl} alt='poster' />
-        <FaPlay className='play-icon' />
+        <FaCircleInfo className='play-icon' />
         <div className='count'>
           <span className='item'>
             <FaClosedCaptioning className='icon' />
@@ -33,9 +34,7 @@ const PostCardI: React.FC<PostCardIProps> = ({
           </span>
         </div>
       </div>
-      <p className='title' onClick={onClick}>
-        {title}
-      </p>
+      <p className='title' onClick={onClick}>{title}</p>
       <p className='meta-info'>
         {type}
         <FaDotCircle className='sep' />
@@ -45,4 +44,4 @@ const PostCardI: React.FC<PostCardIProps> = ({
   );
 };
 
-export default PostCardI;
+export default PostCardE;

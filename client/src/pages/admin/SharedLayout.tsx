@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import NavBar from '../components/Navbar';
 import { Outlet } from 'react-router-dom';
-import Wrapper from '../assets/wrappers/SharedLayout';
-import Footer from '../components/Footer';
-import Sidebar from '../components/Sidebar';
-import { FaHome } from 'react-icons/fa';
+import Wrapper from '../../assets/wrappers/admin/SharedLayout';
+import Sidebar from '../../components/Sidebar';
+import NavBar from '../../components/Navbar';
+import { MdMovie } from 'react-icons/md';
+import Footer from '../../components/Footer';
 
 const SharedLayout: React.FC = () => {
   const [showSidebar, setShowSidebar] = useState<boolean>(false);
@@ -13,7 +13,7 @@ const SharedLayout: React.FC = () => {
       <Sidebar
         show={showSidebar}
         setShow={setShowSidebar}
-        items={[{ icon: FaHome, name: 'Home', to: '/home' }]}
+        items={[{ icon: MdMovie, name: 'Posts', to: 'posts' }]}
       />
       <NavBar onMenuClick={() => setShowSidebar(true)} />
       <Outlet />
