@@ -1,28 +1,63 @@
 import React from 'react';
 import Wrapper from '../assets/wrappers/Table';
+import { BsThreeDots } from 'react-icons/bs';
+import { FaTrash, FaEdit } from 'react-icons/fa';
 
 interface TableProps {
-  fields: string[];
-  data: { [key: string]: any }[];
+  fields: { title: string; key: string }[];
+  data: { [key: string]: string }[];
+  onUpdateClick: (value: any) => void;
+  onDeleteClick: (value: any) => void;
 }
 
-const Table: React.FC<TableProps> = ({ data, fields }) => {
+const Table: React.FC<TableProps> = ({
+  data,
+  fields,
+  onDeleteClick,
+  onUpdateClick,
+}) => {
   return (
-    <Wrapper>
-      <tr>
-        {fields.map((value, index) => {
-          return <th key={index}>{value}</th>;
+    <Wrapper cellSpacing={0} cellPadding={0}>
+      <thead>
+        <tr>
+          {fields.map((value, index) => {
+            return <th key={index}>{value.title}</th>;
+          })}
+          <th key={-1}></th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((row, rowIndex) => {
+          return (
+            <tr key={rowIndex}>
+              {fields.map((col, colIndex) => {
+                return <td key={colIndex}>{row[col.key]}</td>;
+              })}
+              <td key={-1} className='action'>
+                <div className='action-btn'>
+                  <BsThreeDots className='action-icon' />
+                  <div className='btn-menu'>
+                    <div
+                      className='btn-item'
+                      onClick={() => onUpdateClick(row)}
+                    >
+                      <FaEdit />
+                      <span>Edit</span>
+                    </div>
+                    <div
+                      className='btn-item'
+                      onClick={() => onDeleteClick(row)}
+                    >
+                      <FaTrash />
+                      <span>Delete</span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          );
         })}
-      </tr>
-      {data.map((row, rowIndex) => {
-        return (
-          <tr key={rowIndex}>
-            {fields.map((col, colIndex) => {
-              return <td key={colIndex}>{row[col]}</td>;
-            })}
-          </tr>
-        );
-      })}
+      </tbody>
     </Wrapper>
   );
 };

@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  flex: 0 0 calc(25% - 20px);
   border-radius: 4px;
-  margin: 10px 10px;
   overflow: hidden;
   box-shadow: var(--shadow-4);
   box-sizing: border-box;

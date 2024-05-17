@@ -69,6 +69,5 @@ const getSurroundingPages = (totalPages: number, page: number) => {
   for (let i = leftPage; i <= rightPage; ++i) {
     surroundingPages.push(i);
   }
-  console.log(surroundingPages);
   return surroundingPages;
 };

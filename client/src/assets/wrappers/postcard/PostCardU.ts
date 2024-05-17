@@ -27,7 +27,7 @@ const Wrapper = styled.div`
       display: flex;
       align-items: center;
       .count-item {
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: #1a1e2199;
         border-radius: var(--borderRadius);
         padding: 4px 6px;
         display: flex;

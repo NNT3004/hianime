@@ -3,6 +3,7 @@ import Wrapper from '../../assets/wrappers/AllPosts';
 import Pagination from '../../components/Pagination';
 import PostCardE from '../../components/postcard/PostCardE';
 import { useNavigate } from 'react-router-dom';
+import HeadNav from '../../components/HeadNav';
 
 const dump = [1, 1, 1, 1, 1, 1, 1, 1, 1];
 
@@ -11,7 +12,8 @@ const AllPosts: React.FC = () => {
   const [curPage, setCurPage] = useState<number>(1);
   return (
     <Wrapper>
-      <div className='post-container'>
+      <HeadNav navs={[{ name: 'Posts' }]} />
+      <div className='posts-container'>
         {dump.map((_, index) => {
           return (
             <PostCardE

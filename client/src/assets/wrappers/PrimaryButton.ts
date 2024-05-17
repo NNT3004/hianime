@@ -4,7 +4,6 @@ const Wrapper = styled.button`
   background-color: var(--primary-500);
   border-radius: var(--borderRadius);
   border: none;
-  color: var(--white);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -13,10 +12,11 @@ const Wrapper = styled.button`
   padding: 0px 12px;
   transition: background-color 100ms;
   font-family: var(--bodyFont);
+  color: #ffffff;
   height: 36px;
-
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   &:hover {
-    background-color: var(--primary-200);
+    background-color: var(--primary-500-light);
   }
 
   .btn__text {
@@ -31,7 +31,7 @@ const Wrapper = styled.button`
   }
 
   &:disabled {
-    background-color: var(--grey-800);
+    background-color: var(--grey-800) !important;
     color: var(--grey-900);
     cursor: default;
   }

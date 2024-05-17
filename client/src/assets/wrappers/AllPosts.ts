@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  .post-container {
-    display: flex;
-    flex-wrap: wrap;
-    .post {
-      flex: 0 0 calc(20% - 20px);
-    }
+  padding: 0 30px 30px;
+  .posts-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: auto;
+    grid-gap: 1rem;
     margin-bottom: 30px;
   }
 `;

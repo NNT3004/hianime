@@ -7,8 +7,25 @@ import PostInfo from './pages/post/PostInfo';
 import PostMain from './pages/post/PostMain';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Post from './pages/admin/Post';
+import Episodes from './pages/admin/Episodes';
+import { useEffect } from 'react';
+import { AppDispatch, RootState } from './store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser } from './store/slices/authSlice';
+import Loading from './components/Loading';
+import Genres from './pages/admin/Genres';
+import Studios from './pages/admin/Studios';
 
 function App() {
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(getUser());
+  });
+  const gettingUser = useSelector((state: RootState) => state.auth.gettingUser);
+  if (gettingUser) {
+    return <Loading />;
+  }
+
   return (
     <BrowserRouter>
       <ScrollToTop>
@@ -17,7 +34,7 @@ function App() {
             <Route path='' element={<Navigate to='home' replace />} />
             <Route path='home' element={<Home />} />
             <Route
-              path='posts/:post-id'
+              path='posts/:postId'
               element={
                 <PostInfo
                   aired='Apr 4, 2024 to ?'
@@ -35,13 +52,16 @@ function App() {
               }
             />
             <Route
-              path='posts/:post-id/episodes/:episode-id'
+              path='posts/:postId/episodes/:episodeId'
               element={<PostMain curEpisodeId='' postId='' />}
             />
           </Route>
-          <Route path='/admin' element={<SharedAdminLayout />}>
+          <Route path='admin' element={<SharedAdminLayout />}>
             <Route path='posts' element={<AllPosts />} />
-            <Route path='posts/:post-id' element={<Post />} />
+            <Route path='posts/:postId' element={<Post />} />
+            <Route path='posts/:postId/episodes' element={<Episodes />} />
+            <Route path='genres' element={<Genres />} />
+            <Route path='studios' element={<Studios />} />
           </Route>
         </Routes>
       </ScrollToTop>

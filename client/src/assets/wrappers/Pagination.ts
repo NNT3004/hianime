@@ -19,7 +19,7 @@ const Wrapper = styled.div`
     user-select: none;
     &:hover {
       color: var(--white);
-      background-color: var(--primary-400);
+      background-color: var(--primary-500-light);
     }
   }
   nav.activate {

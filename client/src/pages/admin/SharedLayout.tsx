@@ -1,23 +1,39 @@
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 import Wrapper from '../../assets/wrappers/admin/SharedLayout';
-import Sidebar from '../../components/Sidebar';
-import NavBar from '../../components/Navbar';
-import { MdMovie } from 'react-icons/md';
-import Footer from '../../components/Footer';
+import Sidebar from '../../components/admin/Sidebar';
+import Navbar from '../../components/admin/Navbar';
+import Logo from '../../components/Logo';
+import { FaBars, FaCaretLeft } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../store/slices/authSlice';
 
 const SharedLayout: React.FC = () => {
-  const [showSidebar, setShowSidebar] = useState<boolean>(false);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const user = useSelector(selectUser);
+  if(!user || user.role !== 'admin') {
+    return <Navigate to='/home'/>
+  }
   return (
     <Wrapper>
-      <Sidebar
-        show={showSidebar}
-        setShow={setShowSidebar}
-        items={[{ icon: MdMovie, name: 'Posts', to: 'posts' }]}
-      />
-      <NavBar onMenuClick={() => setShowSidebar(true)} />
-      <Outlet />
-      <Footer />
+      <main className='dashboard'>
+        <div className='toggle-sidebar'>
+          <div className={showSidebar ? 'toggle-btn hide' : 'toggle-btn'} onClick={() => setShowSidebar(true)}>
+            <FaBars />
+          </div>
+          <Logo />
+          <div className={showSidebar ? 'toggle-btn' : 'toggle-btn hide'} onClick={() => setShowSidebar(false)}>
+            <FaCaretLeft />
+          </div>
+        </div>
+        <Sidebar showSidebar={showSidebar}/>
+        <div className='dashboard-main'>
+          <Navbar />
+          <div className='dashboard-page'>
+            <Outlet />
+          </div>
+        </div>
+      </main>
     </Wrapper>
   );
 };

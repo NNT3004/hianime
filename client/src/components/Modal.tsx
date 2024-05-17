@@ -2,7 +2,7 @@ import React from 'react';
 import Wrapper from '../assets/wrappers/Modal';
 
 interface ModalProps {
-  children: React.ReactElement;
+  children: any;
   display: boolean;
   setDisplay: (display: boolean) => void;
 }
@@ -21,7 +21,7 @@ const Modal: React.FC<ModalProps> = ({ children, display, setDisplay }) => {
 
   return (
     <Wrapper
-      onClick={onClickExceptChild}
+      onMouseDown={onClickExceptChild}
       style={{ display: display ? 'flex' : 'none' }}
     >
       {children}

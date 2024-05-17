@@ -60,7 +60,7 @@ const Wrapper = styled.form`
       justify-content: space-between;
       .checkbox {
         font-size: 1rem;
-        color: var(--textColor);
+        color: #eeeeee;
         font-family: var(--body-font);
         display: flex;
         align-items: center;

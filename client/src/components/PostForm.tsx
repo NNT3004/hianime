@@ -4,11 +4,13 @@ import { Input, Select, InputNumber, DatePicker } from 'antd';
 import ImageUpload from './ImageUpload';
 import PrimaryButton from './PrimaryButton';
 import { FaCloudUploadAlt } from 'react-icons/fa';
+import { SiSteelseries } from 'react-icons/si';
+import { useNavigate } from 'react-router-dom';
 
 const PostForm: React.FC = () => {
   const [verImgUrl, setVerImgUrl] = useState<string>('');
   const [horImgUrl, setHorImgUrl] = useState<string>('');
-
+  const navigate = useNavigate();
   return (
     <Wrapper>
       <div className='wrapper'>
@@ -106,7 +108,7 @@ const PostForm: React.FC = () => {
             <ImageUpload
               imageUrl={verImgUrl}
               setImageUrl={setVerImgUrl}
-              id='ver-poster'
+              className='ver-poster'
             />
           </div>
           <div className='col-ver'>
@@ -114,11 +116,17 @@ const PostForm: React.FC = () => {
             <ImageUpload
               imageUrl={horImgUrl}
               setImageUrl={setHorImgUrl}
-              id='hor-poster'
+              className='hor-poster'
             />
           </div>
         </div>
         <div className='btns'>
+          <PrimaryButton
+            startIcon={SiSteelseries}
+            onClick={() => navigate('/admin/posts/1/episodes')}
+          >
+            Epsodes
+          </PrimaryButton>
           <PrimaryButton startIcon={FaCloudUploadAlt}>Update</PrimaryButton>
         </div>
       </div>

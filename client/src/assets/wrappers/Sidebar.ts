@@ -10,7 +10,8 @@ const Wrapper = styled.div`
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.6);
   .side-bar {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: #1a1e2199;
+    box-shadow: 3px 0 10px 0 rgba(0, 0, 0, 0.3);
     width: 300px;
     height: 100%;
     .hor-sep {
@@ -26,13 +27,13 @@ const Wrapper = styled.div`
       align-items: center;
       justify-content: center;
       height: 60px;
-      background-color: #000;
+      background-color: #1a1e21;
       position: relative;
       .menu {
         display: flex;
         justify-content: center;
         align-items: center;
-        color: var(--textColor);
+        color: #eeeeee;
         height: 100%;
         padding: 0 16px;
         cursor: pointer;
@@ -69,11 +70,11 @@ const Wrapper = styled.div`
           flex-grow: 1;
         }
         &.activate {
-          background-color: var(--primary-500-t);
-          color: var(--primary-300);
+          background-color: #273037;
+          color: var(--primary-500);
         }
         &:hover {
-          color: var(--primary-300);
+          color: var(--primary-500);
         }
       }
     }

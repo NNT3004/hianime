@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  background: var(--black);
+  background: #273037;
   display: flex;
   align-items: center;
   border-radius: var(--borderRadius);
@@ -10,7 +10,7 @@ const Wrapper = styled.div`
     border: transparent;
     background: transparent;
     height: 100%;
-    color: var(--textColor);
+    color: #eeeeee;
     flex-grow: 1;
     font-size: var(--small-text);
   }
@@ -30,7 +30,7 @@ const Wrapper = styled.div`
     padding: 0px 10px;
     height: 100%;
     &:hover {
-      color: var(--grey-50);
+      color: #eeeeee;
     }
     &:disabled {
       color: var(--grey-900);

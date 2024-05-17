@@ -52,13 +52,13 @@ const Wrapper = styled.aside`
       }
       &:hover {
         background-color: #222;
-        color: var(--primary-50);
+        color: var(--primary-500-light);
       }
     }
     ul.activate {
       border-left: 4px solid var(--primary-500);
       background-color: #222;
-      color: var(--primary-50);
+      color: var(--primary-500-light);
     }
     .watched {
       color: var(--grey-900);

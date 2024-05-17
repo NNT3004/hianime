@@ -47,29 +47,28 @@ const Wrapper = styled.aside`
     .item {
       display: flex;
       align-items: center;
-      border-right-color: var(--primary-500);
-      border-right-width: 3px;
-      border-right-style: solid;
+      /* border-right-color: red; */
+      /* border-right-width: 4px; */
+      /* border-right-style: solid; */
       border-radius: 8px;
-      background-color: black;
+      background-color: #31363f;
       transition: background-color 100ms;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
       margin: 10px 0;
       cursor: pointer;
       .rank {
         font-family: var(--outlineFont);
-        width: 40px;
+        width: 60px;
         text-align: center;
         font-size: 60px;
         font-weight: bold;
       }
       .post {
         width: 280px;
-        margin-top: auto;
-        margin-bottom: auto;
+        height: 105px;
       }
       &:hover {
-        background-color: var(--grey-900);
-        color: white;
+        background-color: #31363f99;
       }
     }
   }

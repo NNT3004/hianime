@@ -6,16 +6,16 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 60px;
-  background-color: #000;
+  background-color: #1a1e21;
   padding: 0px 16px;
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  box-shadow: var(--shadow-4);
+  box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.3);
   .logo {
     height: 40px;
-    margin: 0 10px 0 30px;
+    margin: 0 10px 0 38px;
     cursor: pointer;
   };
   .search {
@@ -24,12 +24,8 @@ const Wrapper = styled.div`
     max-width: 600px;
   };
   .menu {
-    color: var(--textColor);
     font-size: 24px;
     cursor: pointer;
-  };
-  .menu:hover {
-    color: var(--grey-50);
   };
   .center {
     display: flex;

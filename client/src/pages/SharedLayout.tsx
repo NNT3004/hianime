@@ -7,15 +7,25 @@ import Sidebar from '../components/Sidebar';
 import { FaHome } from 'react-icons/fa';
 
 const SharedLayout: React.FC = () => {
-  const [showSidebar, setShowSidebar] = useState<boolean>(false);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [initalSidebar, setInitalSidebar] = useState(false);
+
+  const handleMenuClicked = (e: React.MouseEvent) => {
+    if (!initalSidebar) {
+      setInitalSidebar(true);
+    }
+    setShowSidebar(true);
+  };
   return (
     <Wrapper>
-      <Sidebar
-        show={showSidebar}
-        setShow={setShowSidebar}
-        items={[{ icon: FaHome, name: 'Home', to: '/home' }]}
-      />
-      <NavBar onMenuClick={() => setShowSidebar(true)} />
+      {initalSidebar && (
+        <Sidebar
+          show={showSidebar}
+          setShow={setShowSidebar}
+          items={[{ icon: FaHome, name: 'Home', to: '/home' }]}
+        />
+      )}
+      <NavBar onMenuClick={handleMenuClicked} />
       <Outlet />
       <Footer />
     </Wrapper>

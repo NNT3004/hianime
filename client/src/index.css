@@ -19,7 +19,8 @@ html {
   --primary-200: #5285d8;
   --primary-300: #427ad4;
   --primary-400: #326fd1;
-  --primary-500: #2d68c4;
+  --primary-500: #4999da;
+  --primary-500-light: #7bbbef;
   --primary-600: #2658a7;
   --primary-700: #20498c;
   --primary-800: #193a70;
@@ -70,11 +71,11 @@ html {
 }
 
 body {
-  background: var(--backgroundColor);
+  background-color: #20282d;
   font-family: var(--bodyFont);
   font-weight: 400;
   line-height: 1.75;
-  color: var(--textColor);
+  /* color: var(--textColor); */
   overflow-x: hidden;
 }
 
@@ -132,10 +133,10 @@ small,
   font-size: var(--small-text);
 }
 
-button:disabled {
-  cursor: not-allowed;
-}
-
 .full-page {
   min-height: 100vh;
+}
+
+.ant-picker-dropdown {
+  z-index: 3000;
 }
