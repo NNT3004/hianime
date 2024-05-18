@@ -58,8 +58,9 @@ function App() {
           </Route>
           <Route path='admin' element={<SharedAdminLayout />}>
             <Route path='posts' element={<AllPosts />} />
-            <Route path='posts/:postId' element={<Post />} />
+            <Route path='posts/:postId' element={<Post key='post-update'/>} />
             <Route path='posts/:postId/episodes' element={<Episodes />} />
+            <Route path='add-post' element={<Post key='post-add'/>} />
             <Route path='genres' element={<Genres />} />
             <Route path='studios' element={<Studios />} />
           </Route>

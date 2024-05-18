@@ -14,6 +14,9 @@ import studiosRouter from './routes/studiosRoutes';
 import postsRouter from './routes/postsRoutes';
 import groupsRouter from './routes/groupsRoutes';
 import episodesRouter from './routes/episodesRoutes';
+import genresRouter from './routes/genresRoutes';
+import postGenresRouter from './routes/postGenresRoutes';
+import imagesRouter from './routes/imagesRoutes';
 import errorHandlerMiddleware from './middlewares/error-handler';
 import notFoundMiddleWare from './middlewares/not-found';
 
@@ -22,6 +25,9 @@ app.use('/api/v1/studios', studiosRouter);
 app.use('/api/v1/posts', postsRouter);
 app.use('/api/v1/groups', groupsRouter);
 app.use('/api/v1/episodes', episodesRouter);
+app.use('/api/v1/genres', genresRouter);
+app.use('/api/v1/post-genres', postGenresRouter);
+app.use('/api/v1/images', imagesRouter);
 app.use(notFoundMiddleWare);
 app.use(errorHandlerMiddleware);
 

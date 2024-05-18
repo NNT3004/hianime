@@ -43,7 +43,10 @@ const Wrapper = styled.div`
       margin-top: 60px;
       width: 100%;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
+      button {
+        margin: 0 20px;
+      }
     }
   }
 `;

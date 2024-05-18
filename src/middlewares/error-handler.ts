@@ -9,6 +9,7 @@ const errorHandlerMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(error);
   const defaultError = {
     statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
     msg: 'here there and everywhere',

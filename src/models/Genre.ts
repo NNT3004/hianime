@@ -20,8 +20,8 @@ const schema = new Schema<IGenre, GenreModel, IGenreMethods>({
   description: {
     type: String,
     required: true,
-    minlength: 32,
-    maxlength: 1024,
+    minlength: 3,
+    maxlength: 40,
     trim: true,
   },
 });

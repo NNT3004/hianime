@@ -46,7 +46,7 @@ const schema = new Schema<IPost, PostModel, IPostMethods>({
   },
   type: {
     type: String,
-    enum: ['TV', 'Movie', 'ONA', 'OVA'],
+    enum: ['tv', 'moive', 'ona', 'ova'],
     required: true,
   },
   airedFrom: {
@@ -59,7 +59,7 @@ const schema = new Schema<IPost, PostModel, IPostMethods>({
   },
   status: {
     type: String,
-    enum: ['Airing'],
+    enum: ['airing', 'completed', 'waiting'],
     required: true,
   },
   duration: {

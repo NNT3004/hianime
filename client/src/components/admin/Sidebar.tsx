@@ -3,6 +3,7 @@ import Wrapper from '../../assets/wrappers/admin/Sidebar';
 import { NavLink } from 'react-router-dom';
 import { MdMovie } from 'react-icons/md';
 import { FaPuzzlePiece, FaSimplybuilt } from 'react-icons/fa';
+import { MdLibraryAdd } from "react-icons/md";
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -20,6 +21,15 @@ const Sidebar: React.FC<SidebarProps> = ({ showSidebar }) => {
         >
           <MdMovie className='icon' />
           <span className='text'>Posts</span>
+        </NavLink>
+        <NavLink
+          to='add-post'
+          className={({ isActive }) =>
+            isActive ? 'activated nav-link' : 'nav-link'
+          }
+        >
+          <MdLibraryAdd className='icon' />
+          <span className='text'>Add posts</span>
         </NavLink>
         <NavLink
           to='genres'

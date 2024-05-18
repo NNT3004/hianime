@@ -22,7 +22,6 @@ const schema = new Schema<IPostGenre, PostGenreModel, IPostGenreMethods>(
       required: true,
     },
   },
-  { _id: false }
 );
 
 schema.index({ post: 1, genre: 1 }, { unique: true });

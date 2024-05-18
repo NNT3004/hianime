@@ -5,6 +5,7 @@ const Wrapper = styled.aside`
   min-height: 100vh;
   height: 100%;
   width: 250px;
+  min-width: 250px;
   margin-left: -250px;
   transition: 0.3s ease-in-out all;
   position: sticky;

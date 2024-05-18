@@ -6,7 +6,7 @@ import { FaClosedCaptioning, FaDotCircle } from 'react-icons/fa';
 interface PostCardEProps {
   title: string | ReactElement;
   imgUrl: string;
-  episodeCount: number;
+  episodeCount: number | string;
   className?: string;
   type: string;
   duration: string;
