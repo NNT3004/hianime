@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import multer, { Multer } from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';

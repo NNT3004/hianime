@@ -20,7 +20,7 @@ const RecentlyUpdated: React.FC<RecentlyUpdatedProps> = ({ className }) => {
       <header>
         <p>recently updated</p>
         <nav>
-          <button disabled={true} onClick={() => console.log('232323')}>
+          <button disabled={true} onClick={() => {}}>
             <FaAngleLeft />
           </button>
           <button>

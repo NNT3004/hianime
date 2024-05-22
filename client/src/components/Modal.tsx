@@ -1,32 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Wrapper from '../assets/wrappers/Modal';
 
 interface ModalProps {
   children: any;
-  display: boolean;
-  setDisplay: (display: boolean) => void;
+  onClickOutside: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ children, display, setDisplay }) => {
+const Modal: React.FC<ModalProps> = ({ children, onClickOutside }) => {
   const onClickExceptChild = (e: React.MouseEvent) => {
     if (e.currentTarget !== e.target) return;
-    setDisplay(false);
+    onClickOutside();
   };
-
-  if (display) {
+  useEffect(() => {
     document.body.style.overflowY = 'hidden';
-  } else {
-    document.body.style.overflowY = 'scroll';
-  }
+    return () => {
+      document.body.style.overflowY = 'scroll';
+    };
+  });
 
-  return (
-    <Wrapper
-      onMouseDown={onClickExceptChild}
-      style={{ display: display ? 'flex' : 'none' }}
-    >
-      {children}
-    </Wrapper>
-  );
+  return <Wrapper onMouseDown={onClickExceptChild}>{children}</Wrapper>;
 };
 
 export default Modal;

@@ -19,7 +19,9 @@ import postGenresRouter from './routes/postGenresRoutes';
 import imagesRouter from './routes/imagesRoutes';
 import errorHandlerMiddleware from './middlewares/error-handler';
 import notFoundMiddleWare from './middlewares/not-found';
+import path from 'path';
 
+app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/studios', studiosRouter);
 app.use('/api/v1/posts', postsRouter);

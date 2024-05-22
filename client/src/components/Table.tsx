@@ -5,7 +5,7 @@ import { FaTrash, FaEdit } from 'react-icons/fa';
 
 interface TableProps {
   fields: { title: string; key: string }[];
-  data: { [key: string]: string }[];
+  data: { [key: string]: any }[];
   onUpdateClick: (value: any) => void;
   onDeleteClick: (value: any) => void;
 }

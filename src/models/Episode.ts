@@ -6,7 +6,7 @@ interface IEpisode {
   index: number;
   episodeNumber: number;
   title: string;
-  duration: number;
+  duration: string;
   releaseDate: Date;
   path: string;
 }
@@ -36,7 +36,7 @@ const schema = new Schema<IEpisode, EpisodeModel, IEpisodeMethods>({
     required: true,
   },
   duration: {
-    type: Number,
+    type: String,
     required: true,
   },
   releaseDate: {
@@ -45,8 +45,7 @@ const schema = new Schema<IEpisode, EpisodeModel, IEpisodeMethods>({
   },
   path: {
     type: String,
-    validate: validator.isURL,
-    required: true,
+    required: false,
   },
 });
 

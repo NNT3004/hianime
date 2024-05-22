@@ -67,12 +67,15 @@ const Genres: React.FC = () => {
   }, [error, api, dispatch, status]);
 
   useEffect(() => {
-    if(formError && formStatus === 'failed') {
+    if (formError && formStatus === 'failed') {
       api.error({ message: 'Error', description: formError });
       dispatch(resetFormStatus());
     }
-    if(formStatus === 'succeeded') {
-      api.success({ message: 'Success', description: 'you left me, but i never left you' });
+    if (formStatus === 'succeeded') {
+      api.success({
+        message: 'Success',
+        description: 'you left me, but i never left you',
+      });
       dispatch(resetFormStatus());
       resetState();
     }
@@ -124,25 +127,27 @@ const Genres: React.FC = () => {
     <Wrapper>
       {contextHolder}
       <HeadNav navs={[{ name: 'Genres' }]} />
-      <Modal display={state.action !== 'none'} setDisplay={(_) => {}}>
-        {state.action === 'delete' && (
-          <ConfirmForm
-            description="You're going to delete a genre. Are you sure?"
-            message='Deleting genre'
-            onCancel={resetState}
-            onConfirm={() => onSubmit(state.genre)}
-            disabled={formLoading}
-          />
-        )}
-        {(state.action === 'update' || state.action === 'add') && (
-          <GenreFrom
-            genre={state.genre}
-            onSubmit={onSubmit}
-            onCancel={resetState}
-            disabled={formLoading}
-          />
-        )}
-      </Modal>
+      {state.action !== 'none' && (
+        <Modal onClickOutside={() => {}}>
+          {state.action === 'delete' && (
+            <ConfirmForm
+              description="You're going to delete a genre. Are you sure?"
+              message='Deleting genre'
+              onCancel={resetState}
+              onConfirm={() => onSubmit(state.genre)}
+              disabled={formLoading}
+            />
+          )}
+          {(state.action === 'update' || state.action === 'add') && (
+            <GenreFrom
+              genre={state.genre}
+              onSubmit={onSubmit}
+              onCancel={resetState}
+              disabled={formLoading}
+            />
+          )}
+        </Modal>
+      )}
       <div className='card-container'>
         <div className='btn-container'>
           <PrimaryButton

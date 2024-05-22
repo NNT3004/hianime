@@ -44,15 +44,17 @@ const NavBar: React.FC<NavBarProps> = ({ onMenuClick }) => {
           Sign in
         </PrimaryButton>
       )}
-      <Modal display={showAuthForm} setDisplay={setShowAuthFrom}>
-        {showAuthForm && (
-          <AuthForm
-            onCloseBtnClicked={() => {
-              setShowAuthFrom(false);
-            }}
-          />
-        )}
-      </Modal>
+      {showAuthForm && (
+        <Modal onClickOutside={() => setShowAuthFrom(false)}>
+          {showAuthForm && (
+            <AuthForm
+              onCloseBtnClicked={() => {
+                setShowAuthFrom(false);
+              }}
+            />
+          )}
+        </Modal>
+      )}
     </Wrapper>
   );
 };

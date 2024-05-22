@@ -32,6 +32,7 @@ const Wrapper = styled.div`
       label {
         display: block;
         width: 100px;
+        min-width: 100px;
       }
       .input {
         min-height: 30px;

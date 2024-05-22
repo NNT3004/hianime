@@ -67,12 +67,15 @@ const Studios: React.FC = () => {
   }, [error, api, dispatch, status]);
 
   useEffect(() => {
-    if(formError && formStatus === 'failed') {
+    if (formError && formStatus === 'failed') {
       api.error({ message: 'Error', description: formError });
       dispatch(resetFormStatus());
     }
-    if(formStatus === 'succeeded') {
-      api.success({ message: 'Success', description: 'you left me, but i never left you' });
+    if (formStatus === 'succeeded') {
+      api.success({
+        message: 'Success',
+        description: 'you left me, but i never left you',
+      });
       dispatch(resetFormStatus());
       resetState();
     }
@@ -114,7 +117,9 @@ const Studios: React.FC = () => {
         })
       );
     } else if (state.action === 'add') {
-      dispatch(addStudio({ name: studio.name, description: studio.description }));
+      dispatch(
+        addStudio({ name: studio.name, description: studio.description })
+      );
     } else if (state.action === 'delete') {
       dispatch(deleteStudio(studio._id!));
     }
@@ -124,25 +129,27 @@ const Studios: React.FC = () => {
     <Wrapper>
       {contextHolder}
       <HeadNav navs={[{ name: 'Studios' }]} />
-      <Modal display={state.action !== 'none'} setDisplay={(_) => {}}>
-        {state.action === 'delete' && (
-          <ConfirmForm
-            description="You're going to delete a studio. Are you sure?"
-            message='Deleting studio'
-            onCancel={resetState}
-            onConfirm={() => onSubmit(state.studio)}
-            disabled={formLoading}
-          />
-        )}
-        {(state.action === 'update' || state.action === 'add') && (
-          <StudioFrom
-            studio={state.studio}
-            onSubmit={onSubmit}
-            onCancel={resetState}
-            disabled={formLoading}
-          />
-        )}
-      </Modal>
+      {state.action !== 'none' && (
+        <Modal onClickOutside={() => {}}>
+          {state.action === 'delete' && (
+            <ConfirmForm
+              description="You're going to delete a studio. Are you sure?"
+              message='Deleting studio'
+              onCancel={resetState}
+              onConfirm={() => onSubmit(state.studio)}
+              disabled={formLoading}
+            />
+          )}
+          {(state.action === 'update' || state.action === 'add') && (
+            <StudioFrom
+              studio={state.studio}
+              onSubmit={onSubmit}
+              onCancel={resetState}
+              disabled={formLoading}
+            />
+          )}
+        </Modal>
+      )}
       <div className='card-container'>
         <div className='btn-container'>
           <PrimaryButton

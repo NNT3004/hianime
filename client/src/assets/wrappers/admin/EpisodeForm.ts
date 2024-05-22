@@ -39,6 +39,17 @@ const Wrapper = styled.form`
       margin: 50px auto 0;
     }
   }
+  @keyframes popup {
+    from {
+      opacity: 0.5;
+      transform: translateX(-100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  animation: popup 0.3s;
 `;
 
 export default Wrapper;
