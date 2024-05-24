@@ -6,7 +6,7 @@ const Wrapper = styled.aside`
     display: flex;
     align-items: center;
     color: var(--white);
-    background-color: #000;
+    background-color: #1a1e21;
     span {
       margin: 0;
       display: inline-block;
@@ -14,7 +14,7 @@ const Wrapper = styled.aside`
     }
   }
   li {
-    background-color: #000;
+    background-color: #1a1e21;
     list-style-type: none;
     overflow-y: auto;
     overflow-x: hidden;
@@ -48,16 +48,16 @@ const Wrapper = styled.aside`
       }
       border-left: 4px solid transparent;
       &:nth-child(odd) {
-        background-color: #111;
+        background-color: #20282d;
       }
       &:hover {
-        background-color: #222;
+        background-color: #273037;
         color: var(--primary-500-light);
       }
     }
     ul.activate {
       border-left: 4px solid var(--primary-500);
-      background-color: #222;
+      background-color: #273037;
       color: var(--primary-500-light);
     }
     .watched {

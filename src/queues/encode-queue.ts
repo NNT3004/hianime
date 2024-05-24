@@ -24,7 +24,7 @@ const encodeWorker = new Worker(
     );
     await Episode.updateOne(
       { _id: job.data._id },
-      { path: `public/${uniqueEpisodeId}/master.m3u8` }
+      { path: `/public/${uniqueEpisodeId}/master.m3u8` }
     );
   },
   {

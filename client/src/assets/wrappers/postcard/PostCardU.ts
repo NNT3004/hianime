@@ -49,6 +49,8 @@ const Wrapper = styled.div`
       }
       .type {
         margin: 0 3px;
+        text-transform: uppercase;
+        font-size: 0.865rem;
       }
     }
   }

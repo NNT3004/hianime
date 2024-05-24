@@ -1,38 +1,75 @@
-import { BadRequestError, NotFoundError } from '../errors';
+import { BadRequestError } from '../errors';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Rating from '../models/Rating';
+import { Types } from 'mongoose';
 
-export const createRating = async (req: Request, res: Response) => {
-  const user = req.user.userId;
+export const getAverageRating = async (req: Request, res: Response) => {
+  const user = req.user?.userId;
 
-  const { post, score } = req.body;
+  const { post } = req.query;
 
-  const rating = await Rating.create({ user, post, score });
+  const [result] = await Rating.aggregate([
+    {
+      $match: { post: new Types.ObjectId(post + '') },
+    },
+    {
+      $group: {
+        _id: null,
+        averageRating: { $avg: '$score' },
+      },
+    },
+  ]);
 
-  res.status(StatusCodes.OK).json({ rating });
+  if (user) {
+    const myRating = await Rating.findOne({ user, post });
+
+    const myScore = (myRating?.score || 0) as 0 | 5 | 8 | 10;
+
+    res.status(StatusCodes.OK).json({
+      averageRating: result.averageRating,
+      myRating: scoreRate[myScore],
+    });
+  } else {
+    res.status(StatusCodes.OK).json({ averageRating: result.averageRating });
+  }
 };
 
-export const getAllRatings = async (req: Request, res: Response) => {
-  const user = req.user.userId;
-  const ratings = await Rating.find({ user });
+type RateOption = 'boring' | 'good' | 'great';
+const rateScore = {
+  boring: 5,
+  good: 8,
+  great: 10,
+};
 
-  res.status(StatusCodes.OK).json({ ratings });
+const scoreRate = {
+  0: 'none',
+  5: 'boring',
+  8: 'good',
+  10: 'great',
 };
 
 export const updateRating = async (req: Request, res: Response) => {
   const user = req.user.userId;
 
-  const { post, score } = req.body;
+  const { post } = req.query;
+  const { rate } = req.body;
 
-  const rating = await Rating.updateOne(
+  const isValidRate = (value: any): value is RateOption =>
+    ['boring', 'good', 'great'].includes(value);
+
+  if (!isValidRate(rate)) throw new BadRequestError('kira kira hai ni natta');
+  const score = rateScore[rate];
+
+  await Rating.updateOne(
     { user, post },
     { score },
     {
       runValidators: true,
+      upsert: true,
     }
   );
-  res.status(StatusCodes.OK).json({ rating });
+  res.status(StatusCodes.OK).json();
 };
 
 export const deleteRating = async (req: Request, res: Response) => {
@@ -44,5 +81,5 @@ export const deleteRating = async (req: Request, res: Response) => {
 
   if (result.deletedCount == 0)
     throw new BadRequestError('making each day of the year');
-  res.status(StatusCodes.OK).json({ msg: 'deleted successfully' });
+  res.status(StatusCodes.OK).json();
 };

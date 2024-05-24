@@ -2,13 +2,20 @@ import React from 'react';
 import Wrapper from '../assets/wrappers/EpisodeList';
 import { FaPlayCircle } from 'react-icons/fa';
 
+interface Episode {
+  _id: string;
+  index: number;
+  episodeNumber: number;
+  title: string;
+  path: string;
+  duration: string;
+  releaseDate: string;
+}
+
 interface EpisodeListProps {
-  episodes: {
-    episode: number;
-    title: string;
-  }[];
-  curEpisode: number;
-  onChangeEpisode: (episode: number) => void;
+  episodes: Episode[];
+  curEpisode?: Episode;
+  onChangeEpisode: (episode: Episode) => void;
   className?: string;
 }
 
@@ -24,16 +31,18 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
         <span>List of episode</span>
       </header>
       <li>
-        {episodes.map((value, index) => {
+        {episodes.map((episode) => {
           return (
             <ul
-              key={index}
-              onClick={() => onChangeEpisode(value.episode)}
-              className={value.episode === curEpisode ? 'activate' : 'watched'}
+              key={episode._id}
+              onClick={() => onChangeEpisode(episode)}
+              className={
+                episode._id === curEpisode?._id ? 'activate' : 'watched'
+              }
             >
-              <span className='episode'>{value.episode}</span>
-              <span className='title'>{value.title}</span>
-              {value.episode === curEpisode && (
+              <span className='episode'>{episode.episodeNumber}</span>
+              <span className='title'>{episode.title}</span>
+              {episode._id === curEpisode?._id && (
                 <FaPlayCircle className='play-icon' />
               )}
             </ul>

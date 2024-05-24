@@ -2,6 +2,13 @@ import styled from 'styled-components';
 
 const Wrapper = styled.section`
   display: flex;
+  min-height: calc(100vh - 60px);
+  .capitalize {
+    text-transform: capitalize;
+  }
+  .cgrey {
+    color: var(--grey-800);
+  }
   p {
     margin: 0;
   }
@@ -22,9 +29,18 @@ const Wrapper = styled.section`
     .nav {
       display: flex;
       align-items: center;
+      span {
+        cursor: pointer;
+        &:last-child {
+          cursor: default;
+          color: var(--grey-800);
+        }
+      }
     }
     .title {
       font-size: 2.75rem;
+      line-height: 2.85rem;
+      margin: 20px 0;
     }
     .meta-info {
       display: flex;
@@ -67,7 +83,7 @@ const Wrapper = styled.section`
         background-color: var(--white);
         color: var(--black);
         &:hover {
-          background-color: var(--grey-500);;
+          background-color: var(--grey-500);
         }
       }
     }
@@ -79,6 +95,7 @@ const Wrapper = styled.section`
     padding: 80px 30px 0;
     background-color: rgba(255, 255, 255, 0.05);
     width: 280px;
+    min-width: 280px;
     p {
       font-size: 0.865rem;
       margin: 6px 0;

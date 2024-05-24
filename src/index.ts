@@ -16,10 +16,15 @@ import groupsRouter from './routes/groupsRoutes';
 import episodesRouter from './routes/episodesRoutes';
 import genresRouter from './routes/genresRoutes';
 import postGenresRouter from './routes/postGenresRoutes';
+import historiesRouter from './routes/historiesRoutes';
+import ratingsRouter from './routes/ratingsRoutes';
 import imagesRouter from './routes/imagesRoutes';
 import errorHandlerMiddleware from './middlewares/error-handler';
 import notFoundMiddleWare from './middlewares/not-found';
 import path from 'path';
+
+// auth middleware
+import authenticateUser from './middlewares/auth.js';
 
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 app.use('/api/v1/auth', authRouter);
@@ -29,6 +34,8 @@ app.use('/api/v1/groups', groupsRouter);
 app.use('/api/v1/episodes', episodesRouter);
 app.use('/api/v1/genres', genresRouter);
 app.use('/api/v1/post-genres', postGenresRouter);
+app.use('/api/v1/histories', authenticateUser, historiesRouter);
+app.use('/api/v1/ratings', ratingsRouter);
 app.use('/api/v1/images', imagesRouter);
 app.use(notFoundMiddleWare);
 app.use(errorHandlerMiddleware);

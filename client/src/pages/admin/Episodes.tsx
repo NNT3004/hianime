@@ -14,6 +14,7 @@ import { getAuthClient } from '../../api/client';
 import { useParams } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';
 import Loading from '../../components/Loading';
+import { secondsToHMS } from '../../utils/convert';
 dayjs.extend(customParseFormat);
 
 export type Episode = {
@@ -107,6 +108,7 @@ const Episodes: React.FC = () => {
               },
             }
           );
+          setProgress(undefined);
         } else {
           response = await getAuthClient().put(
             `/episodes/${episode._id}`,
@@ -114,20 +116,22 @@ const Episodes: React.FC = () => {
           );
         }
 
-        const ep = episodes.find(({ _id }) => {
-          return episode._id === _id;
-        })!;
-
         const updatedEpisode = response.data.episode;
 
-        ep.index = updatedEpisode.index;
-        ep.episodeNumber = updatedEpisode.episodeNumber;
-        ep.title = updatedEpisode.title;
-        ep.duration = updatedEpisode.duration;
-        ep.releaseDate = new Date(updatedEpisode.releaseDate).toLocaleString();
-        ep.path = updatedEpisode.path;
-
-        setEpisodes([...episodes]);
+        setEpisodes([
+          ...episodes.map((episode) => {
+            if (episode._id === updatedEpisode._id) {
+              return {
+                ...updatedEpisode,
+                releaseDate: new Date(
+                  updatedEpisode.releaseDate
+                ).toLocaleString(),
+              };
+            } else {
+              return episode;
+            }
+          }),
+        ]);
         resetAction();
         message.success('to live a better life');
       } catch (err) {
@@ -137,7 +141,7 @@ const Episodes: React.FC = () => {
       setFormLoading(false);
     } else if (action.action === 'add') {
       setFormLoading(true);
-      if (!video) {
+      if (!video && (!episode.duration || !episode.path)) {
         message.error('Please provide video');
         return;
       }
@@ -154,21 +158,30 @@ const Episodes: React.FC = () => {
             formData.append(key, String(episode[key]));
           }
         });
+
+        let response: AxiosResponse;
+
         formData.append('video', video as FileType);
 
-        const response = await getAuthClient().post('/episodes', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          onUploadProgress(progressEvent) {
-            const totalLength = progressEvent.total;
-            if (totalLength) {
-              setProgress(
-                Math.round((progressEvent.loaded * 100) / totalLength)
-              );
-            }
-          },
-        });
+        if (video) {
+          response = await getAuthClient().post('/episodes', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            onUploadProgress(progressEvent) {
+              const totalLength = progressEvent.total;
+              if (totalLength) {
+                setProgress(
+                  Math.round((progressEvent.loaded * 100) / totalLength)
+                );
+              }
+            },
+          });
+          setProgress(undefined);
+        } else {
+          response = await getAuthClient().post('/episodes', formData);
+        }
+
         setEpisodes([
           ...episodes,
           {
@@ -184,7 +197,6 @@ const Episodes: React.FC = () => {
         const error = err as AxiosError;
         message.error((error.response?.data as any).msg);
       }
-      setProgress(undefined);
       setFormLoading(false);
     } else if (action.action === 'delete') {
       setFormLoading(true);
@@ -287,6 +299,7 @@ const Episodes: React.FC = () => {
                 {
                   key: 'duration',
                   title: 'Duration',
+                  map: secondsToHMS,
                 },
                 {
                   key: 'releaseDate',

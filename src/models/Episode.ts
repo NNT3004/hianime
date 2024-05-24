@@ -1,12 +1,13 @@
 import { Schema, model, Model, Types } from 'mongoose';
 import validator from 'validator';
+import Post from './Post';
 
 interface IEpisode {
   post: Types.ObjectId;
   index: number;
   episodeNumber: number;
   title: string;
-  duration: string;
+  duration: number;
   releaseDate: Date;
   path: string;
 }
@@ -36,7 +37,7 @@ const schema = new Schema<IEpisode, EpisodeModel, IEpisodeMethods>({
     required: true,
   },
   duration: {
-    type: String,
+    type: Number,
     required: true,
   },
   releaseDate: {

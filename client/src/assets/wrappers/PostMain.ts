@@ -13,6 +13,8 @@ const Wrapper = styled.div`
     }
     .watch {
       border: 1px solid var(--primary-500);
+      border-radius: 12px;
+      overflow: hidden;
       display: flex;
       margin: 0 38px;
       position: relative;
@@ -25,11 +27,12 @@ const Wrapper = styled.div`
         left: 0;
       }
       .player {
-        background-color: #000;
+        background-color: #1a1e21;
         flex-grow: 1;
         .frame {
           aspect-ratio: 16/9;
-          background-color: bisque;
+          border-radius: 0;
+          background-color: #000;
         }
       }
     }

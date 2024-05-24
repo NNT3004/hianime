@@ -383,18 +383,27 @@ export const getVideoDuration = async (inputPath: string) => {
   //   inputPath
   // )} 2>&1 | grep Duration | awk '{print $2}' | tr -d ,`;
   // return stdout.substring(0, stdout.length - 3);
-  const { stdout } = await $`ffmpeg -i ${slash(
-    inputPath
-  )} 2>&1 | findstr Duration`;
-  const str = stdout.trim();
-  const durationRegex = /Duration: (\d{2}:\d{2}:\d{2})./;
-  const match = str.match(durationRegex);
-  if (match && match.length > 1) {
-    const duration = match[1];
-    return duration;
-  } else {
-    return 'N/A';
-  }
+
+  // const { stdout } = await $`ffmpeg -i ${slash(
+  //   inputPath
+  // )} 2>&1 | findstr Duration`;
+  // const str = stdout.trim();
+  // const durationRegex = /Duration: (\d{2}:\d{2}:\d{2})./;
+  // const match = str.match(durationRegex);
+  // if (match && match.length > 1) {
+  //   const duration = match[1];
+  //   if (duration.startsWith('00:')) return duration.substring(3);
+  //   return duration;
+  // } else {
+  //   return 'N/A';
+  // }
+
+  const { stdout } =
+    await $`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${slash(
+      inputPath
+    )}`;
+
+  return stdout.trim();
 };
 
 export const encodeHLSWithMultipleVideoStreams = async (

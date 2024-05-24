@@ -1,70 +1,102 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Wrapper from '../../assets/wrappers/PostInfo';
 import { GoDotFill } from 'react-icons/go';
 import { FaClosedCaptioning, FaPlay, FaPlus } from 'react-icons/fa';
 import PrimaryButton from '../../components/PrimaryButton';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { client } from '../../api/client';
+import Loading from '../../components/Loading';
+
+interface Post {
+  _id: string;
+  title: string;
+  posterVerticalPath: string;
+  description: string;
+  type: string;
+  airedFrom: string;
+  airedTo: string;
+  status: string;
+  duration: string;
+  episodeCount: string;
+  studio: { _id: string; name: string };
+  genres: { _id: string; name: string }[];
+}
 
 interface PostInfoProps {
-  imgUrl: string;
-  title: string;
-  episodeCount: number;
-  type: string;
-  duration: string;
-  description: string;
-  aired: string;
-  premiered: string;
-  status: string;
-  genres: string[];
-  studio: string;
   className?: string;
 }
 
-const PostInfo: React.FC<PostInfoProps> = ({
-  aired,
-  description,
-  duration,
-  episodeCount,
-  genres,
-  imgUrl,
-  premiered,
-  status,
-  studio,
-  title,
-  type,
-  className,
-}) => {
+const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
   const navigate = useNavigate();
+
+  const { postId } = useParams();
+
+  const [status, setStatus] = useState<
+    'idle' | 'loading' | 'succeeded' | 'failed'
+  >('idle');
+
+  const [post, setPost] = useState<Post>();
+
+  useEffect(() => {
+    if (status === 'idle') {
+      const getPostInfo = async () => {
+        setStatus('loading');
+        try {
+          const response = await client.get(`/posts/${postId}?info=true`);
+          setPost(response.data.post);
+          setStatus('succeeded');
+        } catch (err) {
+          setStatus('failed');
+        }
+      };
+      getPostInfo();
+    }
+  }, [status, postId]);
+
+  const loading = status === 'idle' || status === 'loading';
+
+  if (loading) {
+    return (
+      <Loading
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      />
+    );
+  }
+
   return (
     <Wrapper className={className}>
       <div className='poster'>
-        <img alt='poster' src={imgUrl} />
+        <img alt='poster' src={post?.posterVerticalPath} />
       </div>
       <div className='summary'>
         <p className='nav'>
-          <span>Home</span>
+          <span onClick={() => navigate('/home')}>Home</span>
           <GoDotFill className='sep-dot' />
-          <span>{type}</span>
+          <span>{post?.type.toUpperCase()}</span>
           <GoDotFill className='sep-dot' />
-          <span>{title}</span>
+          <span className='cgrey'>{post?.title}</span>
         </p>
-        <p className='title'>{title}</p>
+        <p className='title'>{post?.title}</p>
         <div className='meta-info'>
           <span className='item'>
             <FaClosedCaptioning className='icon' />
-            <span className='text'>{episodeCount}</span>
+            <span className='text'>{post?.episodeCount}</span>
           </span>
           <GoDotFill className='sep-dot' />
-          <span>{type}</span>
+          <span>{post?.type.toUpperCase()}</span>
           <GoDotFill className='sep-dot' />
-          <span>{duration}</span>
+          <span>{post?.duration + 'm'}</span>
         </div>
         <div className='btn-container'>
           <PrimaryButton
             startIcon={FaPlay}
             className='btn'
             onClick={() => {
-              navigate('/posts/1/episodes/1');
+              navigate(`/posts/${postId}/episodes`);
             }}
           >
             Watch now
@@ -73,32 +105,36 @@ const PostInfo: React.FC<PostInfoProps> = ({
             Add to list
           </PrimaryButton>
         </div>
-        <p className='description'>{description}</p>
+        <p className='description'>{post?.description}</p>
       </div>
       <div className='info-container'>
         <p>
           <span className='label'>Aired:</span>
-          <span>{aired}</span>
+          <span>
+            {new Date(post?.airedFrom || '').toLocaleDateString() +
+              ' - ' +
+              new Date(post?.airedTo || '').toLocaleDateString()}
+          </span>
         </p>
         <p>
           <span className='label'>Premiered:</span>
-          <span>{premiered}</span>
+          <span>{getSeasonYear(new Date(post?.airedFrom || ''))}</span>
         </p>
         <p>
           <span className='label'>Duration:</span>
-          <span>{duration}</span>
+          <span>{post?.duration}</span>
         </p>
         <p>
           <span className='label'>Status:</span>
-          <span>{status}</span>
+          <span className='capitalize'>{post?.status}</span>
         </p>
         <div className='sep' />
         <p>
           <span className='label'>Genres:</span>
-          {genres.map((value, index) => {
+          {post?.genres.map((genre) => {
             return (
-              <span key={index} className='genre'>
-                {value}
+              <span key={genre._id} className='genre'>
+                {genre.name}
               </span>
             );
           })}
@@ -106,7 +142,7 @@ const PostInfo: React.FC<PostInfoProps> = ({
         <div className='sep' />
         <p>
           <span className='label'>Studio:</span>
-          <span>{studio}</span>
+          <span>{post?.studio.name}</span>
         </p>
       </div>
     </Wrapper>
@@ -114,3 +150,31 @@ const PostInfo: React.FC<PostInfoProps> = ({
 };
 
 export default PostInfo;
+
+function getSeasonYear(date: Date): string {
+  const month = date.getMonth() + 1;
+  let season: string;
+  let year: number;
+
+  switch (true) {
+    case month >= 3 && month <= 5:
+      season = 'Spring';
+      break;
+    case month >= 6 && month <= 8:
+      season = 'Summer';
+      break;
+    case month >= 9 && month <= 11:
+      season = 'Fall';
+      break;
+    default:
+      season = 'Winter';
+  }
+
+  if (month >= 3) {
+    year = date.getFullYear();
+  } else {
+    year = date.getFullYear() - 1;
+  }
+
+  return `${season} ${year}`;
+}

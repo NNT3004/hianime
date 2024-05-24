@@ -1,7 +1,6 @@
 import multer from 'multer';
 import path from 'path';
 import { BadRequestError } from '../errors';
-import { Request, Response } from 'express';
 
 const storage = multer.diskStorage({
   destination: '/uploads/',

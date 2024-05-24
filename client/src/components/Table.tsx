@@ -4,7 +4,7 @@ import { BsThreeDots } from 'react-icons/bs';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 
 interface TableProps {
-  fields: { title: string; key: string }[];
+  fields: { title: string; key: string; map?: (v: any) => any }[];
   data: { [key: string]: any }[];
   onUpdateClick: (value: any) => void;
   onDeleteClick: (value: any) => void;
@@ -31,7 +31,11 @@ const Table: React.FC<TableProps> = ({
           return (
             <tr key={rowIndex}>
               {fields.map((col, colIndex) => {
-                return <td key={colIndex}>{row[col.key]}</td>;
+                return (
+                  <td key={colIndex}>
+                    {col.map ? col.map(row[col.key]) : row[col.key]}
+                  </td>
+                );
               })}
               <td key={-1} className='action'>
                 <div className='action-btn'>

@@ -7,6 +7,7 @@ import {
   Upload,
   TimePicker,
   Progress,
+  Tabs,
 } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import type { UploadFile, UploadProps } from 'antd';
@@ -16,13 +17,18 @@ import PrimaryButton from '../../components/PrimaryButton';
 import { FaCheckDouble } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
 import { Episode } from '../../pages/admin/Episodes';
-import '@vidstack/react/player/styles/default/theme.css';
-import '@vidstack/react/player/styles/default/layouts/video.css';
+import '@vidstack/react/player/styles/base.css';
+import '@vidstack/react/player/styles/plyr/theme.css';
 import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import {
-  defaultLayoutIcons,
-  DefaultVideoLayout,
-} from '@vidstack/react/player/layouts/default';
+  PlyrLayout,
+  plyrLayoutIcons,
+} from '@vidstack/react/player/layouts/plyr';
+import {
+  formatDateToYMD,
+  hmsToSeconds,
+  secondsToHMS,
+} from '../../utils/convert';
 dayjs.extend(customParseFormat);
 const dateFormat = 'YYYY/MM/DD';
 const timeFormat = 'HH:mm:ss';
@@ -137,29 +143,83 @@ const EpisodeForm: React.FC<EpisodeFormProps> = ({
             disabled={loading}
           />
         </div>
-        <Dragger {...props}>
-          <p className='ant-upload-drag-icon'>
-            <InboxOutlined />
-          </p>
-          <p className='ant-upload-text' style={{ color: '#eeeeee' }}>
-            Click or drag file to this area to upload
-          </p>
-          <p className='ant-upload-hint' style={{ color: '#eeeeee' }}>
-            Support for a single or bulk upload. Strictly prohibited from
-            uploading company data or other banned files.
-          </p>
-        </Dragger>
-        {progress && <Progress percent={progress} style={{ width: '100%' }} />}
+        <Tabs
+          defaultActiveKey='1'
+          items={[
+            {
+              key: '1',
+              label: 'Upload Video',
+              children: (
+                <Dragger {...props}>
+                  <p className='ant-upload-drag-icon'>
+                    <InboxOutlined />
+                  </p>
+                  <p className='ant-upload-text' style={{ color: '#eeeeee' }}>
+                    Click or drag file to this area to upload
+                  </p>
+                  <p className='ant-upload-hint' style={{ color: '#eeeeee' }}>
+                    今まで、僕が作り上げてきた魔法、しっかりしてよ
+                  </p>
+                </Dragger>
+              ),
+            },
+            {
+              key: '2',
+              label: 'Stream link',
+              children: (
+                <div>
+                  <div className='form-row'>
+                    <label htmlFor='path'>Path</label>
+                    <Input
+                      type='text'
+                      id='path'
+                      className='input'
+                      value={dumpEpisode.path}
+                      onChange={handleOnChange}
+                      disabled={loading}
+                    />
+                  </div>
+                  <div className='form-row'>
+                    <label htmlFor='duration'>Duration</label>
+                    <TimePicker
+                      value={dayjs(
+                        secondsToHMS(dumpEpisode.duration || 0),
+                        timeFormat
+                      )}
+                      format={timeFormat}
+                      id='duration'
+                      className='input'
+                      onChange={(_, dateString) => {
+                        if (typeof dateString === 'string') {
+                          setDumpEpisode({
+                            ...dumpEpisode,
+                            duration: hmsToSeconds(dateString),
+                          });
+                        }
+                      }}
+                      disabled={loading}
+                    />
+                  </div>
+                </div>
+              ),
+            },
+          ]}
+        />
+        {progress && (
+          <Progress
+            percent={progress}
+            style={{ width: '100%' }}
+            strokeColor='var(--primary-500)'
+          />
+        )}
         {dumpEpisode.path && (
           <MediaPlayer
             title='Sprite Fight'
-            src={'/' + dumpEpisode.path}
-            style={{marginTop: '50px'}}
+            src={dumpEpisode.path}
+            style={{ marginTop: '50px' }}
           >
             <MediaProvider />
-            <DefaultVideoLayout
-              icons={defaultLayoutIcons}
-            />
+            <PlyrLayout icons={plyrLayoutIcons} />
           </MediaPlayer>
         )}
         <div className='btn-container'>
@@ -211,12 +271,4 @@ function combineDateAndTime(dateStr: string, timeStr: string) {
   }
 
   return date.toISOString();
-}
-
-function formatDateToYMD(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${year}/${month}/${day}`;
 }

@@ -8,9 +8,7 @@ const Wrapper = styled.div`
   height: 60px;
   background-color: #1a1e21;
   padding: 0px 16px;
-  position: fixed;
-  left: 0;
-  right: 0;
+  position: sticky;
   top: 0;
   box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.3);
   .logo {

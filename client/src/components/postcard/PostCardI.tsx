@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
 import Wrapper from '../../assets/wrappers/postcard/PostCardI';
-import { FaPlay, FaDotCircle, FaClosedCaptioning } from 'react-icons/fa';
+import { FaPlay, FaClosedCaptioning } from 'react-icons/fa';
+import { GoDotFill } from 'react-icons/go';
 
 interface PostCardIProps {
   title: string | ReactElement;
@@ -21,6 +22,7 @@ const PostCardI: React.FC<PostCardIProps> = ({
   duration,
   onClick,
 }) => {
+  type = type.toUpperCase();
   return (
     <Wrapper className={className}>
       <div className='poster' onClick={onClick}>
@@ -38,7 +40,7 @@ const PostCardI: React.FC<PostCardIProps> = ({
       </p>
       <p className='meta-info'>
         {type}
-        <FaDotCircle className='sep' />
+        <GoDotFill className='sep' />
         {duration}
       </p>
     </Wrapper>

@@ -4,6 +4,7 @@ const Wrapper = styled.aside`
   display: flex;
   justify-content: space-between;
   padding: 10px 10px;
+  margin-top: -10px;
   user-select: none;
   li {
     list-style-type: none;
@@ -28,7 +29,7 @@ const Wrapper = styled.aside`
   }
   .nav {
     .btn {
-        color: var(--white);
+      color: var(--white);
       &:hover {
         color: var(--primary-500);
       }
@@ -47,6 +48,11 @@ const Wrapper = styled.aside`
         }
       }
     }
+  }
+  .btn.disabled,
+  .btn.disabled:hover {
+    color: var(--grey-800);
+    cursor: default;
   }
 `;
 

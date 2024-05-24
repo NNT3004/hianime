@@ -31,10 +31,13 @@ const Wrapper = styled.div`
     margin: 16px 0;
   }
   .btn-container {
-    list-style-type: none;
     display: flex;
     justify-content: space-between;
     .btn {
+      background: none;
+      border: none;
+      font: inherit;
+      outline: inherit;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
@@ -61,8 +64,14 @@ const Wrapper = styled.div`
       &:hover {
         background-color: var(--white);
       }
+      &.activated {
+        background-color: var(--primary-500-light);
+      }
+      &:disabled {
+        background-color: var(--grey-800);
+      }
     }
   }
-`;
+  `;
 
 export default Wrapper;

@@ -9,8 +9,16 @@ export const getHistory = async (req: Request, res: Response) => {
   const { post } = req.query;
 
   if (post) {
-    const history = History.findOne({ user, post });
-    res.status(StatusCodes.OK).json({ history });
+    const history = await History.findOne({ user, post });
+    if (history) {
+      res.status(StatusCodes.OK).json({
+        history: { episode: history.episode, position: history.position },
+      });
+    } else {
+      res.status(StatusCodes.OK).json({
+        history: null,
+      });
+    }
   } else {
     const histories = await History.find({ user }).sort('createdAt');
     res.status(StatusCodes.OK).json({ histories });
@@ -21,11 +29,18 @@ export const updateHistory = async (req: Request, res: Response) => {
   const user = req.user.userId;
 
   const { post } = req.query;
+
+  const { episode, position } = req.body;
+
   if (!post) throw new BadRequestError('missng post');
 
-  History.updateOne({ user, post }, req.body);
+  await History.updateOne(
+    { user, post },
+    { user, post, episode, position },
+    { upsert: true }
+  );
 
-  res.status(StatusCodes.OK).json({ msg: 'sos dan' });
+  res.status(StatusCodes.OK).json();
 };
 
 export const deleteHistory = async (req: Request, res: Response) => {

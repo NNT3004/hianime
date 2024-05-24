@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.aside`
   width: 320px;
+  min-width: 320px;
   header {
     display: flex;
     align-items: center;
@@ -18,6 +19,7 @@ const Wrapper = styled.aside`
       border-radius: 5px;
       display: flex;
       button {
+        font-size: 0.75rem;
         &:nth-child(2) {
           margin: 0 3px;
         }

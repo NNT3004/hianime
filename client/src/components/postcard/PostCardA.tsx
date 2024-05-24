@@ -1,12 +1,22 @@
 import React from 'react';
 import Wrapper from '../../assets/wrappers/postcard/PostCardA';
-import { FaCalendarTimes, FaPlay, FaAngleRight } from 'react-icons/fa';
+import {
+  FaCalendarTimes,
+  FaPlay,
+  FaAngleRight,
+  FaPlayCircle,
+  FaClosedCaptioning,
+} from 'react-icons/fa';
 import PrimaryButton from '../PrimaryButton';
 import { useNavigate } from 'react-router-dom';
+import { FaClock } from 'react-icons/fa6';
 interface PostCardAProps {
   title: string;
   description: string;
-  airedDate: string;
+  type: string;
+  duration: number;
+  episodeCount: number;
+  airedFrom: string;
   $imgUrl: string;
   className?: string;
 }
@@ -14,9 +24,12 @@ interface PostCardAProps {
 const PostCardA: React.FC<PostCardAProps> = ({
   title,
   description,
-  airedDate,
-  className,
+  type,
+  duration,
+  episodeCount,
+  airedFrom,
   $imgUrl,
+  className,
 }) => {
   const navigate = useNavigate();
   return (
@@ -26,22 +39,46 @@ const PostCardA: React.FC<PostCardAProps> = ({
           <h1 className='title'>{title}</h1>
           <div className='info'>
             <span className='info-item'>
-              <FaCalendarTimes className='icon' />
-              <span className='text'>{airedDate}</span>
+              <FaPlayCircle className='icon' />
+              <span className='text' style={{ textTransform: 'uppercase' }}>
+                {type}
+              </span>
+            </span>
+            <span className='info-item'>
+              <FaClock className='icon' />
+              <span className='text'>{duration + 'm'}</span>
             </span>
             <span className='info-item'>
               <FaCalendarTimes className='icon' />
-              <span className='text'>{airedDate}</span>
+              <span className='text'>
+                {new Date(airedFrom).toLocaleDateString()}
+              </span>
+            </span>
+            <span className='info-item'>
+              <FaClosedCaptioning className='icon' />
+              <span className='text'>{episodeCount}</span>
             </span>
           </div>
           <div className='nav-container'>
-          <PrimaryButton startIcon={FaPlay} className='nav' onClick={() => {navigate('/posts/1/episodes/1')}}>
-            Watch now
-          </PrimaryButton>
-          <PrimaryButton endIcon={FaAngleRight} className='nav-white nav' onClick={() => {navigate('/posts/1')}}>
-            Details
-          </PrimaryButton>
-        </div>
+            <PrimaryButton
+              startIcon={FaPlay}
+              className='nav'
+              onClick={() => {
+                navigate('/posts/1/episodes/1');
+              }}
+            >
+              Watch now
+            </PrimaryButton>
+            <PrimaryButton
+              endIcon={FaAngleRight}
+              className='nav-white nav'
+              onClick={() => {
+                navigate('/posts/1');
+              }}
+            >
+              Details
+            </PrimaryButton>
+          </div>
           <div className='description'>{description}</div>
         </div>
       </div>

@@ -1,54 +1,57 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Wrapper from '../assets/wrappers/PlayerNav';
 import { TbPlayerTrackNextFilled } from 'react-icons/tb';
 import { TbPlayerTrackPrevFilled } from 'react-icons/tb';
 
-interface PlayerSetting {
+interface PlayerNavProps {
   autoPlay: boolean;
+  onClickAutoPlay: () => void;
   autoNext: boolean;
+  onClickAutoNext: () => void;
+  onNextClicked: () => void;
+  onPrevClicked: () => void;
+  disabledPrev: boolean;
+  disabledNext: boolean;
 }
 
-const PlayerNav: React.FC = () => {
-  const [settings, setSettings] = useState<PlayerSetting>({
-    autoNext: false,
-    autoPlay: false,
-  });
+const PlayerNav: React.FC<PlayerNavProps> = ({
+  autoNext,
+  autoPlay,
+  disabledNext,
+  disabledPrev,
+  onClickAutoNext,
+  onClickAutoPlay,
+  onNextClicked,
+  onPrevClicked,
+}) => {
   return (
     <Wrapper>
       <li className='setting'>
-        <ul
-          className='btn'
-          onClick={() => {
-            setSettings((settings) => {
-              return { ...settings, autoPlay: !settings.autoPlay };
-            });
-          }}
-        >
+        <ul className='btn' onClick={onClickAutoPlay}>
           <span>Auto Play </span>
-          <span className={settings.autoPlay ? 'on' : 'off'}>
-            {settings.autoPlay ? 'On' : 'Off'}
+          <span className={autoPlay ? 'on' : 'off'}>
+            {autoPlay ? 'On' : 'Off'}
           </span>
         </ul>
-        <ul
-          className='btn'
-          onClick={() => {
-            setSettings((settings) => {
-              return { ...settings, autoNext: !settings.autoNext };
-            });
-          }}
-        >
+        <ul className='btn' onClick={onClickAutoNext}>
           <span>Auto Next </span>
-          <span className={settings.autoNext ? 'on' : 'off'}>
-            {settings.autoNext ? 'On' : 'Off'}
+          <span className={autoNext ? 'on' : 'off'}>
+            {autoNext ? 'On' : 'Off'}
           </span>
         </ul>
       </li>
       <li className='nav'>
-        <ul className='btn'>
+        <ul
+          className={disabledPrev ? 'btn disabled' : 'btn'}
+          onClick={onPrevClicked}
+        >
           <TbPlayerTrackPrevFilled className='icon' />
           <span>Prev</span>
         </ul>
-        <ul className='btn'>
+        <ul
+          className={disabledNext ? 'btn disabled' : 'btn'}
+          onClick={onNextClicked}
+        >
           <span>Next</span>
           <TbPlayerTrackNextFilled className='icon' />
         </ul>

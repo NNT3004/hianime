@@ -10,7 +10,7 @@ const Wrapper = styled.article<{ $imgUrl: string }>`
   .shadow {
     display: flex;
     flex-direction: column-reverse;
-    box-shadow: inset 100px -40px 100px 120px #20282d;
+    box-shadow: inset 300px -40px 100px 120px #20282d;
     width: 100%;
     height: 100%;
     padding: 50px;
@@ -34,6 +34,7 @@ const Wrapper = styled.article<{ $imgUrl: string }>`
         margin-right: 8px;
       }
       .text {
+        font-size: 0.865rem;
       }
     }
     .info-item:not(:first-child) {

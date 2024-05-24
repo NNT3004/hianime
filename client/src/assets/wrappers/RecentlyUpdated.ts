@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
+  flex-grow: 1;
   header {
     display: flex;
     align-items: center;
@@ -11,37 +12,29 @@ const Wrapper = styled.section`
       margin: 0;
       text-transform: capitalize;
     }
-    nav {
-      height: 42px;
+    .btn {
+      color: var(--grey-800);
       display: flex;
       align-items: center;
-      button {
-        color: var(--grey-800);
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
+      font-size: 1rem;
+      cursor: pointer;
+      .icon {
+        display: flex;
         align-items: center;
         justify-content: center;
-        transition: color 100ms;
-        font-size: 1rem;
-        padding: 0px 10px;
-        height: 100%;
-        &:hover {
-          color: var(--grey-50);
-        }
-        &:disabled {
-          color: var(--grey-900);
-          cursor: default;
-        }
+        margin-left: 6px;
+      }
+      &:hover {
+        color: #eeeeee;
       }
     }
   }
   .container {
-    display: flex;
-    flex-wrap: wrap;
-    .post {
-    }
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: auto;
+    grid-gap: 1rem;
   }
 `;
 

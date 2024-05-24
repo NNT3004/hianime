@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import Episode from '../models/Episode';
 import encodeQueue from '../queues/encode-queue';
 import { getVideoDuration } from '../utils/encode-hls';
+import ViewCount from '../models/ViewCount';
 
 export const getEpisode = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -16,22 +17,41 @@ export const getEpisode = async (req: Request, res: Response) => {
 
 export const createEpisode = async (req: Request, res: Response) => {
   const video = req.file;
-  if (!video) throw new BadRequestError('missing video');
 
-  req.body.duration = await getVideoDuration(video.path);
-  const episode = await Episode.create(req.body);
+  if (video) {
+    req.body.duration = await getVideoDuration(video.path);
+    req.body.path = null;
+    const episode = await Episode.create(req.body);
+    encodeQueue.add(episode._id.toString(), {
+      path: video.path,
+      _id: episode._id,
+    });
+    res.status(StatusCodes.OK).json({ episode });
+  } else {
+    const episode = await Episode.create(req.body);
+    res.status(StatusCodes.OK).json({ episode });
+  }
+};
 
-  encodeQueue.add(episode._id.toString(), {
-    path: video.path,
-    _id: episode._id,
-  });
-  res.status(StatusCodes.OK).json({ episode });
+export const getEpisodes = async (req: Request, res: Response) => {
+  const { post } = req.query;
+
+  const episodes = await Episode.find({
+    post,
+    releaseDate: { $lt: new Date() },
+  })
+    .select(['-post'])
+    .sort('index');
+
+  res.status(StatusCodes.OK).json({ episodes });
 };
 
 export const getAllEpisodes = async (req: Request, res: Response) => {
   const { post } = req.query;
 
-  const episodes = await Episode.find({ post }).sort('index');
+  const episodes = await Episode.find({
+    post,
+  }).sort('index');
 
   res.status(StatusCodes.OK).json({ episodes });
 };
@@ -43,23 +63,22 @@ export const updateEpisode = async (req: Request, res: Response) => {
   if (video) {
     req.body.duration = await getVideoDuration(video.path);
     req.body.path = null;
-  }
-
-  const episode = await Episode.findByIdAndUpdate(id, req.body, {
-    runValidators: true,
-    new: true,
-  });
-
-  if (video && episode) {
+    const episode = await Episode.findOneAndUpdate({ _id: id }, req.body, {
+      runValidators: true,
+      new: true,
+    });
+    if (!episode) throw new NotFoundError('episode not found');
     encodeQueue.add(episode._id.toString(), {
       path: video.path,
       _id: episode._id,
     });
+    res.status(StatusCodes.OK).json({ episode });
   } else {
-    throw new NotFoundError('episode not found');
+    const episode = await Episode.findOneAndUpdate({ _id: id }, req.body, {
+      new: true,
+    });
+    res.status(StatusCodes.OK).json({ episode });
   }
-
-  res.status(StatusCodes.OK).json({ episode });
 };
 
 export const deleteEpisode = async (req: Request, res: Response) => {

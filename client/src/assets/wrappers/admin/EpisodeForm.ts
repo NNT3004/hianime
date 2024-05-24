@@ -20,6 +20,7 @@ const Wrapper = styled.form`
       flex-direction: row;
       & > label {
         width: 110px;
+        color: #eee;
       }
       .input {
         flex-grow: 1;
