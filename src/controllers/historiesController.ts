@@ -2,6 +2,8 @@ import { BadRequestError, NotFoundError } from '../errors';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import History from '../models/History';
+import Episode from '../models/Episode';
+import { Types } from 'mongoose';
 
 export const getHistory = async (req: Request, res: Response) => {
   const user = req.user.userId;
@@ -20,7 +22,74 @@ export const getHistory = async (req: Request, res: Response) => {
       });
     }
   } else {
-    const histories = await History.find({ user }).sort('createdAt');
+    // const histories = await History.find({ user })
+    //   .sort('createdAt')
+    //   .select('-user')
+    //   .populate({
+    //     path: 'post',
+    //     select: ['_id', 'title', 'posterVerticalPath', 'type', 'duration'],
+    //   })
+    //   .populate({ path: 'episode', select: ['episodeNumber', 'duration'] });
+
+    const histories = await History.aggregate([
+      { $match: { user: new Types.ObjectId(user) } },
+      { $sort: { createdAt: 1 } },
+      {
+        $lookup: {
+          from: 'posts',
+          localField: 'post',
+          foreignField: '_id',
+          as: 'post',
+        },
+      },
+      { $unwind: '$post' },
+      {
+        $lookup: {
+          from: 'episodes',
+          let: { post: '$post._id' },
+          pipeline: [
+            {
+              $match: {
+                releaseDate: { $lte: new Date() },
+                $expr: { $eq: ['$post', '$$post'] },
+              },
+            },
+            {
+              $group: {
+                _id: '$post',
+                count: { $sum: 1 },
+              },
+            },
+          ],
+          as: 'episodeCount',
+        },
+      },
+      { $unwind: { path: '$episodeCount', preserveNullAndEmptyArrays: true } },
+      {
+        $addFields: {
+          'post.episodeCount': { $ifNull: ['$episodeCount.count', 0] },
+        },
+      },
+      { $unset: ['user', 'episodeCount'] },
+      {
+        $project: {
+          'post.posterHorizonPath': 0,
+          'post.description': 0,
+          'post.airedFrom': 0,
+          'post.airedTo': 0,
+          'post.status': 0,
+          'post.studio': 0,
+          'createdAt': 0,
+          'updatedAt': 0,
+        },
+      },
+    ]);
+
+    await Episode.populate(histories, {
+      path: 'episode',
+      select: ['episodeNumber', 'duration'],
+    });
+
     res.status(StatusCodes.OK).json({ histories });
   }
 };

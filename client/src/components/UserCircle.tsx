@@ -7,6 +7,7 @@ import { MdAdminPanelSettings } from 'react-icons/md';
 import { IoMdLogOut } from 'react-icons/io';
 import { AppDispatch } from '../store/store';
 import { useNavigate } from 'react-router-dom';
+import { FaHistory } from 'react-icons/fa';
 
 interface UserCircleProps {
   className?: string;
@@ -47,7 +48,9 @@ const UserCircle: React.FC<UserCircleProps> = ({ className }) => {
         <div className='user-name'>
           <img
             alt='avt'
-            src={user?.avtPath || process.env.PUBLIC_URL + '/default_avatar.png'}
+            src={
+              user?.avtPath || process.env.PUBLIC_URL + '/default_avatar.png'
+            }
           />
           <span>{user?.name}</span>
         </div>
@@ -56,6 +59,10 @@ const UserCircle: React.FC<UserCircleProps> = ({ className }) => {
           <div className='menu-item'>
             <FaUserCircle className='icon' />
             <span className='text'>My profile</span>
+          </div>
+          <div className='menu-item' onClick={() => navigate('/histories')}>
+            <FaHistory className='icon' />
+            <span className='text'>History</span>
           </div>
           {user?.role === 'admin' && (
             <div className='menu-item' onClick={() => navigate('/admin/posts')}>

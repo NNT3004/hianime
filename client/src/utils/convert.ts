@@ -22,3 +22,11 @@ export function hmsToSeconds(timeString: string): number {
   const [hours, minutes, seconds] = timeString.split(':').map(Number);
   return hours * 3600 + minutes * 60 + seconds;
 }
+
+export function secondToShortHSM(second: number): string {
+  let shotrHSM = secondsToHMS(second);
+  while (shotrHSM.startsWith('00:')) {
+    shotrHSM = shotrHSM.substring(3);
+  }
+  return shotrHSM;
+}

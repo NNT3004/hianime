@@ -27,7 +27,7 @@ export const getAverageRating = async (req: Request, res: Response) => {
     const myScore = (myRating?.score || 0) as 0 | 5 | 8 | 10;
 
     res.status(StatusCodes.OK).json({
-      averageRating: result.averageRating,
+      averageRating: result?.averageRating || 0,
       myRating: scoreRate[myScore],
     });
   } else {

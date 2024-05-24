@@ -33,7 +33,7 @@ const schema = new Schema<IEpisode, EpisodeModel, IEpisodeMethods>({
   title: {
     type: String,
     minlength: 3,
-    maxlength: 20,
+    maxlength: 30,
     required: true,
   },
   duration: {
