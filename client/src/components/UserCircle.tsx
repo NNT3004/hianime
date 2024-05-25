@@ -2,12 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import Wrapper from '../assets/wrappers/UserCircle';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser, selectUser } from '../store/slices/authSlice';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaHeart, FaHistory } from 'react-icons/fa';
 import { MdAdminPanelSettings } from 'react-icons/md';
 import { IoMdLogOut } from 'react-icons/io';
 import { AppDispatch } from '../store/store';
 import { useNavigate } from 'react-router-dom';
-import { FaHistory } from 'react-icons/fa';
 
 interface UserCircleProps {
   className?: string;
@@ -59,6 +58,10 @@ const UserCircle: React.FC<UserCircleProps> = ({ className }) => {
           <div className='menu-item'>
             <FaUserCircle className='icon' />
             <span className='text'>My profile</span>
+          </div>
+          <div className='menu-item' onClick={() => navigate('/favorites')}>
+            <FaHeart className='icon' />
+            <span className='text'>My favorites</span>
           </div>
           <div className='menu-item' onClick={() => navigate('/histories')}>
             <FaHistory className='icon' />

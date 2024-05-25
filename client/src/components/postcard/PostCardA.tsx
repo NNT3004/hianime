@@ -11,6 +11,7 @@ import PrimaryButton from '../PrimaryButton';
 import { useNavigate } from 'react-router-dom';
 import { FaClock } from 'react-icons/fa6';
 interface PostCardAProps {
+  _id: string;
   title: string;
   description: string;
   type: string;
@@ -22,6 +23,7 @@ interface PostCardAProps {
 }
 
 const PostCardA: React.FC<PostCardAProps> = ({
+  _id,
   title,
   description,
   type,
@@ -64,7 +66,7 @@ const PostCardA: React.FC<PostCardAProps> = ({
               startIcon={FaPlay}
               className='nav'
               onClick={() => {
-                navigate('/posts/1/episodes/1');
+                navigate(`/posts/${_id}/episodes`);
               }}
             >
               Watch now
@@ -73,7 +75,7 @@ const PostCardA: React.FC<PostCardAProps> = ({
               endIcon={FaAngleRight}
               className='nav-white nav'
               onClick={() => {
-                navigate('/posts/1');
+                navigate(`/posts/${_id}`);
               }}
             >
               Details

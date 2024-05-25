@@ -5,7 +5,7 @@ import React from 'react';
 interface PrimaryButtonProps {
   startIcon?: IconType;
   endIcon?: IconType;
-  children: string;
+  children?: string;
   className?: string;
   disabled?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;

@@ -86,6 +86,12 @@ const Wrapper = styled.section`
           background-color: var(--grey-500);
         }
       }
+      .btn-red {
+        background-color: #dc143c;
+        &:hover {
+          background-color: #dc143c55;
+        }
+      }
     }
     .description {
       text-align: justify;

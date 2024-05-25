@@ -4,7 +4,9 @@ import { getAuthClient } from '../api/client';
 import Loading from '../components/Loading';
 import PostCardO from '../components/postcard/PostCardO';
 import Wrapper from '../assets/wrappers/Histories';
-import { FaHistory } from 'react-icons/fa';
+import { FaHistory, FaTimes } from 'react-icons/fa';
+import { AxiosError } from 'axios';
+import { message } from 'antd';
 
 interface HistoriesProps {
   className?: string;
@@ -42,6 +44,21 @@ const Histories: React.FC<HistoriesProps> = ({ className }) => {
   const loading = status === 'idle' || status === 'loading';
 
   const [histories, setHistories] = useState<History[]>([]);
+  const [actionLoading, setActionLoaind] = useState(false);
+
+  const deleteHistory = async (post: string) => {
+    setActionLoaind(true);
+
+    try {
+      await getAuthClient().delete(`/histories?post=${post}`);
+      setHistories([...histories.filter((history) => history._id !== post)]);
+    } catch (err) {
+      const error = err as AxiosError;
+      message.error((error.response?.data as any).msg);
+    }
+
+    setActionLoaind(false);
+  };
 
   useEffect(() => {
     if (status === 'idle') {
@@ -79,21 +96,30 @@ const Histories: React.FC<HistoriesProps> = ({ className }) => {
         <div className='container'>
           {histories.map((history) => {
             return (
-              <PostCardO
-                episodeDuration={history.episode.duration}
-                episodeNumber={history.episode.episodeNumber}
-                episodeRemuse={Math.floor(history.position)}
-                duration={history.post.duration + 'm'}
-                episodeCount={history.post.episodeCount}
-                imgUrl={history.post.posterVerticalPath}
-                title={history.post.title}
-                type={history.post.type}
-                className='post'
-                key={history.post._id}
-                onClick={() => {
-                  navigate(`/posts/${history.post._id}`);
-                }}
-              />
+              <div className='post-with-btn'>
+                <PostCardO
+                  episodeDuration={history.episode.duration}
+                  episodeNumber={history.episode.episodeNumber}
+                  episodeRemuse={Math.floor(history.position)}
+                  duration={history.post.duration + 'm'}
+                  episodeCount={history.post.episodeCount}
+                  imgUrl={history.post.posterVerticalPath}
+                  title={history.post.title}
+                  type={history.post.type}
+                  className='post'
+                  key={history.post._id}
+                  onClick={() => {
+                    navigate(`/posts/${history.post._id}/episodes`);
+                  }}
+                />
+                <button
+                  className='delete-btn'
+                  onClick={() => deleteHistory(history.post._id)}
+                  disabled={actionLoading}
+                >
+                  <FaTimes />
+                </button>
+              </div>
             );
           })}
         </div>

@@ -16,6 +16,7 @@ import Loading from './components/Loading';
 import Genres from './pages/admin/Genres';
 import Studios from './pages/admin/Studios';
 import Histories from './pages/Histories';
+import Favorites from './pages/Favorites';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -47,6 +48,7 @@ function App() {
             <Route path='posts/:postId' element={<PostInfo />} />
             <Route path='posts/:postId/episodes' element={<PostMain />} />
             <Route path='histories' element={<Histories />} />
+            <Route path='favorites' element={<Favorites />} />
           </Route>
           <Route path='/admin' element={<SharedAdminLayout />}>
             <Route path='posts' element={<AllPosts />} />

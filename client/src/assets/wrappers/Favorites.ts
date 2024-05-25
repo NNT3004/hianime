@@ -8,7 +8,7 @@ const Wrapper = styled.section`
     display: flex;
     align-items: center;
     padding: 10px 20px;
-    .his-icon {
+    .fav-icon {
       display: flex;
       align-items: center;
       justify-content: center;

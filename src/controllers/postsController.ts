@@ -2,7 +2,6 @@ import { NotFoundError } from '../errors';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Post from '../models/Post';
-import { Types } from 'mongoose';
 import PostGenre from '../models/PostGenre';
 import ViewCount from '../models/ViewCount';
 import Episode from '../models/Episode';

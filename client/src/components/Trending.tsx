@@ -74,6 +74,7 @@ const Trending: React.FC = () => {
             return (
               <SwiperSlide key={post._id}>
                 <PostCardA
+                  _id={post._id}
                   title={post.title}
                   description={post.description}
                   type={post.type}

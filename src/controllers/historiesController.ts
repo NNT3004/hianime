@@ -79,8 +79,8 @@ export const getHistory = async (req: Request, res: Response) => {
           'post.airedTo': 0,
           'post.status': 0,
           'post.studio': 0,
-          'createdAt': 0,
-          'updatedAt': 0,
+          createdAt: 0,
+          updatedAt: 0,
         },
       },
     ]);
@@ -118,9 +118,12 @@ export const deleteHistory = async (req: Request, res: Response) => {
   const { post } = req.query;
   if (!post) throw new BadRequestError('missng post');
 
+  console.log(user);
+  console.log(post);
+
   const result = await History.deleteOne({ user, post });
 
-  if (result.deletedCount == 0)
+  if (result.deletedCount <= 0)
     throw new BadRequestError('making each day of the year');
   res.status(StatusCodes.OK).json({ msg: 'deleted successfully' });
 };
