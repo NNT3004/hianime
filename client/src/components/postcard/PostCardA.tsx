@@ -42,8 +42,8 @@ const PostCardA: React.FC<PostCardAProps> = ({
           <div className='info'>
             <span className='info-item'>
               <FaPlayCircle className='icon' />
-              <span className='text' style={{ textTransform: 'uppercase' }}>
-                {type}
+              <span className='text'>
+                {type === 'movie' ? 'Movie' : type.toUpperCase()}
               </span>
             </span>
             <span className='info-item'>

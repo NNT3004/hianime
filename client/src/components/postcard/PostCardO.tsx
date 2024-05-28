@@ -10,7 +10,7 @@ interface PostCardOProps {
   episodeCount: number;
   className?: string;
   type: string;
-  duration: string;
+  duration: number;
   episodeDuration: number;
   episodeRemuse: number;
   episodeNumber: number;
@@ -29,7 +29,6 @@ const PostCardO: React.FC<PostCardOProps> = ({
   episodeRemuse,
   onClick,
 }) => {
-  type = type.toUpperCase();
   return (
     <Wrapper className={className}>
       <div className='poster' onClick={onClick}>
@@ -46,9 +45,9 @@ const PostCardO: React.FC<PostCardOProps> = ({
         {title}
       </p>
       <p className='meta-info'>
-        {type}
+        {type === 'movie' ? 'Movie' : type.toUpperCase()}
         <GoDotFill className='sep' />
-        {duration}
+        {duration + 'm'}
       </p>
       <div className='duration'>
         <div className='ep-info'>

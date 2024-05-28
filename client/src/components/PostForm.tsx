@@ -178,7 +178,7 @@ const PostForm: React.FC<PostFormProps> = ({ _id }) => {
           <TextArea
             id='description'
             autoSize={{ minRows: 2 }}
-            maxLength={200}
+            maxLength={8192}
             className='input'
             value={post.description}
             onChange={handleChange}

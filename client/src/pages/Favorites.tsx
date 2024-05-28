@@ -28,7 +28,7 @@ const Favorites: React.FC<FavoritesProps> = ({ className }) => {
     'idle' | 'loading' | 'succeeded' | 'failed'
   >('idle');
 
-  const [actionLoading, setActionLoaind] = useState(false);
+  const [actionLoading, setActionLoaing] = useState(false);
 
   const loading = status === 'idle' || status === 'loading';
 
@@ -51,7 +51,7 @@ const Favorites: React.FC<FavoritesProps> = ({ className }) => {
   }, [status]);
 
   const deleteFavorite = async (post: string) => {
-    setActionLoaind(true);
+    setActionLoaing(true);
 
     try {
       await getAuthClient().delete(`/favorites?post=${post}`);
@@ -61,7 +61,7 @@ const Favorites: React.FC<FavoritesProps> = ({ className }) => {
       message.error((error.response?.data as any).msg);
     }
 
-    setActionLoaind(false);
+    setActionLoaing(false);
   };
 
   return (
@@ -86,7 +86,7 @@ const Favorites: React.FC<FavoritesProps> = ({ className }) => {
             return (
               <div className='post-with-btn'>
                 <PostCardI
-                  duration={post.duration + 'm'}
+                  duration={post.duration}
                   episodeCount={post.episodeCount}
                   imgUrl={post.posterVerticalPath}
                   title={post.title}

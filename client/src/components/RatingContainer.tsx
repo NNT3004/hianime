@@ -53,7 +53,9 @@ const RatingContainer: React.FC = () => {
             <span className='text'>{post?.episodeCount}</span>
           </span>
           <GoDotFill className='sep-dot' />
-          <span style={{ textTransform: 'uppercase' }}>{post?.type}</span>
+          <span>
+            {post?.type === 'movie' ? 'Movie' : post?.type.toUpperCase()}
+          </span>
           <GoDotFill className='sep-dot' />
           <span>{post?.duration + 'm'}</span>
         </div>

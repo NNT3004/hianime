@@ -13,9 +13,8 @@ import Loading from '../../components/Loading';
 const AllPosts: React.FC = () => {
   const navigate = useNavigate();
   const [curPage, setCurPage] = useState<number>(1);
-  const [status, setStatus] = useState<
-    'idle' | 'loading' | 'succeeded' | 'failed'
-  >('idle');
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState<
     {
       _id: string;
@@ -27,59 +26,62 @@ const AllPosts: React.FC = () => {
     }[]
   >([]);
   useEffect(() => {
-    if (status === 'idle') {
+    if (loading === false) {
       const getAllPosts = async () => {
         try {
-          setStatus('loading');
-          const response = await getAuthClient().get('/posts');
+          setLoading(true);
+          const response = await getAuthClient().get(`/posts?page=${curPage}`);
           setPosts(response.data.posts);
-          setStatus('succeeded');
+          setTotalPages(response.data.totalPages);
+          setLoading(false);
         } catch (err) {
           const error = err as AxiosError;
           message.error((error.response!.data as any).msg);
-          setStatus('failed');
+          setLoading(false);
         }
       };
       getAllPosts();
     }
-  }, [status]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curPage]);
 
-  const isLoading = status === 'idle' || status === 'loading';
+  const handleChangePage = (page: number) => {
+    setCurPage(page);
+  };
 
   return (
     <>
       <SearchForm />
       <Wrapper>
         <HeadNav navs={[{ name: 'Posts' }]} />
-        {isLoading ? (
+        {loading ? (
           <Loading />
         ) : (
-          <>
-            <div className='posts-container'>
-              {posts.map((post, index) => {
-                return (
-                  <PostCardE
-                    duration={post.duration}
-                    episodeCount={post.episodeCount}
-                    imgUrl={post.posterVerticalPath}
-                    title={post.title}
-                    type={post.type}
-                    className='post'
-                    key={index}
-                    onClick={() => {
-                      navigate(post._id);
-                    }}
-                  />
-                );
-              })}
-            </div>
-            <Pagination
-              curPage={curPage}
-              setCurPage={setCurPage}
-              totalPages={10}
-            />
-          </>
+          <div className='posts-container'>
+            {posts.map((post, index) => {
+              return (
+                <PostCardE
+                  duration={post.duration}
+                  episodeCount={post.episodeCount}
+                  imgUrl={post.posterVerticalPath}
+                  title={post.title}
+                  type={post.type}
+                  className='post'
+                  key={index}
+                  onClick={() => {
+                    navigate(post._id);
+                  }}
+                />
+              );
+            })}
+          </div>
         )}
+        <Pagination
+          disabled={loading}
+          curPage={curPage}
+          setCurPage={handleChangePage}
+          totalPages={totalPages}
+        />
       </Wrapper>
     </>
   );

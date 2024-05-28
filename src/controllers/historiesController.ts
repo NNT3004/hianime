@@ -33,7 +33,7 @@ export const getHistory = async (req: Request, res: Response) => {
 
     const histories = await History.aggregate([
       { $match: { user: new Types.ObjectId(user) } },
-      { $sort: { createdAt: 1 } },
+      { $sort: { updatedAt: -1 } },
       {
         $lookup: {
           from: 'posts',
@@ -117,9 +117,6 @@ export const deleteHistory = async (req: Request, res: Response) => {
 
   const { post } = req.query;
   if (!post) throw new BadRequestError('missng post');
-
-  console.log(user);
-  console.log(post);
 
   const result = await History.deleteOne({ user, post });
 

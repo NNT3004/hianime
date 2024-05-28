@@ -30,7 +30,9 @@ const PostCardU: React.FC<PostCardUProps> = ({
             <span className='text'>{episodeCount}</span>
           </span>
           <FaDotCircle className='sep' />
-          <span className='type'>{type}</span>
+          <span className='type'>
+            {type === 'movie' ? 'Movie' : type.toUpperCase()}
+          </span>
         </span>
       </div>
     </Wrapper>

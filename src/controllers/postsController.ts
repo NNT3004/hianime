@@ -243,7 +243,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
     result.totalCount.length > 0 ? result.totalCount[0].total : 0;
   const totalPages = Math.floor(totalCount / numPerPageT) + 1;
 
-  res.status(StatusCodes.OK).json({ posts, pageT, totalPages });
+  res.status(StatusCodes.OK).json({ posts, page: pageT, totalPages });
 };
 
 export const deletePost = async (req: Request, res: Response) => {

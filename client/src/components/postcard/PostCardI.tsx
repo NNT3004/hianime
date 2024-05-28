@@ -9,7 +9,7 @@ interface PostCardIProps {
   episodeCount: number;
   className?: string;
   type: string;
-  duration: string;
+  duration: number;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
@@ -22,7 +22,6 @@ const PostCardI: React.FC<PostCardIProps> = ({
   duration,
   onClick,
 }) => {
-  type = type.toUpperCase();
   return (
     <Wrapper className={className}>
       <div className='poster' onClick={onClick}>
@@ -39,9 +38,9 @@ const PostCardI: React.FC<PostCardIProps> = ({
         {title}
       </p>
       <p className='meta-info'>
-        {type}
+        {type === 'movie' ? 'Movie' : type.toUpperCase()}
         <GoDotFill className='sep' />
-        {duration}
+        {duration + 'm'}
       </p>
     </Wrapper>
   );

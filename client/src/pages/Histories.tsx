@@ -44,20 +44,22 @@ const Histories: React.FC<HistoriesProps> = ({ className }) => {
   const loading = status === 'idle' || status === 'loading';
 
   const [histories, setHistories] = useState<History[]>([]);
-  const [actionLoading, setActionLoaind] = useState(false);
+  const [actionLoading, setActionLoaing] = useState(false);
 
   const deleteHistory = async (post: string) => {
-    setActionLoaind(true);
+    setActionLoaing(true);
 
     try {
       await getAuthClient().delete(`/histories?post=${post}`);
-      setHistories([...histories.filter((history) => history._id !== post)]);
+      setHistories([
+        ...histories.filter((history) => history.post._id !== post),
+      ]);
     } catch (err) {
       const error = err as AxiosError;
       message.error((error.response?.data as any).msg);
     }
 
-    setActionLoaind(false);
+    setActionLoaing(false);
   };
 
   useEffect(() => {
@@ -101,7 +103,7 @@ const Histories: React.FC<HistoriesProps> = ({ className }) => {
                   episodeDuration={history.episode.duration}
                   episodeNumber={history.episode.episodeNumber}
                   episodeRemuse={Math.floor(history.position)}
-                  duration={history.post.duration + 'm'}
+                  duration={history.post.duration}
                   episodeCount={history.post.episodeCount}
                   imgUrl={history.post.posterVerticalPath}
                   title={history.post.title}

@@ -23,16 +23,16 @@ const Wrapper = styled.section`
   }
   .container {
     padding: 10px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: auto;
-    grid-gap: 1rem;
+    display: flex;
+    flex-wrap: wrap;
     .post-with-btn {
       position: relative;
+      width: 25%;
+      padding: 0.5rem;
       .delete-btn {
         position: absolute;
-        right: -8px;
-        top: -8px;
+        right: 0;
+        top: 0;
         border: none;
         background-color: var(--white);
         border-radius: 50%;
@@ -47,6 +47,11 @@ const Wrapper = styled.section`
         &:hover {
           background-color: var(--primary-500);
           color: var(--white);
+        }
+        &:disabled {
+          background-color: var(--grey-800) !important;
+          color: var(--grey-900);
+          cursor: default;
         }
       }
     }

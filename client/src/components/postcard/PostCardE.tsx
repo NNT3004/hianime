@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 import Wrapper from '../../assets/wrappers/postcard/PostCardE';
-import { FaCircleInfo } from "react-icons/fa6";
+import { FaCircleInfo } from 'react-icons/fa6';
 import { FaClosedCaptioning, FaDotCircle } from 'react-icons/fa';
 
 interface PostCardEProps {
@@ -34,11 +34,13 @@ const PostCardE: React.FC<PostCardEProps> = ({
           </span>
         </div>
       </div>
-      <p className='title' onClick={onClick}>{title}</p>
+      <p className='title' onClick={onClick}>
+        {title}
+      </p>
       <p className='meta-info'>
-        {type}
+        {type === 'movie' ? 'Movie' : type.toUpperCase()}
         <FaDotCircle className='sep' />
-        {duration}
+        {duration + 'm'}
       </p>
     </Wrapper>
   );

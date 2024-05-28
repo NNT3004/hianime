@@ -70,7 +70,7 @@ const RecentlyUpdated: React.FC<RecentlyUpdatedProps> = ({ className }) => {
           {posts.map((post) => {
             return (
               <PostCardI
-                duration={post.duration + 'm'}
+                duration={post.duration}
                 episodeCount={post.episodeCount}
                 imgUrl={post.posterVerticalPath}
                 title={post.title}

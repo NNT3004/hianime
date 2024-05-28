@@ -20,8 +20,8 @@ interface Post {
   airedFrom: string;
   airedTo: string;
   status: string;
-  duration: string;
-  episodeCount: string;
+  duration: number;
+  episodeCount: number;
   studio: { _id: string; name: string };
   genres: { _id: string; name: string }[];
 }
@@ -123,7 +123,9 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
         <p className='nav'>
           <span onClick={() => navigate('/home')}>Home</span>
           <GoDotFill className='sep-dot' />
-          <span>{post?.type.toUpperCase()}</span>
+          <span>
+            {post?.type === 'movie' ? 'Movie' : post?.type.toUpperCase()}
+          </span>
           <GoDotFill className='sep-dot' />
           <span className='cgrey'>{post?.title}</span>
         </p>
@@ -134,7 +136,7 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
             <span className='text'>{post?.episodeCount}</span>
           </span>
           <GoDotFill className='sep-dot' />
-          <span>{post?.type.toUpperCase()}</span>
+          <span>{post?.type === 'movie' ? 'Movie' : post?.type.toUpperCase()}</span>
           <GoDotFill className='sep-dot' />
           <span>{post?.duration + 'm'}</span>
         </div>

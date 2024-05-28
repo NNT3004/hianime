@@ -48,21 +48,19 @@ const Wrapper = styled.section`
       span {
       }
       .item {
-        font-size: 0.875rem;
-        background-color: rgba(255, 255, 255, 0.6);
-        opacity: 0.8;
+        background-color: rgba(0, 0, 0, 0.2);
         border-radius: var(--borderRadius);
         padding: 4px 6px;
         display: flex;
         justify-content: center;
         align-items: center;
         line-height: 100%;
-        color: var(--black);
         .icon {
-          margin-right: 1.5px;
+          margin-right: 3px;
+          font-size: 0.865rem;
         }
         .text {
-          margin-left: 1.5px;
+          margin-left: 3px;
           font-size: 0.73rem;
         }
       }

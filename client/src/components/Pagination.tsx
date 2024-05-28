@@ -10,13 +10,15 @@ import {
 interface PaginationProps {
   totalPages: number;
   curPage: number;
-  setCurPage: (page: number | ((page: number) => number)) => void;
+  disabled: boolean;
+  setCurPage: (page: number) => void;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
   curPage,
   totalPages,
   setCurPage,
+  disabled,
 }) => {
   const pages = useMemo<number[]>(
     () => getSurroundingPages(totalPages, curPage),
@@ -25,31 +27,36 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <Wrapper>
       {curPage > 2 && (
-        <nav onClick={() => setCurPage(1)}>
+        <button onClick={() => setCurPage(1)} disabled={disabled}>
           <FaAngleDoubleLeft />
-        </nav>
+        </button>
       )}
       {curPage > 1 && (
-        <nav onClick={() => setCurPage((page) => page - 1)}>
+        <button onClick={() => setCurPage(curPage - 1)} disabled={disabled}>
           <FaAngleLeft />
-        </nav>
+        </button>
       )}
       {pages.map((page) => {
         return (
-          <nav key={page} className={curPage === page ? 'activate' : ''} onClick={() => setCurPage(page)}>
+          <button
+            key={page}
+            className={curPage === page ? 'activate' : ''}
+            onClick={() => setCurPage(page)}
+            disabled={disabled}
+          >
             {page}
-          </nav>
+          </button>
         );
       })}
       {curPage < totalPages && (
-        <nav>
-          <FaAngleRight onClick={() => setCurPage((page) => page + 1)}/>
-        </nav>
+        <button disabled={disabled}>
+          <FaAngleRight onClick={() => setCurPage(curPage + 1)} />
+        </button>
       )}
       {curPage < totalPages - 1 && (
-        <nav>
-          <FaAngleDoubleRight onClick={() => setCurPage(totalPages)}/>
-        </nav>
+        <button disabled={disabled}>
+          <FaAngleDoubleRight onClick={() => setCurPage(totalPages)} />
+        </button>
       )}
     </Wrapper>
   );

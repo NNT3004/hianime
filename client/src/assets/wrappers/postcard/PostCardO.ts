@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   box-sizing: border-box;
   .poster {
     width: 100%;
-    padding-top: calc(4/3 * 100%);
+    padding-top: calc(4 / 3 * 100%);
     position: relative;
     cursor: pointer;
     img {

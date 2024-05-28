@@ -24,8 +24,8 @@ const schema = new Schema<IPost, PostModel, IPostMethods>(
     title: {
       type: String,
       required: true,
-      minlength: 3,
-      maxlength: 40,
+      minlength: 2,
+      maxlength: 128,
       trim: true,
     },
     posterVerticalPath: {
@@ -41,13 +41,13 @@ const schema = new Schema<IPost, PostModel, IPostMethods>(
     description: {
       type: String,
       required: true,
-      minlength: 32,
-      maxlength: 1024,
+      minlength: 8,
+      maxlength: 8192,
       trim: true,
     },
     type: {
       type: String,
-      enum: ['tv', 'moive', 'ona', 'ova'],
+      enum: ['tv', 'movie', 'ona', 'ova'],
       required: true,
     },
     airedFrom: {
