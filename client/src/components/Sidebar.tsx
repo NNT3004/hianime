@@ -36,8 +36,8 @@ const Sidebar: React.FC<SidebarProps> = ({ show, setShow, items }) => {
               <NavLink
                 key={index}
                 to={value.to}
-                className={(isActivate) =>
-                  isActivate ? 'activate nav-item' : 'nav-item'
+                className={({ isActive }) =>
+                  isActive ? 'activated nav-item' : 'nav-item'
                 }
               >
                 <value.icon className='icon' />

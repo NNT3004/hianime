@@ -4,7 +4,6 @@ import { StatusCodes } from 'http-status-codes';
 import Episode from '../models/Episode';
 import encodeQueue from '../queues/encode-queue';
 import { getVideoDuration } from '../utils/encode-hls';
-import ViewCount from '../models/ViewCount';
 
 export const getEpisode = async (req: Request, res: Response) => {
   const { id } = req.params;

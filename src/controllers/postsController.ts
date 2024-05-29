@@ -297,7 +297,7 @@ export const getTopPosts = async (req: Request, res: Response) => {
       $sort: { totalViews: -1 },
     },
     {
-      $limit: 10,
+      $limit: 9,
     },
     {
       $lookup: {

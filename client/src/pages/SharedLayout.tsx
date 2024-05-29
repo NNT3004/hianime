@@ -5,6 +5,7 @@ import Wrapper from '../assets/wrappers/SharedLayout';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import { FaHome } from 'react-icons/fa';
+import { AiFillSchedule } from 'react-icons/ai';
 
 const SharedLayout: React.FC = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -22,7 +23,10 @@ const SharedLayout: React.FC = () => {
         <Sidebar
           show={showSidebar}
           setShow={setShowSidebar}
-          items={[{ icon: FaHome, name: 'Home', to: '/home' }]}
+          items={[
+            { icon: FaHome, name: 'Home', to: '/home' },
+            { icon: AiFillSchedule, name: 'Recently', to: '/recently-updated' },
+          ]}
         />
       )}
       <NavBar onMenuClick={handleMenuClicked} />

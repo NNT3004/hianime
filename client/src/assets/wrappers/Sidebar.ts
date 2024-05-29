@@ -69,7 +69,7 @@ const Wrapper = styled.div`
         span {
           flex-grow: 1;
         }
-        &.activate {
+        &.activated {
           background-color: #273037;
           color: var(--primary-500);
         }

@@ -22,14 +22,6 @@ export const getHistory = async (req: Request, res: Response) => {
       });
     }
   } else {
-    // const histories = await History.find({ user })
-    //   .sort('createdAt')
-    //   .select('-user')
-    //   .populate({
-    //     path: 'post',
-    //     select: ['_id', 'title', 'posterVerticalPath', 'type', 'duration'],
-    //   })
-    //   .populate({ path: 'episode', select: ['episodeNumber', 'duration'] });
 
     const histories = await History.aggregate([
       { $match: { user: new Types.ObjectId(user) } },

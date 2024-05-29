@@ -1,5 +1,5 @@
 import { Queue, Worker } from 'bullmq';
-import { encodeHLSWithMultipleVideoStreams } from '../utils/encode-hls';
+import { encodeHLS } from '../utils/encode-hls';
 import Episode from '../models/Episode';
 import path from 'path';
 import { Types } from 'mongoose';
@@ -18,7 +18,7 @@ const encodeWorker = new Worker(
   async (job) => {
     const episodeId: Types.ObjectId = job.data._id;
     const uniqueEpisodeId = episodeId.toString() + '-' + Date.now();
-    await encodeHLSWithMultipleVideoStreams(
+    await encodeHLS(
       job.data.path,
       path.join(__dirname, '..', '..', 'public', uniqueEpisodeId)
     );

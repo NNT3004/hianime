@@ -50,7 +50,7 @@ const RecentlyUpdated: React.FC<RecentlyUpdatedProps> = ({ className }) => {
     <Wrapper className={className}>
       <header>
         <p>recently updated</p>
-        <div className='btn'>
+        <div className='btn' onClick={() => navigate('/recently-updated')}>
           <span className='text'>View more</span>
           <span className='icon'>
             <FaAngleRight />
