@@ -2,48 +2,58 @@ import { BadRequestError, NotFoundError } from '../errors';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import CommentVote from '../models/CommentVote';
+import Comment from '../models/Comment';
 
 export const createCommentVote = async (req: Request, res: Response) => {
-  const user = req.user.userId;
-  const { isUpvote, comment } = req.body;
-
-  const commentVote = await CommentVote.create({ user, comment, isUpvote });
-  res.status(StatusCodes.OK).json({ commentVote });
-};
-
-export const updateCommentVote = async (req: Request, res: Response) => {
   const user = req.user.userId;
   const { comment } = req.query;
   const { isUpvote } = req.body;
 
-  const commentVote = await CommentVote.findOneAndUpdate(
+  const prevVote = await CommentVote.findOneAndUpdate(
     { user, comment },
     { isUpvote },
     {
       runValidators: true,
-      new: true,
+      upsert: true,
     }
   );
-  res.status(StatusCodes.OK).json({ commentVote });
+  const voteCounts = {} as any;
+  if (prevVote && prevVote.isUpvote === true) {
+    if (!isUpvote) {
+      voteCounts.upvote = -1;
+      voteCounts.devote = 1;
+    }
+  } else if (prevVote && prevVote.isUpvote === false) {
+    if (isUpvote) {
+      voteCounts.upvote = 1;
+      voteCounts.devote = -1;
+    }
+  } else {
+    if (isUpvote) {
+      voteCounts.upvote = 1;
+    } else {
+      voteCounts.devote = 1;
+    }
+  }
+
+  await Comment.updateOne({ _id: comment }, { $inc: voteCounts });
+
+  res.status(StatusCodes.OK).json({});
 };
 
 export const deleteCommentVote = async (req: Request, res: Response) => {
   const user = req.user.userId;
   const { comment } = req.query;
 
-  const result = await CommentVote.deleteOne({ user, comment });
+  const preVote = await CommentVote.findOneAndDelete({ user, comment });
 
-  if (result.deletedCount == 0)
+  if (preVote && preVote.isUpvote) {
+    await Comment.updateOne({ _id: comment }, { $inc: { upvote: -1 } });
+  } else if (preVote) {
+    await Comment.updateOne({ _id: comment }, { $inc: { devote: -1 } });
+  } else {
     throw new BadRequestError('making each day of the year');
-  res.status(StatusCodes.OK).json({ msg: 'deleted successfully' });
-};
+  }
 
-export const getAllCommentsVote = async (req: Request, res: Response) => {
-  const user = req.user.userId;
-  const { episode } = req.query;
-
-  const commentVotes = await CommentVote.find({
-    user,
-    'comment.episode': episode,
-  }).select('-user');
+  res.status(StatusCodes.OK).json({});
 };

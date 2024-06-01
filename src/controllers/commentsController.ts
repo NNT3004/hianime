@@ -1,7 +1,9 @@
 import { BadRequestError, NotFoundError } from '../errors';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import Comment from '../models/Comment';
+import Comment, { IComment } from '../models/Comment';
+import CommentVote from '../models/CommentVote';
+import { FlattenMaps, Types } from 'mongoose';
 
 export const getComment = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -13,59 +15,103 @@ export const getComment = async (req: Request, res: Response) => {
 };
 
 export const createComment = async (req: Request, res: Response) => {
-  const comment = await Comment.create(req.body);
+  const user = req.user.userId;
+  const { episode } = req.query;
 
-  res.status(StatusCodes.OK).json({ comment });
+  req.body.user = user;
+  req.body.episode = episode;
+  req.body.upvote = 0;
+  req.body.devote = 0;
+  req.body.replyCount = 0;
+
+  if (req.body.parentComment) {
+    await Comment.updateOne(
+      { _id: req.body.parentComment },
+      { $inc: { replyCount: 1 } }
+    );
+  }
+
+  const comment = await Comment.create(req.body);
+  await comment.populate('user', ['name', 'avtPath']);
+
+  res
+    .status(StatusCodes.OK)
+    .json({ comment: { ...comment.toObject(), userAction: 0 } });
 };
 
 export const getAllComments = async (req: Request, res: Response) => {
-  const { episode, page } = req.query;
+  const user = req.user?.userId;
 
-  let pageN = 0;
-  if (typeof page === 'string') {
-    pageN = Number.parseInt(page) || 0;
+  const { episode, createdAt, parent } = req.query;
+  let limit = req.query.limit as any;
+
+  limit = Number.parseInt(limit + '') || (0 as number);
+
+  if (!episode) throw new BadRequestError('episode not found');
+  if (!createdAt || !limit) throw new BadRequestError('invalid parameters');
+
+  let comments: (FlattenMaps<IComment> & {
+    _id: Types.ObjectId;
+  })[];
+  if (parent) {
+    comments = await Comment.find({
+      episode,
+      parentComment: parent,
+    })
+      .sort({ createdAt: 1 })
+      .gt('createdAt', createdAt)
+      .limit(limit + 1)
+      .populate('user', ['name', 'avtPath'])
+      .lean();
+  } else {
+    comments = await Comment.find({
+      episode,
+      parentComment: { $exists: false },
+    })
+      .sort({ createdAt: -1 })
+      .lt('createdAt', createdAt)
+      .limit(limit + 1)
+      .populate('user', ['name', 'avtPath'])
+      .lean();
   }
 
-  const limit = 10;
+  let hasMore: boolean;
+  if (comments.length !== limit + 1) {
+    hasMore = false;
+  } else {
+    hasMore = true;
+    comments.pop();
+  }
 
-  const [result] = await Comment.aggregate([
-    {
-      $match: { episode, toComment: { $exists: false } },
-    },
-    {
-      $facet: {
-        paginatedResults: [
-          {
-            $skip: (pageN - 1) * limit,
-          },
-          {
-            $limit: limit,
-          },
-          {
-            $lookup: {
-              from: 'comments',
-              localField: '_id',
-              foreignField: 'toComment',
-              as: 'replies',
-            },
-          },
-          {
-            $addFields: {
-              hasReply: { $gt: [{ $size: '$replies' }, 0] },
-            },
-          },
-        ],
-        totalCount: [{ $count: 'total' }],
-      },
-    },
-  ]);
+  if (user) {
+    const commentVotes = await CommentVote.find({
+      comment: { $in: comments.map((c) => c._id) },
+    })
+      .select(['-user', '-_id', '-__v'])
+      .lean();
 
-  const comments = result.paginatedResults;
-  const totalCount =
-    result.totalCount.length > 0 ? result.totalCount[0].total : 0;
-  const totalPages = Math.floor(totalCount / limit) + 1;
+    const commentVote = commentVotes.reduce((map: any, cv) => {
+      map[cv.comment.toString()] = cv.isUpvote;
+      return map;
+    }, {});
 
-  res.status(StatusCodes.OK).json({ comments, curPage: pageN, totalPages });
+    comments = comments.map((c) => {
+      const isUpvote = commentVote[c._id.toString()];
+      return {
+        ...c,
+        userAction: isUpvote === undefined ? 0 : isUpvote === true ? 1 : -1,
+      };
+    });
+  } else {
+    comments = comments.map((c) => {
+      return {
+        ...c,
+        userAction: 0,
+      };
+    });
+  }
+
+  res.status(StatusCodes.OK).json({ comments, hasMore });
 };
 
 export const updateComment = async (req: Request, res: Response) => {

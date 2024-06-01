@@ -20,6 +20,7 @@ import {
 } from '@vidstack/react/player/layouts/plyr';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/slices/authSlice';
+import CommentSection from '../../components/CommentSection';
 
 interface Episode {
   _id: string;
@@ -103,7 +104,7 @@ const PostMain: React.FC = () => {
       getEpisodes();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
+  }, []);
 
   const onEpisodeChange = (episode: Episode) => {
     setInitialPosition(undefined);
@@ -216,6 +217,7 @@ const PostMain: React.FC = () => {
         </section>
         <RatingContainer />
       </div>
+      <CommentSection key={searchParams.get('episode')} />
     </Wrapper>
   );
 };

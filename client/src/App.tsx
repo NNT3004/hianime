@@ -19,6 +19,10 @@ import Histories from './pages/Histories';
 import Favorites from './pages/Favorites';
 import SingleQueryPosts from './pages/SingleQueryPosts';
 
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
+TimeAgo.addDefaultLocale(en);
+
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {

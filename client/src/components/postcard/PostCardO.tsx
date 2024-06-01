@@ -53,9 +53,9 @@ const PostCardO: React.FC<PostCardOProps> = ({
         <div className='ep-info'>
           <span>{'EP ' + episodeNumber}</span>
           <span>
-            {secondToShortHSM(episodeRemuse) +
+            {secondToShortHSM(Math.floor(episodeRemuse)) +
               ' / ' +
-              secondToShortHSM(episodeDuration)}
+              secondToShortHSM(Math.ceil(episodeDuration))}
           </span>
         </div>
         <div className='bgr'>

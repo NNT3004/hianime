@@ -70,7 +70,7 @@ const EpisodeForm: React.FC<EpisodeFormProps> = ({
     onChange({ file }) {
       if (!file.name) {
         setFileList([]);
-      } else if (file.name.endsWith('.mp4')) {
+      } else if (file.name.endsWith('.mp4') || file.name.endsWith('.mkv')) {
         setFileList([file]);
       }
     },
@@ -78,7 +78,7 @@ const EpisodeForm: React.FC<EpisodeFormProps> = ({
       setFileList([]);
     },
     fileList: fileList,
-    accept: '.mp4',
+    accept: '.mp4,.mkv',
     style: {
       color: '#eee',
     },

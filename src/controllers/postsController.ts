@@ -97,6 +97,7 @@ type SortOption = 'updated' | 'added' | 'name-asc' | 'name-desc' | 'release';
 type TypeOption = 'all' | 'tv' | 'movie' | 'ona' | 'ova';
 type StatusOption = 'all' | 'airing' | 'completed' | 'waiting';
 type SeasonOption = 'all' | 'spring' | 'summer' | 'fall' | 'winter';
+
 export const getAllPosts = async (req: Request, res: Response) => {
   let { sort, page, numPerPage, name, type, status, season, year } = req.query;
 
@@ -122,7 +123,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
   switch (sortT) {
     case 'added':
       order = {
-        created_at: 1,
+        createdAt: -1,
       };
       break;
     case 'name-asc':
@@ -137,7 +138,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
       break;
     case 'updated':
       order = {
-        updated_at: 1,
+        updatedAt: -1,
       };
       break;
     case 'release':

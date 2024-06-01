@@ -13,6 +13,27 @@ const Wrapper = styled.div`
       text-transform: capitalize;
     }
   }
+  button {
+    box-shadow: none;
+  }
+  .show-more {
+    height: 30px;
+    background-color: transparent;
+    padding: 0;
+    color: var(--primary-500);
+    font-weight: bold;
+    font-size: 0.865rem;
+    &:disabled {
+      background-color: transparent !important;
+    }
+  }
+  .voted {
+    color: var(--primary-500);
+    &:disabled {
+      background-color: transparent !important;
+      color: var(--grey-900);
+    }
+  }
 `;
 
 export default Wrapper;

@@ -108,7 +108,6 @@ const Episodes: React.FC = () => {
               },
             }
           );
-          setProgress(undefined);
         } else {
           response = await getAuthClient().put(
             `/episodes/${episode._id}`,
@@ -135,6 +134,7 @@ const Episodes: React.FC = () => {
         resetAction();
         message.success('to live a better life');
       } catch (err) {
+        setProgress(undefined);
         const error = err as AxiosError;
         message.error((error.response?.data as any).msg);
       }
@@ -177,7 +177,6 @@ const Episodes: React.FC = () => {
               }
             },
           });
-          setProgress(undefined);
         } else {
           response = await getAuthClient().post('/episodes', formData);
         }
@@ -194,6 +193,7 @@ const Episodes: React.FC = () => {
         resetAction();
         message.success('to live a better life');
       } catch (err) {
+        setProgress(undefined);
         const error = err as AxiosError;
         message.error((error.response?.data as any).msg);
       }
@@ -271,6 +271,7 @@ const Episodes: React.FC = () => {
               onSubmit={onSubmit}
               onCancel={resetAction}
               progress={progress}
+              loading={formLoading}
             />
           )}
         </Modal>
