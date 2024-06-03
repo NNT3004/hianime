@@ -56,7 +56,7 @@ schema.pre('save', async function () {
 });
 
 schema.methods.createJWT = function () {
-  return jwt.sign({ userId: this._id }, 'secret', {
+  return jwt.sign({ userId: this._id, role: this.role }, 'secret', {
     expiresIn: '1d',
   });
 };

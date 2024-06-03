@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import CommentVote from '../models/CommentVote';
 import Comment from '../models/Comment';
+import commentQueue from '../queues/comment-queue';
 
 export const createCommentVote = async (req: Request, res: Response) => {
   const user = req.user.userId;
@@ -17,6 +18,7 @@ export const createCommentVote = async (req: Request, res: Response) => {
       upsert: true,
     }
   );
+
   const voteCounts = {} as any;
   if (prevVote && prevVote.isUpvote === true) {
     if (!isUpvote) {
@@ -38,6 +40,12 @@ export const createCommentVote = async (req: Request, res: Response) => {
 
   await Comment.updateOne({ _id: comment }, { $inc: voteCounts });
 
+  const commentId = comment as string;
+  commentQueue.add(commentId, {
+    action: 'vote',
+    commentId,
+  });
+
   res.status(StatusCodes.OK).json({});
 };
 
@@ -45,15 +53,21 @@ export const deleteCommentVote = async (req: Request, res: Response) => {
   const user = req.user.userId;
   const { comment } = req.query;
 
-  const preVote = await CommentVote.findOneAndDelete({ user, comment });
+  const prevVote = await CommentVote.findOneAndDelete({ user, comment });
 
-  if (preVote && preVote.isUpvote) {
+  if (prevVote && prevVote.isUpvote) {
     await Comment.updateOne({ _id: comment }, { $inc: { upvote: -1 } });
-  } else if (preVote) {
+  } else if (prevVote) {
     await Comment.updateOne({ _id: comment }, { $inc: { devote: -1 } });
   } else {
     throw new BadRequestError('making each day of the year');
   }
+
+  const commentId = comment as string;
+  commentQueue.add(commentId, {
+    action: 'vote',
+    commentId,
+  });
 
   res.status(StatusCodes.OK).json({});
 };

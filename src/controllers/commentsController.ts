@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import Comment, { IComment } from '../models/Comment';
 import CommentVote from '../models/CommentVote';
 import { FlattenMaps, Types } from 'mongoose';
+import commentQueue from '../queues/comment-queue';
 
 export const getComment = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -33,6 +34,11 @@ export const createComment = async (req: Request, res: Response) => {
 
   const comment = await Comment.create(req.body);
   await comment.populate('user', ['name', 'avtPath']);
+
+  commentQueue.add(comment._id.toString(), {
+    action: 'comment',
+    comment: { ...comment.toObject(), userAction: 0 },
+  });
 
   res
     .status(StatusCodes.OK)

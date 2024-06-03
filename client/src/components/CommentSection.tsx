@@ -9,6 +9,9 @@ import { message } from 'antd';
 import Loading from './Loading';
 import { GoTriangleDown } from 'react-icons/go';
 import PrimaryButton from './PrimaryButton';
+import { socket } from '../utils/socket';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../store/slices/authSlice';
 
 interface CommentSectionProps {}
 
@@ -43,10 +46,48 @@ const CommentSection: React.FC<CommentSectionProps> = () => {
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const user = useSelector(selectUser);
+
   const [params] = useSearchParams();
   const episode = params.get('episode');
 
   const targetRef = useRef(null);
+
+  const updateCommentVote = (_id: string, upvote: number, devote: number) => {
+    setComments((prevComments) =>
+      prevComments.map((comment) => {
+        if (comment._id === _id) {
+          return { ...comment, upvote, devote };
+        } else {
+          return comment;
+        }
+      })
+    );
+  };
+
+  const updateReplyVote = (
+    commentId: string,
+    replyId: string,
+    upvote: number,
+    devote: number
+  ) => {
+    setComments((prevComments) =>
+      prevComments.map((comment) => {
+        if (comment._id === commentId) {
+          const replies = comment.replies.map((reply) => {
+            if (reply._id === replyId) {
+              return { ...reply, upvote, devote };
+            } else {
+              return reply;
+            }
+          });
+          return { ...comment, replies };
+        } else {
+          return comment;
+        }
+      })
+    );
+  };
 
   const addCommentVote = (_id: string, userAction: -1 | 0 | 1) => {
     setComments((prevComments) =>
@@ -145,11 +186,11 @@ const CommentSection: React.FC<CommentSectionProps> = () => {
 
   const addComments = (newComments: IComment[]) => {
     setComments((prevComments) => [
+      ...prevComments,
       ...newComments.map((comment) => {
         comment.replies = [];
         return comment;
       }),
-      ...prevComments,
     ]);
   };
 
@@ -157,8 +198,6 @@ const CommentSection: React.FC<CommentSectionProps> = () => {
     setComments((prevComments) =>
       prevComments.map((comment) => {
         if (comment._id !== reply.parentComment) return comment;
-
-        console.log(comment);
 
         if (comment.replies.length === comment.replyCount)
           return {
@@ -230,6 +269,36 @@ const CommentSection: React.FC<CommentSectionProps> = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (episode && firstLoad) {
+      socket.on(episode, (action: string, data: any) => {
+        if (action === 'comment') {
+          const { comment } = data;
+
+          if (comment.user._id === user?._id) return;
+
+          if (comment.parentComment) {
+            addReply(comment);
+          } else {
+            addComment(comment);
+          }
+        } else if (action === 'vote') {
+          const { replyId, commentId, upvote, devote } = data;
+
+          if (replyId) {
+            updateReplyVote(commentId, replyId, upvote, devote);
+          } else {
+            updateCommentVote(commentId, upvote, devote);
+          }
+        }
+      });
+
+      return () => {
+        socket.off(episode);
+      };
+    }
+  }, [firstLoad, episode, user]);
 
   return (
     <Wrapper ref={targetRef}>

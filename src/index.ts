@@ -5,6 +5,32 @@ import express from 'express';
 const app = express();
 app.use(express.json());
 
+// socket
+import { Server } from 'socket.io';
+import { createServer } from 'node:http';
+const server = createServer(app);
+export const io = new Server(server);
+
+import jwt, { JwtPayload } from 'jsonwebtoken';
+
+io.on('connection', (socket) => {
+
+  const authHeader = socket.handshake.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer')) {
+    return;
+  }
+  const token = authHeader.split(' ')[1];
+  if (token) {
+    return;
+  }
+  try {
+    const decoded = jwt.verify(token, 'secret') as JwtPayload;
+    socket.join(decoded.role);
+  } catch (error) {
+    return;
+  }
+});
+
 // allow throw error to middleware
 import 'express-async-errors';
 
@@ -52,7 +78,7 @@ const start = async () => {
   try {
     const port = process.env.PORT || 5000;
     await connectDB(String(process.env.MONGO_URL));
-    app.listen(port, () => {
+    server.listen(port, () => {
       console.log('Listening');
     });
   } catch (error) {

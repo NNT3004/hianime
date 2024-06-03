@@ -1,10 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { client, removeAuthClient, setAndGetAuthClient, setAuthClient } from '../../api/client';
+import {
+  client,
+  removeAuthClient,
+  setAndGetAuthClient,
+  setAuthClient,
+} from '../../api/client';
 import { AxiosError } from 'axios';
 import { RootState } from '../store';
 
 export interface AuthState {
   user: {
+    _id: string;
     name: string;
     email: string;
     role: string;
@@ -33,7 +39,7 @@ export const authSlice = createSlice({
     logoutUser(state) {
       removeAuthClient();
       state.user = null;
-    }
+    },
   },
   extraReducers(builder) {
     builder
@@ -44,6 +50,7 @@ export const authSlice = createSlice({
         state.status = 'succeeded';
         const { user, token } = action.payload;
         state.user = {
+          _id: user._id,
           email: user.email,
           role: user.role,
           name: user.name,
@@ -63,6 +70,7 @@ export const authSlice = createSlice({
         state.status = 'succeeded';
         const { user, token } = action.payload;
         state.user = {
+          _id: user._id,
           email: user.email,
           role: user.role,
           name: user.name,
@@ -79,6 +87,7 @@ export const authSlice = createSlice({
         state.gettingUser = false;
         const { user } = action.payload;
         state.user = {
+          _id: user._id,
           email: user.email,
           role: user.role,
           name: user.name,
