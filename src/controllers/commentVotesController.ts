@@ -44,6 +44,7 @@ export const createCommentVote = async (req: Request, res: Response) => {
   commentQueue.add(commentId, {
     action: 'vote',
     commentId,
+    userAction: isUpvote ? 1 : -1,
   });
 
   res.status(StatusCodes.OK).json({});
@@ -67,6 +68,7 @@ export const deleteCommentVote = async (req: Request, res: Response) => {
   commentQueue.add(commentId, {
     action: 'vote',
     commentId,
+    userAction: 0,
   });
 
   res.status(StatusCodes.OK).json({});

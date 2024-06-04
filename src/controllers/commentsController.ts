@@ -25,6 +25,8 @@ export const createComment = async (req: Request, res: Response) => {
   req.body.devote = 0;
   req.body.replyCount = 0;
 
+  const comment = await Comment.create(req.body);
+  
   if (req.body.parentComment) {
     await Comment.updateOne(
       { _id: req.body.parentComment },
@@ -32,7 +34,6 @@ export const createComment = async (req: Request, res: Response) => {
     );
   }
 
-  const comment = await Comment.create(req.body);
   await comment.populate('user', ['name', 'avtPath']);
 
   commentQueue.add(comment._id.toString(), {

@@ -10,6 +10,7 @@ interface IEpisode {
   duration: number;
   releaseDate: Date;
   path: string;
+  rendering: boolean;
 }
 
 interface IEpisodeMethods {}
@@ -47,6 +48,11 @@ const schema = new Schema<IEpisode, EpisodeModel, IEpisodeMethods>({
   path: {
     type: String,
     required: false,
+  },
+  rendering: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
 });
 

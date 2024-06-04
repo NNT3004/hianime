@@ -3,6 +3,7 @@ import { encodeHLS } from '../utils/encode-hls';
 import Episode from '../models/Episode';
 import path from 'path';
 import { Types } from 'mongoose';
+import { io } from '..';
 
 const queueName = 'Encode';
 
@@ -24,7 +25,12 @@ const encodeWorker = new Worker(
     );
     await Episode.updateOne(
       { _id: job.data._id },
-      { path: `/public/${uniqueEpisodeId}/master.m3u8` }
+      { path: `/public/${uniqueEpisodeId}/master.m3u8`, rendering: false }
+    );
+    io.emit(
+      'rendered',
+      episodeId.toString(),
+      `/public/${uniqueEpisodeId}/master.m3u8`
     );
   },
   {

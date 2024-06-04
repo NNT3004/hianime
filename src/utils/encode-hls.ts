@@ -7,7 +7,7 @@ export const getVideoDuration = async (input: string) => {
     await $`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${slash(
       input
     )}`;
-  return stdout.trim();
+  return stdout.trim().substring(0, 8);
 };
 
 export const encodeHLS = async (input: string, outDir: string) => {

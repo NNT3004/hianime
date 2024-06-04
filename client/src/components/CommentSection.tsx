@@ -40,6 +40,8 @@ export interface IComment {
   replies: IReply[];
 }
 
+let commentIds: { [key: string]: boolean } = {};
+
 const CommentSection: React.FC<CommentSectionProps> = () => {
   const [firstLoad, setFirstload] = useState(false);
   const [comments, setComments] = useState<IComment[]>([]);
@@ -53,11 +55,22 @@ const CommentSection: React.FC<CommentSectionProps> = () => {
 
   const targetRef = useRef(null);
 
-  const updateCommentVote = (_id: string, upvote: number, devote: number) => {
+  const updateCommentVote = (
+    _id: string,
+    upvote: number,
+    devote: number,
+    userId: string,
+    userAction: -1 | 0 | 1
+  ) => {
     setComments((prevComments) =>
       prevComments.map((comment) => {
         if (comment._id === _id) {
-          return { ...comment, upvote, devote };
+          return {
+            ...comment,
+            upvote,
+            devote,
+            userAction: userId === user?._id ? userAction : comment.userAction,
+          };
         } else {
           return comment;
         }
@@ -69,14 +82,22 @@ const CommentSection: React.FC<CommentSectionProps> = () => {
     commentId: string,
     replyId: string,
     upvote: number,
-    devote: number
+    devote: number,
+    userId: string,
+    userAction: -1 | 0 | 1
   ) => {
     setComments((prevComments) =>
       prevComments.map((comment) => {
         if (comment._id === commentId) {
           const replies = comment.replies.map((reply) => {
             if (reply._id === replyId) {
-              return { ...reply, upvote, devote };
+              return {
+                ...reply,
+                upvote,
+                devote,
+                userAction:
+                  userId === user?._id ? userAction : comment.userAction,
+              };
             } else {
               return reply;
             }
@@ -180,6 +201,8 @@ const CommentSection: React.FC<CommentSectionProps> = () => {
   };
 
   const addComment = (comment: IComment) => {
+    if (comment.user._id === user?._id) commentIds[comment._id] = true;
+
     comment.replies = [];
     setComments((prevComments) => [comment, ...prevComments]);
   };
@@ -195,6 +218,8 @@ const CommentSection: React.FC<CommentSectionProps> = () => {
   };
 
   const addReply = (reply: IReply) => {
+    if (reply.user._id === user?._id) commentIds[reply._id] = true;
+
     setComments((prevComments) =>
       prevComments.map((comment) => {
         if (comment._id !== reply.parentComment) return comment;
@@ -254,6 +279,8 @@ const CommentSection: React.FC<CommentSectionProps> = () => {
       threshold: 0.5,
     };
 
+    commentIds = {};
+
     const observer = new IntersectionObserver(async ([entry]) => {
       if (entry.isIntersecting && episode) {
         await getComments();
@@ -275,21 +302,30 @@ const CommentSection: React.FC<CommentSectionProps> = () => {
       socket.on(episode, (action: string, data: any) => {
         if (action === 'comment') {
           const { comment } = data;
-
-          if (comment.user._id === user?._id) return;
-
           if (comment.parentComment) {
-            addReply(comment);
+            if (!commentIds[comment._id]) {
+              addReply(comment);
+            }
           } else {
-            addComment(comment);
+            if (!commentIds[comment._id]) {
+              addComment(comment);
+            }
           }
         } else if (action === 'vote') {
-          const { replyId, commentId, upvote, devote } = data;
+          const { replyId, commentId, upvote, devote, userId, userAction } =
+            data;
 
           if (replyId) {
-            updateReplyVote(commentId, replyId, upvote, devote);
+            updateReplyVote(
+              commentId,
+              replyId,
+              upvote,
+              devote,
+              userId,
+              userAction
+            );
           } else {
-            updateCommentVote(commentId, upvote, devote);
+            updateCommentVote(commentId, upvote, devote, userId, userAction);
           }
         }
       });
@@ -298,6 +334,7 @@ const CommentSection: React.FC<CommentSectionProps> = () => {
         socket.off(episode);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstLoad, episode, user]);
 
   return (

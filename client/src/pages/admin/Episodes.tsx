@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';
 import Loading from '../../components/Loading';
 import { secondsToHMS } from '../../utils/convert';
+import { socket } from '../../utils/socket';
 dayjs.extend(customParseFormat);
 
 export type Episode = {
@@ -26,6 +27,7 @@ export type Episode = {
   duration?: number;
   releaseDate: string;
   path?: string;
+  rendering?: boolean;
 };
 
 const getInitialEpisode = (): Episode => {
@@ -227,6 +229,7 @@ const Episodes: React.FC = () => {
           const response = await getAuthClient().get(
             `/episodes?post=${postId}`
           );
+
           setEpisodes(
             (response.data.episodes as Array<Episode>).map((value) => {
               return {
@@ -244,14 +247,31 @@ const Episodes: React.FC = () => {
       };
       getAllEpisodes();
     }
-  }, [postId, status]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    socket.on('rendered', (episodeId, path) => {
+      setEpisodes((prevEpisodes) =>
+        prevEpisodes.map((episode) => {
+          if (episodeId !== episode._id) return episode;
+
+          return { ...episode, rendering: false, path };
+        })
+      );
+    });
+
+    return () => {
+      socket.off('rendered');
+    };
+  }, []);
 
   return (
     <Wrapper>
       <HeadNav
         navs={[
           { name: 'Posts', to: '/admin/posts' },
-          { name: 'Korekara', to: '/admin/posts/1' },
+          { name: 'Post', to: `/admin/posts/${postId}` },
           { name: 'Episodes' },
         ]}
       />
@@ -309,6 +329,7 @@ const Episodes: React.FC = () => {
               ]}
               onDeleteClick={onTableDelete}
               onUpdateClick={onTableUpdate}
+              changeAction={(episode) => episode.rendering}
             />
           </>
         )}

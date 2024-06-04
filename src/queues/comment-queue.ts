@@ -36,12 +36,16 @@ const commentWorker = new Worker(
             commentId: comment.parentComment.toString(),
             upvote: comment.upvote,
             devote: comment.devote,
+            userId: comment.user.toString(),
+            userAction,
           });
         } else {
           io.emit(comment.episode.toString(), job.data.action, {
             commentId: comment._id.toString(),
             upvote: comment.upvote,
             devote: comment.devote,
+            userId: comment.user.toString(),
+            userAction,
           });
         }
 

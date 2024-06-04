@@ -20,6 +20,7 @@ export const createEpisode = async (req: Request, res: Response) => {
   if (video) {
     req.body.duration = await getVideoDuration(video.path);
     req.body.path = null;
+    req.body.rendering = true;
     const episode = await Episode.create(req.body);
     encodeQueue.add(episode._id.toString(), {
       path: video.path,
@@ -62,6 +63,7 @@ export const updateEpisode = async (req: Request, res: Response) => {
   if (video) {
     req.body.duration = await getVideoDuration(video.path);
     req.body.path = null;
+    req.body.rendering = true;
     const episode = await Episode.findOneAndUpdate({ _id: id }, req.body, {
       runValidators: true,
       new: true,

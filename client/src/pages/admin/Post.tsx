@@ -10,7 +10,7 @@ const Post: React.FC = () => {
     <Wrapper>
       {postId ? (
         <HeadNav
-          navs={[{ name: 'Posts', to: '/admin/posts' }, { name: 'Korekara' }]}
+          navs={[{ name: 'Posts', to: '/admin/posts' }, { name: 'Post' }]}
         />
       ) : (
         <HeadNav navs={[{ name: 'Add post' }]} />
