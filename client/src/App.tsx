@@ -21,6 +21,7 @@ import SingleQueryPosts from './pages/SingleQueryPosts';
 
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import Statistics from './pages/admin/Statistics';
 TimeAgo.addDefaultLocale(en);
 
 function App() {
@@ -63,6 +64,7 @@ function App() {
             <Route path='add-post' element={<Post key='post-add' />} />
             <Route path='genres' element={<Genres />} />
             <Route path='studios' element={<Studios />} />
+            <Route path='statistics' element={<Statistics />} />
           </Route>
         </Routes>
       </ScrollToTop>

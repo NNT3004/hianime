@@ -3,7 +3,8 @@ import Wrapper from '../../assets/wrappers/admin/Sidebar';
 import { NavLink } from 'react-router-dom';
 import { MdMovie } from 'react-icons/md';
 import { FaPuzzlePiece, FaSimplybuilt } from 'react-icons/fa';
-import { MdLibraryAdd } from "react-icons/md";
+import { MdLibraryAdd } from 'react-icons/md';
+import { IoStatsChart } from 'react-icons/io5';
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -30,6 +31,15 @@ const Sidebar: React.FC<SidebarProps> = ({ showSidebar }) => {
         >
           <MdLibraryAdd className='icon' />
           <span className='text'>Add posts</span>
+        </NavLink>
+        <NavLink
+          to='statistics'
+          className={({ isActive }) =>
+            isActive ? 'activated nav-link' : 'nav-link'
+          }
+        >
+          <IoStatsChart className='icon' />
+          <span className='text'>Statistics</span>
         </NavLink>
         <NavLink
           to='genres'

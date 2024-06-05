@@ -3,7 +3,7 @@ import { Schema, model, Model, Types } from 'mongoose';
 interface IViewCount {
   post: Types.ObjectId;
   count: number;
-  date: string;
+  date: Date;
 }
 
 interface IViewCountMethods {}
@@ -23,7 +23,7 @@ const schema = new Schema<IViewCount, ViewCountModel, IViewCountMethods>({
     default: 0,
   },
   date: {
-    type: String,
+    type: Date,
     required: true,
     minlength: 10,
     maxlength: 10,

@@ -5,6 +5,8 @@ import Post from '../models/Post';
 import PostGenre from '../models/PostGenre';
 import ViewCount from '../models/ViewCount';
 import Episode from '../models/Episode';
+import User from '../models/User';
+import Genre from '../models/Genre';
 
 export const createPost = async (req: Request, res: Response) => {
   const body = Object.fromEntries(
@@ -362,14 +364,156 @@ export const getTopPosts = async (req: Request, res: Response) => {
 export const increaseView = async (req: Request, res: Response) => {
   const { id } = req.params;
 
+  const curDate = new Date();
+  curDate.setHours(0, 0, 0, 0);
+
   await ViewCount.updateOne(
     {
       post: id,
-      date: new Date().toISOString().split('T')[0],
+      date: curDate,
     },
     { $inc: { count: 1 } },
     { upsert: true, setDefaultsOnInsert: true }
   );
 
   res.status(StatusCodes.OK).json();
+};
+
+export const getStats = async (req: Request, res: Response) => {
+  const usersCount = await User.countDocuments();
+  const genresCount = await Genre.countDocuments();
+  const postsCount = await Post.countDocuments();
+
+  const postsCountPerGenre = await PostGenre.aggregate([
+    {
+      $group: {
+        _id: { genre: '$genre' },
+        count: { $count: {} },
+      },
+    },
+    {
+      $lookup: {
+        from: 'genres',
+        localField: '_id.genre',
+        foreignField: '_id',
+        as: 'genreInfo',
+      },
+    },
+    {
+      $unwind: '$genreInfo',
+    },
+    {
+      $project: {
+        _id: 0,
+        genre: '$genreInfo.name',
+        count: 1,
+      },
+    },
+  ]);
+
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  const viewsCountPerType = await ViewCount.aggregate([
+    {
+      $match: {
+        date: { $gte: sixMonthsAgo },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          year: { $year: '$date' },
+          month: { $month: '$date' },
+          post: '$post',
+        },
+        totalViews: { $sum: '$count' },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        year: '$_id.year',
+        month: '$_id.month',
+        post: '$_id.post',
+        totalViews: 1,
+      },
+    },
+    {
+      $lookup: {
+        from: 'posts',
+        localField: 'post',
+        foreignField: '_id',
+        as: 'postInfo',
+      },
+    },
+    {
+      $unwind: '$postInfo',
+    },
+    {
+      $group: {
+        _id: {
+          year: '$year',
+          month: '$month',
+          type: '$postInfo.type',
+        },
+        totalViews: { $sum: '$totalViews' },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        year: '$_id.year',
+        month: '$_id.month',
+        type: '$_id.type',
+        totalViews: 1,
+      },
+    },
+    {
+      $sort: {
+        year: 1,
+        month: 1,
+        type: 1,
+      },
+    },
+  ]);
+
+  const transformedData = viewsCountPerType.reduce((acc, item) => {
+    const monthName = getMonthName(item.month);
+    const name = `${monthName} ${item.year}`;
+
+    if (!acc[name]) {
+      acc[name] = { name };
+    }
+
+    acc[name][item.type] = item.totalViews;
+    return acc;
+  }, {});
+
+  res.status(StatusCodes.OK).json({
+    count: {
+      usersCount,
+      postsCount,
+      genresCount,
+    },
+    viewsCountPerType: Object.values(transformedData),
+    postsCountPerGenre,
+  });
+};
+
+const getMonthName = (monthNumber: number) => {
+  const monthNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  return monthNames[monthNumber - 1];
 };
