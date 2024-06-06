@@ -14,7 +14,6 @@ export const io = new Server(server);
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 io.on('connection', (socket) => {
-
   const authHeader = socket.handshake.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer')) {
     return;
@@ -47,6 +46,7 @@ import ratingsRouter from './routes/ratingsRoutes';
 import favoritesRouter from './routes/favoritesRoutes';
 import commentsRouter from './routes/commentsRoutes';
 import commentVotesRouter from './routes/commentVotesRoutes';
+import usersRouter from './routes/usersRoutes';
 import imagesRouter from './routes/imagesRoutes';
 import errorHandlerMiddleware from './middlewares/error-handler';
 import notFoundMiddleWare from './middlewares/not-found';
@@ -68,6 +68,7 @@ app.use('/api/v1/ratings', ratingsRouter);
 app.use('/api/v1/comments', commentsRouter);
 app.use('/api/v1/comment-votes', commentVotesRouter);
 app.use('/api/v1/favorites', authenticateUser, favoritesRouter);
+app.use('/api/v1/users', authenticateUser, usersRouter);
 app.use('/api/v1/images', imagesRouter);
 app.use(notFoundMiddleWare);
 app.use(errorHandlerMiddleware);

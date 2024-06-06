@@ -2,7 +2,7 @@ import React from 'react';
 import Wrapper from '../../assets/wrappers/admin/Sidebar';
 import { NavLink } from 'react-router-dom';
 import { MdMovie } from 'react-icons/md';
-import { FaPuzzlePiece, FaSimplybuilt } from 'react-icons/fa';
+import { FaPuzzlePiece, FaSimplybuilt, FaUserFriends } from 'react-icons/fa';
 import { MdLibraryAdd } from 'react-icons/md';
 import { IoStatsChart } from 'react-icons/io5';
 
@@ -58,6 +58,15 @@ const Sidebar: React.FC<SidebarProps> = ({ showSidebar }) => {
         >
           <FaSimplybuilt className='icon' />
           <span className='text'>Studios</span>
+        </NavLink>
+        <NavLink
+          to='users'
+          className={({ isActive }) =>
+            isActive ? 'activated nav-link' : 'nav-link'
+          }
+        >
+          <FaUserFriends className='icon' />
+          <span className='text'>Users</span>
         </NavLink>
       </div>
     </Wrapper>

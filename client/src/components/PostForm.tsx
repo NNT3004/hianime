@@ -13,23 +13,14 @@ import PrimaryButton from './PrimaryButton';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { SiSteelseries } from 'react-icons/si';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  getAllGenres,
-  selectGenres,
-  selectStatus as selectGenresStatus,
-} from '../store/slices/genresSlice';
-import {
-  selectStatus as selectStudiosStatus,
-  selectStudios,
-  getAllStudios,
-} from '../store/slices/studiosSlice';
+import { useSelector } from 'react-redux';
+import { selectGenres } from '../store/slices/genresSlice';
+import { selectStudios } from '../store/slices/studiosSlice';
 import { client, getAuthClient } from '../api/client';
 import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Loading from './Loading';
-import { AppDispatch } from '../store/store';
 dayjs.extend(customParseFormat);
 const dateFormat = 'YYYY/MM/DD';
 
@@ -77,15 +68,11 @@ const PostForm: React.FC<PostFormProps> = ({ _id }) => {
   const genres = useSelector(selectGenres);
   const studios = useSelector(selectStudios);
 
-  const genresFetchStatus = useSelector(selectGenresStatus);
-  const studiosFetchStatus = useSelector(selectStudiosStatus);
-  const dispatch = useDispatch<AppDispatch>();
-
   const [status, setStatus] = useState<
     'idle' | 'loading' | 'succeeded' | 'failed'
   >('idle');
 
-  const [firstGet, setFirstGet] = useState(false);
+  const [firstGet, setFirstGet] = useState(true);
 
   const genresSelect = useMemo(
     () =>
@@ -111,16 +98,7 @@ const PostForm: React.FC<PostFormProps> = ({ _id }) => {
       const getPost = async () => {
         try {
           setStatus('loading');
-          setFirstGet(true);
           const response = await client.get(`/posts/${_id}`);
-
-          if (genresFetchStatus === 'idle') {
-            dispatch(getAllGenres());
-          }
-
-          if (studiosFetchStatus === 'idle') {
-            dispatch(getAllStudios());
-          }
 
           setStatus('succeeded');
           setPost(response.data.post);

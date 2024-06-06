@@ -18,35 +18,38 @@ interface IUserMethods {
 
 type UserModel = Model<IUser, {}, IUserMethods>;
 
-const schema = new Schema<IUser, UserModel, IUserMethods>({
-  name: {
-    type: String,
-    required: true,
-    minlength: 3,
-    maxlength: 20,
-    trim: true,
+const schema = new Schema<IUser, UserModel, IUserMethods>(
+  {
+    name: {
+      type: String,
+      required: true,
+      minlength: 3,
+      maxlength: 20,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      validate: validator.isEmail,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 8,
+      maxlength: 25,
+      select: false,
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+      required: true,
+    },
+    avtPath: { type: String, required: false },
   },
-  email: {
-    type: String,
-    required: true,
-    validate: validator.isEmail,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 8,
-    maxlength: 25,
-    select: false,
-  },
-  role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user',
-    required: true,
-  },
-  avtPath: { type: String, required: false },
-});
+  { timestamps: true }
+);
 
 schema.pre('save', async function () {
   if (this.isModified('password')) {

@@ -3,7 +3,7 @@ import Wrapper from '../../assets/wrappers/admin/Genres';
 import HeadNav from '../../components/HeadNav';
 import Table from '../../components/Table';
 import PrimaryButton from '../../components/PrimaryButton';
-import { FaPlus } from 'react-icons/fa';
+import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
 import Modal from '../../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -164,8 +164,19 @@ const Genres: React.FC = () => {
           <Table
             fields={genreFields}
             data={genres}
-            onDeleteClick={onTableDelete}
-            onUpdateClick={onTableUpdate}
+            actions={[
+              {
+                icon: FaEdit,
+                name: 'Edit',
+                onClick: onTableUpdate,
+              },
+              'sep',
+              {
+                icon: FaTrash,
+                name: 'Delete',
+                onClick: onTableDelete,
+              },
+            ]}
           />
         )}
       </div>

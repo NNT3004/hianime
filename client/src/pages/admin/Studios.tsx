@@ -3,7 +3,7 @@ import Wrapper from '../../assets/wrappers/admin/Studios';
 import HeadNav from '../../components/HeadNav';
 import Table from '../../components/Table';
 import PrimaryButton from '../../components/PrimaryButton';
-import { FaPlus } from 'react-icons/fa';
+import { FaEdit, FaPlus } from 'react-icons/fa';
 import Modal from '../../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -24,6 +24,7 @@ import { AppDispatch } from '../../store/store';
 import StudioFrom from '../../components/admin/StudioForm';
 import ConfirmForm from '../../components/ConfirmForm';
 import { notification } from 'antd';
+import { FaTrash } from 'react-icons/fa6';
 
 const studioFields = [
   { title: 'Name', key: 'name' },
@@ -166,8 +167,19 @@ const Studios: React.FC = () => {
           <Table
             fields={studioFields}
             data={studios}
-            onDeleteClick={onTableDelete}
-            onUpdateClick={onTableUpdate}
+            actions={[
+              {
+                icon: FaEdit,
+                name: 'Edit',
+                onClick: onTableUpdate,
+              },
+              'sep',
+              {
+                icon: FaTrash,
+                name: 'Delete',
+                onClick: onTableDelete,
+              },
+            ]}
           />
         )}
       </div>

@@ -7,9 +7,13 @@ import PieChart from '../../components/PieChart';
 import LineChart from '../../components/LineChart';
 import Loading from '../../components/Loading';
 import { getAuthClient } from '../../api/client';
+import BarChart from '../../components/BarChart';
 
 const Statistics: React.FC = () => {
   const [loading, setLoading] = useState(true);
+
+  const [isLineChart, setIsLineChart] = useState(true);
+
   const [stats, setStats] = useState<{
     count: {
       usersCount: number;
@@ -58,19 +62,42 @@ const Statistics: React.FC = () => {
           secondaryColor='#fdffe2'
         />
       </section>
-      <p className='chart-title'>Number of posts per genre</p>
-      <PieChart data={stats?.postsCountPerGenre || []} />
 
-      <p className='chart-title'>View count in last six months</p>
-      <LineChart
-        data={stats?.viewsCountPerType || []}
-        meta={[
-          { dataKey: 'tv', stroke: '#3aa6b9' },
-          { dataKey: 'movie', stroke: '#ffd0d0' },
-          { dataKey: 'ova', stroke: '#ff9eaa' },
-          { dataKey: 'ona', stroke: '#f9f9e0' },
-        ]}
-      />
+      <section>
+        <p className='chart-title'>Number of posts per genre</p>
+        <PieChart data={stats?.postsCountPerGenre || []} />
+      </section>
+
+      <section>
+        <p className='chart-title'>View count in last six months</p>
+        <button
+          onClick={() => setIsLineChart((prev) => !prev)}
+          className='switch-chart'
+        >
+          {isLineChart ? 'Bar Chart' : 'Line Chart'}
+        </button>
+        {isLineChart ? (
+          <LineChart
+            data={stats?.viewsCountPerType || []}
+            meta={[
+              { dataKey: 'tv', stroke: '#3aa6b9' },
+              { dataKey: 'movie', stroke: '#ffd0d0' },
+              { dataKey: 'ova', stroke: '#ff9eaa' },
+              { dataKey: 'ona', stroke: '#f9f9e0' },
+            ]}
+          />
+        ) : (
+          <BarChart
+            data={stats?.viewsCountPerType || []}
+            meta={[
+              { dataKey: 'tv', stroke: '#3aa6b9' },
+              { dataKey: 'movie', stroke: '#ffd0d0' },
+              { dataKey: 'ova', stroke: '#ff9eaa' },
+              { dataKey: 'ona', stroke: '#f9f9e0' },
+            ]}
+          />
+        )}
+      </section>
     </Wrapper>
   );
 };

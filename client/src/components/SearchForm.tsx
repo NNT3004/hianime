@@ -1,13 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Wrapper from '../assets/wrappers/SearchForm';
 import PrimaryButton from './PrimaryButton';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import HeadNav from './HeadNav';
-import { DatePicker, Select } from 'antd';
-import { FaFilter } from "react-icons/fa";
+import { DatePicker, Input, Select } from 'antd';
+import { FaFilter } from 'react-icons/fa';
+dayjs.extend(customParseFormat);
 
-interface SearchFormProps {}
+interface SearchFormProps {
+  onFilter: (query: string) => void;
+  disabled: boolean;
+}
 
-const SearchForm: React.FC<SearchFormProps> = () => {
+const SearchForm: React.FC<SearchFormProps> = ({ disabled, onFilter }) => {
+  const [type, setType] = useState('all');
+  const [status, setStatus] = useState('all');
+  const [season, setSeason] = useState('all');
+  const [year, setYear] = useState<string>();
+  const [sort, setSort] = useState('updated');
+  const [title, setTitle] = useState('');
+
+  const onFilterClicked = () => {
+    let query = `type=${type}&status=${status}&season=${season}&sort=${sort}`;
+
+    if (title && title.trim().length !== 0) query += `&name=${title.trim()}`;
+
+    if (year) query += `&year=${year}`;
+
+    onFilter(query);
+  };
+
   return (
     <Wrapper>
       <HeadNav navs={[{ name: 'Filter' }]} />
@@ -20,7 +43,8 @@ const SearchForm: React.FC<SearchFormProps> = () => {
             <Select
               style={{ flexGrow: 1 }}
               id='type'
-              defaultValue='all'
+              value={type}
+              onChange={setType}
               options={[
                 { value: 'all', label: 'All' },
                 { value: 'tv', label: 'TV' },
@@ -28,6 +52,7 @@ const SearchForm: React.FC<SearchFormProps> = () => {
                 { value: 'ova', label: 'OVA' },
                 { value: 'ona', label: 'ONA' },
               ]}
+              disabled={disabled}
             />
           </div>
           <div className='filter-item'>
@@ -36,14 +61,16 @@ const SearchForm: React.FC<SearchFormProps> = () => {
             </label>
             <Select
               style={{ flexGrow: 1 }}
-              defaultValue='all'
+              value={status}
+              onChange={setStatus}
               id='status'
               options={[
                 { value: 'all', label: 'All' },
-                { value: '0', label: 'Finished Airing' },
-                { value: '1', label: 'Currently Airing' },
-                { value: '2', label: 'Not yet aired' },
+                { value: 'completed', label: 'Finished Airing' },
+                { value: 'airing', label: 'Currently Airing' },
+                { value: 'waiting', label: 'Not yet aired' },
               ]}
+              disabled={disabled}
             />
           </div>
           <div className='filter-item'>
@@ -52,7 +79,8 @@ const SearchForm: React.FC<SearchFormProps> = () => {
             </label>
             <Select
               style={{ flexGrow: 1 }}
-              defaultValue='all'
+              value={season}
+              onChange={setSeason}
               id='season'
               options={[
                 { value: 'all', label: 'All' },
@@ -61,13 +89,21 @@ const SearchForm: React.FC<SearchFormProps> = () => {
                 { value: 'fall', label: 'Fall' },
                 { value: 'winter', label: 'Winter' },
               ]}
+              disabled={disabled}
             />
           </div>
           <div className='filter-item'>
             <label htmlFor='year' className='what'>
               Year
             </label>
-            <DatePicker picker='year' id='year' style={{ flexGrow: 1 }}/>
+            <DatePicker
+              picker='year'
+              id='year'
+              style={{ flexGrow: 1 }}
+              value={year ? dayjs(year) : undefined}
+              onChange={(_, dateString) => setYear(dateString as string)}
+              disabled={disabled}
+            />
           </div>
           <div className='filter-item'>
             <label htmlFor='sort' className='what'>
@@ -75,36 +111,40 @@ const SearchForm: React.FC<SearchFormProps> = () => {
             </label>
             <Select
               style={{ flexGrow: 1 }}
-              defaultValue='0'
+              value={sort}
+              onChange={setSort}
               id='sort'
               options={[
-                { value: '0', label: 'Name A-Z' },
-                { value: '1', label: 'Name Z-A' },
-                { value: '2', label: 'Recently added' },
-                { value: '3', label: 'Recently updated' },
+                { value: 'name-asc', label: 'Name A-Z' },
+                { value: 'name-desc', label: 'Name Z-A' },
+                { value: 'added', label: 'Recently added' },
+                { value: 'updated', label: 'Recently updated' },
+                { value: 'release', label: 'Release date' },
               ]}
+              disabled={disabled}
             />
           </div>
         </div>
-        <div className='genres'>
-          <label htmlFor='genres' className='what'>
-            Genres
+        <div className='title'>
+          <label htmlFor='title' className='what'>
+            Title
           </label>
-          <Select
-            mode='multiple'
-            allowClear
-            style={{ flexGrow: 1 }}
-            placeholder='Genres'
-            id='genres'
-            options={[
-              { value: 'comdey', label: 'Comedy' },
-              { value: 'horror', label: 'Horror' },
-              { value: 'fiction', label: 'Fiction' },
-            ]}
+          <Input
+            type='text'
+            id='title'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            disabled={disabled}
           />
         </div>
         <div className='btn-container'>
-          <PrimaryButton startIcon={FaFilter}>Filter</PrimaryButton>
+          <PrimaryButton
+            startIcon={FaFilter}
+            disabled={disabled}
+            onClick={onFilterClicked}
+          >
+            Filter
+          </PrimaryButton>
         </div>
       </div>
     </Wrapper>

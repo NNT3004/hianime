@@ -3,7 +3,7 @@ import Wrapper from '../../assets/wrappers/admin/Episodes';
 import HeadNav from '../../components/HeadNav';
 import Table from '../../components/Table';
 import PrimaryButton from '../../components/PrimaryButton';
-import { FaPlus } from 'react-icons/fa';
+import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
 import Modal from '../../components/Modal';
 import EpisodeForm from '../../components/admin/EpisodeForm';
 import ConfirmForm from '../../components/ConfirmForm';
@@ -327,9 +327,20 @@ const Episodes: React.FC = () => {
                   title: 'Release Date',
                 },
               ]}
-              onDeleteClick={onTableDelete}
-              onUpdateClick={onTableUpdate}
               changeAction={(episode) => episode.rendering}
+              actions={[
+                {
+                  icon: FaEdit,
+                  name: 'Edit',
+                  onClick: onTableUpdate,
+                },
+                'sep',
+                {
+                  icon: FaTrash,
+                  name: 'Delete',
+                  onClick: onTableDelete,
+                },
+              ]}
             />
           </>
         )}

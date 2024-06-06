@@ -12,6 +12,7 @@ import Loading from '../../components/Loading';
 
 const AllPosts: React.FC = () => {
   const navigate = useNavigate();
+  const [query, setQuery] = useState('');
   const [curPage, setCurPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [loading, setLoading] = useState(false);
@@ -27,31 +28,35 @@ const AllPosts: React.FC = () => {
   >([]);
   useEffect(() => {
     if (loading === false) {
+      console.log(query);
       const getAllPosts = async () => {
+        setLoading(true);
         try {
-          setLoading(true);
-          const response = await getAuthClient().get(`/posts?page=${curPage}`);
+          const response = await getAuthClient().get(
+            `/posts?page=${curPage}&${query}`
+          );
           setPosts(response.data.posts);
           setTotalPages(response.data.totalPages);
-          setLoading(false);
         } catch (err) {
           const error = err as AxiosError;
           message.error((error.response!.data as any).msg);
-          setLoading(false);
         }
+        setLoading(false);
       };
       getAllPosts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [curPage]);
-
-  const handleChangePage = (page: number) => {
-    setCurPage(page);
-  };
+  }, [curPage, query]);
 
   return (
     <>
-      <SearchForm />
+      <SearchForm
+        disabled={loading}
+        onFilter={(query) => {
+          setQuery(query);
+          setCurPage(1);
+        }}
+      />
       <Wrapper>
         <HeadNav navs={[{ name: 'Posts' }]} />
         {loading ? (
@@ -76,12 +81,14 @@ const AllPosts: React.FC = () => {
             })}
           </div>
         )}
-        <Pagination
-          disabled={loading}
-          curPage={curPage}
-          setCurPage={handleChangePage}
-          totalPages={totalPages}
-        />
+        {posts.length > 0 && (
+          <Pagination
+            disabled={loading}
+            curPage={curPage}
+            setCurPage={setCurPage}
+            totalPages={totalPages}
+          />
+        )}
       </Wrapper>
     </>
   );

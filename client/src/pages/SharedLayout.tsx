@@ -4,8 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/SharedLayout';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
-import { FaHome } from 'react-icons/fa';
-import { AiFillSchedule } from 'react-icons/ai';
+import { FaHome, FaClock } from 'react-icons/fa';
 
 const SharedLayout: React.FC = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -25,7 +24,7 @@ const SharedLayout: React.FC = () => {
           setShow={setShowSidebar}
           items={[
             { icon: FaHome, name: 'Home', to: '/home' },
-            { icon: AiFillSchedule, name: 'Recently', to: '/recently-updated' },
+            { icon: FaClock, name: 'Recently', to: '/recently-updated' },
           ]}
         />
       )}

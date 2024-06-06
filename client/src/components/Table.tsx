@@ -1,23 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Wrapper from '../assets/wrappers/Table';
 import { BsThreeDots } from 'react-icons/bs';
-import { FaTrash, FaEdit } from 'react-icons/fa';
 import { Spin } from 'antd';
+import { IconType } from 'react-icons';
 
 interface TableProps {
   fields: { title: string; key: string; map?: (v: any) => any }[];
   data: { [key: string]: any }[];
-  onUpdateClick: (value: any) => void;
-  onDeleteClick: (value: any) => void;
+  actions: (
+    | {
+        name: string;
+        onClick: (value: any) => void;
+        icon: IconType;
+      }
+    | 'sep'
+  )[];
   changeAction?: (value: any) => boolean;
 }
 
 const Table: React.FC<TableProps> = ({
   data,
   fields,
-  onDeleteClick,
-  onUpdateClick,
   changeAction,
+  actions,
 }) => {
   return (
     <Wrapper cellSpacing={0} cellPadding={0}>
@@ -44,11 +49,7 @@ const Table: React.FC<TableProps> = ({
                 {changeAction && changeAction(row) ? (
                   <Spin size='small' />
                 ) : (
-                  <ActionBtn
-                    onDeleteClick={() => onDeleteClick(row)}
-                    onUpdateClick={() => onUpdateClick(row)}
-                    key={rowIndex}
-                  />
+                  <ActionBtn actions={actions} row={row} />
                 )}
               </td>
             </tr>
@@ -60,16 +61,19 @@ const Table: React.FC<TableProps> = ({
 };
 
 interface ActionBtnProps {
-  onUpdateClick: () => void;
-  onDeleteClick: () => void;
   disabled?: boolean;
+  actions: (
+    | {
+        name: string;
+        onClick: (value: any) => void;
+        icon: IconType;
+      }
+    | 'sep'
+  )[];
+  row: any;
 }
 
-const ActionBtn: React.FC<ActionBtnProps> = ({
-  onDeleteClick,
-  onUpdateClick,
-  disabled,
-}) => {
+const ActionBtn: React.FC<ActionBtnProps> = ({ disabled, actions, row }) => {
   const [show, setShow] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -102,28 +106,25 @@ const ActionBtn: React.FC<ActionBtnProps> = ({
       </button>
       {show && (
         <div className='btn-menu' ref={ref}>
-          <div
-            className='btn-item'
-            onClick={() => {
-              setShow(false);
-              onUpdateClick();
-            }}
-          >
-            <FaEdit />
-            <span>Edit</span>
-          </div>
-          <div className='sep' />
-          <div
-            className='btn-item'
-            onClick={() => {
-              console.log(show);
-              setShow(false);
-              onDeleteClick();
-            }}
-          >
-            <FaTrash />
-            <span>Delete</span>
-          </div>
+          {actions.map((value, index) => {
+            if (typeof value === 'string') {
+              return <div className='sep' key={index} />;
+            } else {
+              return (
+                <div
+                  className='btn-item'
+                  onClick={() => {
+                    setShow(false);
+                    value.onClick(row);
+                  }}
+                  key={index}
+                >
+                  <value.icon />
+                  <span>{value.name}</span>
+                </div>
+              );
+            }
+          })}
         </div>
       )}
     </div>

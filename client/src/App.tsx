@@ -22,11 +22,16 @@ import SingleQueryPosts from './pages/SingleQueryPosts';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import Statistics from './pages/admin/Statistics';
+import Users from './pages/admin/Users';
+import { getAllGenres } from './store/slices/genresSlice';
+import { getAllStudios } from './store/slices/studiosSlice';
 TimeAgo.addDefaultLocale(en);
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
+    dispatch(getAllGenres());
+    dispatch(getAllStudios());
     dispatch(getUser());
   });
   const gettingUser = useSelector((state: RootState) => state.auth.gettingUser);
@@ -65,6 +70,7 @@ function App() {
             <Route path='genres' element={<Genres />} />
             <Route path='studios' element={<Studios />} />
             <Route path='statistics' element={<Statistics />} />
+            <Route path='users' element={<Users />} />
           </Route>
         </Routes>
       </ScrollToTop>

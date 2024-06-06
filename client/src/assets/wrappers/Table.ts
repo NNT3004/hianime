@@ -77,6 +77,7 @@ const Wrapper = styled.table`
     width: 100px;
     z-index: 10;
     overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     .btn-item {
       padding: 4px 10px;
       display: flex;

@@ -101,7 +101,7 @@ type StatusOption = 'all' | 'airing' | 'completed' | 'waiting';
 type SeasonOption = 'all' | 'spring' | 'summer' | 'fall' | 'winter';
 
 export const getAllPosts = async (req: Request, res: Response) => {
-  let { sort, page, numPerPage, name, type, status, season, year } = req.query;
+  let { sort, page, limit, name, type, status, season, year } = req.query;
 
   const isValidSort = (value: any): value is SortOption =>
     ['updated', 'added', 'name-asc', 'name-desc', 'release'].includes(value);
@@ -118,7 +118,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
   const seasonT: SeasonOption = isValidSeason(season) ? season : 'all';
   const nameT = (name as string) || '';
   const pageT = Number.parseInt(page as string) || 1;
-  const numPerPageT = Number.parseInt(numPerPage as string) || 12;
+  const limitT = Number.parseInt(limit as string) || 12;
   const yearT = Number.parseInt(year as string) || null;
 
   let order: any;
@@ -197,10 +197,10 @@ export const getAllPosts = async (req: Request, res: Response) => {
             $sort: order,
           },
           {
-            $skip: (pageT - 1) * numPerPageT,
+            $skip: (pageT - 1) * limitT,
           },
           {
-            $limit: numPerPageT,
+            $limit: limitT,
           },
           {
             $lookup: {
@@ -244,7 +244,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
   const posts = result.paginatedResults;
   const totalCount =
     result.totalCount.length > 0 ? result.totalCount[0].total : 0;
-  const totalPages = Math.floor(totalCount / numPerPageT) + 1;
+  const totalPages = Math.floor(totalCount / limitT) + 1;
 
   res.status(StatusCodes.OK).json({ posts, page: pageT, totalPages });
 };
@@ -287,7 +287,7 @@ export const getTopPosts = async (req: Request, res: Response) => {
   const posts = await ViewCount.aggregate([
     {
       $match: {
-        date: { $gte: fromDate.toISOString().split('T')[0] },
+        date: { $gte: fromDate },
       },
     },
     {
