@@ -37,38 +37,33 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
 
   const user = useSelector(selectUser);
 
-  const [status, setStatus] = useState<
-    'idle' | 'loading' | 'succeeded' | 'failed'
-  >('idle');
+  const [loading, setLoading] = useState(true);
 
   const [post, setPost] = useState<Post>();
   const [isFavorited, setFavorited] = useState(false);
   const [actionLoading, setActionLoaind] = useState(false);
 
   useEffect(() => {
-    if (status === 'idle') {
-      const getPostInfo = async () => {
-        setStatus('loading');
-        try {
-          const response = await client.get(`/posts/${postId}?info=true`);
-          setPost(response.data.post);
+    const getPostInfo = async () => {
+      setLoading(true);
+      try {
+        const response = await client.get(`/posts/${postId}?info=true`);
+        setPost(response.data.post);
 
-          if (user) {
-            const { isFavorited } = (
-              await getAuthClient().get(`/favorites/isFavorited?post=${postId}`)
-            ).data;
-            setFavorited(isFavorited);
-          }
-
-          setStatus('succeeded');
-        } catch (err) {
-          setStatus('failed');
+        if (user) {
+          const { isFavorited } = (
+            await getAuthClient().get(`/favorites/isFavorited?post=${postId}`)
+          ).data;
+          setFavorited(isFavorited);
         }
-      };
-      getPostInfo();
-    }
+      } catch (err) {
+        navigate('/home');
+      }
+      setLoading(false);
+    };
+    getPostInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
+  }, [postId]);
 
   const deleteFavorite = async (post?: string) => {
     if (!post) return;
@@ -99,8 +94,6 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
 
     setActionLoaind(false);
   };
-
-  const loading = status === 'idle' || status === 'loading';
 
   if (loading) {
     return (
@@ -136,7 +129,9 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
             <span className='text'>{post?.episodeCount}</span>
           </span>
           <GoDotFill className='sep-dot' />
-          <span>{post?.type === 'movie' ? 'Movie' : post?.type.toUpperCase()}</span>
+          <span>
+            {post?.type === 'movie' ? 'Movie' : post?.type.toUpperCase()}
+          </span>
           <GoDotFill className='sep-dot' />
           <span>{post?.duration + 'm'}</span>
         </div>

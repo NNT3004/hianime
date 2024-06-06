@@ -56,7 +56,7 @@ function App() {
           <Route path='/' element={<SharedLayout />}>
             <Route path='' element={<Navigate to='home' replace />} />
             <Route path='home' element={<Home />} />
-            <Route path='posts/:postId' element={<PostInfo />} />
+            <Route path='posts/:postId' element={<PostInfo key=':postId' />} />
             <Route path='posts/:postId/episodes' element={<PostMain />} />
             <Route path='histories' element={<Histories />} />
             <Route path='favorites' element={<Favorites />} />

@@ -13,6 +13,10 @@ root.render(
   <React.StrictMode>
     <ConfigProvider
       theme={{
+        token: {
+          colorText: '#eee',
+          colorTextDescription: '#eee',
+        },
         components: {
           Progress: {
             colorText: '#eee',

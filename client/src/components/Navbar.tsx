@@ -25,12 +25,12 @@ const NavBar: React.FC<NavBarProps> = ({ onMenuClick }) => {
   return (
     <Wrapper>
       <FaBars className='menu' onClick={onMenuClick} />
+      <Logo
+        onClick={() => {
+          navigate('/home');
+        }}
+      />
       <div className='center'>
-        <Logo
-          onClick={() => {
-            navigate('/home');
-          }}
-        />
         <SearchBar className='search' />
       </div>
       {user ? (
