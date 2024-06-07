@@ -7,6 +7,7 @@ import ViewCount from '../models/ViewCount';
 import Episode from '../models/Episode';
 import User from '../models/User';
 import Genre from '../models/Genre';
+import { Types } from 'mongoose';
 
 export const createPost = async (req: Request, res: Response) => {
   const body = Object.fromEntries(
@@ -516,4 +517,94 @@ const getMonthName = (monthNumber: number) => {
     'Dec',
   ];
   return monthNames[monthNumber - 1];
+};
+
+export const getAllPostsByGenre = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const limit = Number.parseInt(req.query.limit as string) || 12;
+  const page = Number.parseInt(req.query.page as string) || 1;
+
+  const [result] = await PostGenre.aggregate([
+    {
+      $match: {
+        genre: new Types.ObjectId(id),
+      },
+    },
+    {
+      $facet: {
+        paginatedResults: [
+          {
+            $sort: {
+              updatedAt: -1,
+            },
+          },
+          {
+            $skip: (page - 1) * limit,
+          },
+          {
+            $limit: limit,
+          },
+          {
+            $lookup: {
+              from: 'posts',
+              foreignField: '_id',
+              localField: 'post',
+              as: 'postInfo',
+            },
+          },
+          {
+            $unwind: '$postInfo',
+          },
+          {
+            $replaceRoot: {
+              newRoot: '$postInfo',
+            },
+          },
+          {
+            $lookup: {
+              from: 'episodes',
+              let: { post: '$_id' },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ['$post', '$$post'] },
+                        { $lt: ['$releaseDate', new Date()] },
+                      ],
+                    },
+                  },
+                },
+              ],
+              as: 'episodes',
+            },
+          },
+          {
+            $addFields: {
+              episodeCount: { $size: '$episodes' },
+            },
+          },
+          {
+            $project: {
+              title: 1,
+              posterVerticalPath: 1,
+              duration: 1,
+              episodeCount: 1,
+              type: 1,
+            },
+          },
+        ],
+        totalCount: [{ $count: 'total' }],
+      },
+    },
+  ]);
+
+  const posts = result.paginatedResults;
+  const totalCount =
+    result.totalCount.length > 0 ? result.totalCount[0].total : 0;
+  const totalPages = Math.floor(totalCount / limit) + 1;
+  const genre = (await Genre.findById(id))?.name;
+
+  res.status(StatusCodes.OK).json({ posts, page: page, totalPages, genre });
 };

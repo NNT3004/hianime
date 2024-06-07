@@ -14,7 +14,6 @@ root.render(
     <ConfigProvider
       theme={{
         token: {
-          colorText: '#eee',
           colorTextDescription: '#eee',
         },
         components: {

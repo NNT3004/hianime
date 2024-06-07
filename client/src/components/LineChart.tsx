@@ -36,8 +36,15 @@ const LineChart: React.FC<LineChartProps> = ({ data, meta }) => {
         <YAxis tick={{ fill: '#eeeeee' }} />
         <Tooltip />
         <Legend />
-        {meta.map(({ dataKey, stroke }) => {
-          return <Line type='monotone' dataKey={dataKey} stroke={stroke} />;
+        {meta.map(({ dataKey, stroke }, index) => {
+          return (
+            <Line
+              type='monotone'
+              dataKey={dataKey}
+              stroke={stroke}
+              key={index}
+            />
+          );
         })}
       </LC>
     </ResponsiveContainer>

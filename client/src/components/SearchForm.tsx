@@ -3,7 +3,6 @@ import Wrapper from '../assets/wrappers/SearchForm';
 import PrimaryButton from './PrimaryButton';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import HeadNav from './HeadNav';
 import { DatePicker, Input, Select } from 'antd';
 import { FaFilter } from 'react-icons/fa';
 dayjs.extend(customParseFormat);
@@ -33,7 +32,6 @@ const SearchForm: React.FC<SearchFormProps> = ({ disabled, onFilter }) => {
 
   return (
     <Wrapper>
-      <HeadNav navs={[{ name: 'Filter' }]} />
       <div className='card-container'>
         <div className='filter'>
           <div className='filter-item'>

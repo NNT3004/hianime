@@ -75,6 +75,7 @@ const Wrapper = styled.div`
   }
   .post {
     cursor: pointer;
+    border-radius: 3px;
     &:hover {
       background-color: #273037;
     }

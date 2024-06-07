@@ -98,7 +98,7 @@ const Histories: React.FC<HistoriesProps> = ({ className }) => {
         <div className='container'>
           {histories.map((history) => {
             return (
-              <div className='post-with-btn'>
+              <div className='post-with-btn' key={history.post._id}>
                 <PostCardO
                   episodeDuration={history.episode.duration}
                   episodeNumber={history.episode.episodeNumber}
@@ -109,7 +109,6 @@ const Histories: React.FC<HistoriesProps> = ({ className }) => {
                   title={history.post.title}
                   type={history.post.type}
                   className='post'
-                  key={history.post._id}
                   onClick={() => {
                     navigate(`/posts/${history.post._id}/episodes`);
                   }}

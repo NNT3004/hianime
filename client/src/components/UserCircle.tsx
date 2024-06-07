@@ -55,7 +55,7 @@ const UserCircle: React.FC<UserCircleProps> = ({ className }) => {
         </div>
         <div className='sep' />
         <div className='menu-setting'>
-          <div className='menu-item'>
+          <div className='menu-item' onClick={() => navigate('/profile')}>
             <FaUserCircle className='icon' />
             <span className='text'>My profile</span>
           </div>

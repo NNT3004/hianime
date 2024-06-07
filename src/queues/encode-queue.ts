@@ -19,19 +19,27 @@ const encodeWorker = new Worker(
   async (job) => {
     const episodeId: Types.ObjectId = job.data._id;
     const uniqueEpisodeId = episodeId.toString() + '-' + Date.now();
-    await encodeHLS(
-      job.data.path,
-      path.join(__dirname, '..', '..', 'public', uniqueEpisodeId)
-    );
-    await Episode.updateOne(
-      { _id: job.data._id },
-      { path: `/public/${uniqueEpisodeId}/master.m3u8`, rendering: false }
-    );
-    io.emit(
-      'rendered',
-      episodeId.toString(),
-      `/public/${uniqueEpisodeId}/master.m3u8`
-    );
+    try {
+      await encodeHLS(
+        job.data.path,
+        path.join(__dirname, '..', '..', 'public', uniqueEpisodeId)
+      );
+      await Episode.updateOne(
+        { _id: job.data._id },
+        { path: `/public/${uniqueEpisodeId}/master.m3u8`, rendering: false }
+      );
+      io.emit(
+        'rendered',
+        episodeId.toString(),
+        `/public/${uniqueEpisodeId}/master.m3u8`
+      );
+    } catch {
+      await Episode.updateOne(
+        { _id: job.data._id },
+        { path: '', rendering: false }
+      );
+      io.emit('rendered', episodeId.toString(), ``);
+    }
   },
   {
     connection: {

@@ -40,6 +40,11 @@ export const authSlice = createSlice({
       removeAuthClient();
       state.user = null;
     },
+    setAtvPath(state, action) {
+      if (state.user) {
+        state.user.avtPath = action.payload.avtPath;
+      }
+    },
   },
   extraReducers(builder) {
     builder
@@ -156,7 +161,7 @@ export const getUser = createAsyncThunk(
   }
 );
 
-export const { resetStatus, logoutUser } = authSlice.actions;
+export const { resetStatus, logoutUser, setAtvPath } = authSlice.actions;
 export const selectUser = (state: RootState) => state.auth.user;
 
 export default authSlice.reducer;

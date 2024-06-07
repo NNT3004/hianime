@@ -1,20 +1,14 @@
 import React, { useState } from 'react';
-import { Outlet, Navigate, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Wrapper from '../../assets/wrappers/admin/SharedLayout';
 import Sidebar from '../../components/admin/Sidebar';
 import Navbar from '../../components/admin/Navbar';
 import Logo from '../../components/Logo';
 import { FaBars, FaCaretLeft } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../store/slices/authSlice';
 
 const SharedLayout: React.FC = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const navigate = useNavigate();
-  const user = useSelector(selectUser);
-  if (!user || user.role !== 'admin') {
-    return <Navigate to='/home' />;
-  }
   return (
     <Wrapper>
       <main className='dashboard'>

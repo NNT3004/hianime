@@ -32,8 +32,10 @@ const BarChart: React.FC<BarChartProps> = ({ data, meta }) => {
         <YAxis />
         <Tooltip />
         <Legend />
-        {meta.map(({ dataKey, stroke }) => {
-          return <Bar dataKey={dataKey} stackId='a' fill={stroke} />;
+        {meta.map(({ dataKey, stroke }, index) => {
+          return (
+            <Bar dataKey={dataKey} stackId='a' fill={stroke} key={index} />
+          );
         })}
       </BC>
     </ResponsiveContainer>

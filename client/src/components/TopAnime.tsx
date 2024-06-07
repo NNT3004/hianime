@@ -28,16 +28,16 @@ const TopAnime: React.FC<TopAnimeProps> = ({ className }) => {
 
   useEffect(() => {
     const getTrendingPosts = async () => {
-      let ago = 0;
+      let ago;
       switch (topBy) {
         case 'day':
-          ago = 0;
-          break;
-        case 'month':
-          ago = 29;
+          ago = 1;
           break;
         case 'week':
-          ago = 6;
+          ago = 7;
+          break;
+        case 'month':
+          ago = 30;
           break;
       }
       try {
@@ -53,7 +53,7 @@ const TopAnime: React.FC<TopAnimeProps> = ({ className }) => {
   return (
     <Wrapper className={className}>
       <header>
-        <p>Top Anime</p>
+        <p>Top Film</p>
         <span>
           <button
             className={topBy === 'day' ? 'activate' : ''}

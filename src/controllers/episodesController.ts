@@ -4,6 +4,8 @@ import { StatusCodes } from 'http-status-codes';
 import Episode from '../models/Episode';
 import encodeQueue from '../queues/encode-queue';
 import { getVideoDuration } from '../utils/encode-hls';
+import History from '../models/History';
+import Comment from '../models/Comment';
 
 export const getEpisode = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -86,6 +88,9 @@ export const deleteEpisode = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const result = await Episode.deleteOne({ _id: id });
+
+  await History.deleteMany({ episode: id });
+  await Comment.deleteMany({ episode: id });
 
   if (result.deletedCount == 0)
     throw new BadRequestError('making each day of the year');

@@ -28,7 +28,6 @@ const AllPosts: React.FC = () => {
   >([]);
   useEffect(() => {
     if (loading === false) {
-      console.log(query);
       const getAllPosts = async () => {
         setLoading(true);
         try {

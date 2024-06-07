@@ -8,6 +8,7 @@ import {
   getTopPosts,
   increaseView,
   getStats,
+  getAllPostsByGenre,
 } from '../controllers/postsController';
 
 const router = express.Router();
@@ -15,6 +16,7 @@ const router = express.Router();
 router.route('/').get(getAllPosts);
 router.route('/top').get(getTopPosts);
 router.route('/stats').get(getStats);
+router.route('/by-genre/:id').get(getAllPostsByGenre);
 router.route('/:id').get(getPost);
 router.route('/').post(createPost);
 router.route('/:id').put(updatePost);

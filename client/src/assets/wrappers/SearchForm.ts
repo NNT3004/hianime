@@ -1,14 +1,11 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  nav {
-    margin-left: 30px;
-  }
   .card-container {
     border-radius: 8px;
     background-color: #393e46;
     padding: 40px;
-    margin: 0 30px;
+    margin: 30px 30px 0;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: box-shadow 0.3s;
     &:hover {

@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getAuthClient } from '../api/client';
 import Loading from '../components/Loading';
 import PostCardI from '../components/postcard/PostCardI';
 import Wrapper from '../assets/wrappers/SingleQueryPosts';
-import { IoFilm } from 'react-icons/io5';
+import { MdOutlineQueryStats } from "react-icons/md";
 import { message } from 'antd';
 import { AxiosError } from 'axios';
 import Pagination from '../components/Pagination';
 
 interface SingleQueryPostsProps {
-  className?: string;
+  option?: {
+    sort: 'updated' | 'added' | 'name-asc' | 'name-desc' | 'release';
+    type: 'all' | 'tv' | 'movie' | 'ona' | 'ova';
+    status: 'all' | 'airing' | 'completed' | 'waiting';
+    season: 'all' | 'spring' | 'summer' | 'fall' | 'winter';
+  };
+  pageName: string;
 }
 
 interface Post {
@@ -22,46 +28,59 @@ interface Post {
   episodeCount: number;
 }
 
-const SingleQueryPosts: React.FC<SingleQueryPostsProps> = ({ className }) => {
+const SingleQueryPosts: React.FC<SingleQueryPostsProps> = ({
+  option,
+  pageName,
+}) => {
   const navigate = useNavigate();
+  const { genreId } = useParams();
 
   const [curPage, setCurPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [loading, setLoading] = useState(false);
+  const [pgName, setPgName] = useState(pageName);
 
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    if (loading === false) {
-      const getAllPosts = async () => {
-        try {
-          setLoading(true);
-          const response = await getAuthClient().get(`/posts?page=${curPage}`);
-          setPosts(response.data.posts);
-          setTotalPages(response.data.totalPages);
+    const getAllPosts = async () => {
+      setLoading(true);
+      try {
+        let query: string;
+        if (genreId) {
+          query = `/by-genre/${genreId}?page=${curPage}`;
+        } else if (option) {
+          query = `?type=${option.type}&status=${option.status}&season=${option.season}&sort=${option.sort}&page=${curPage}`;
+        } else {
           setLoading(false);
-        } catch (err) {
-          const error = err as AxiosError;
-          message.error((error.response!.data as any).msg);
-          setLoading(false);
+          return;
         }
-      };
-      getAllPosts();
-    }
+        const response = await getAuthClient().get(`/posts${query}`);
+        setPosts(response.data.posts);
+        setTotalPages(response.data.totalPages);
+        if ('genre' in response.data)
+          setPgName(`${pageName}: ${response.data.genre}`);
+      } catch (err) {
+        const error = err as AxiosError;
+        message.error((error.response!.data as any).msg);
+      }
+      setLoading(false);
+    };
+    getAllPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [curPage]);
+  }, [curPage, option, genreId]);
 
   const handleChangePage = (page: number) => {
     setCurPage(page);
   };
 
   return (
-    <Wrapper className={className}>
+    <Wrapper>
       <header>
         <span className='fav-icon'>
-          <IoFilm />
+          <MdOutlineQueryStats />
         </span>
-        <p>recentyl updated</p>
+        <p>{pgName}</p>
       </header>
       {loading ? (
         <Loading

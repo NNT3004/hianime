@@ -84,7 +84,7 @@ const Favorites: React.FC<FavoritesProps> = ({ className }) => {
         <div className='container'>
           {favorites.map((post) => {
             return (
-              <div className='post-with-btn'>
+              <div className='post-with-btn' key={post._id}>
                 <PostCardI
                   duration={post.duration}
                   episodeCount={post.episodeCount}
@@ -92,7 +92,6 @@ const Favorites: React.FC<FavoritesProps> = ({ className }) => {
                   title={post.title}
                   type={post.type}
                   className='post'
-                  key={post._id}
                   onClick={() => {
                     navigate(`/posts/${post._id}`);
                   }}

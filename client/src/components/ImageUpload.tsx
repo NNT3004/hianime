@@ -49,6 +49,9 @@ const ImageUpload: React.FC<ImgaeUploadProps> = ({
       onChange={handleChange}
       name='image'
       style={{ overflow: 'hidden' }}
+      headers={{
+        Authorization: `Bearer ${localStorage.getItem('user_token')}`,
+      }}
     >
       {imageUrl ? (
         <img

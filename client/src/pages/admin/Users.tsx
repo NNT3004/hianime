@@ -14,7 +14,11 @@ import { BiReset } from 'react-icons/bi';
 const userFields = [
   { title: 'Name', key: 'name' },
   { title: 'Email', key: 'email' },
-  { title: 'Registered', key: 'createdAt' },
+  {
+    title: 'Registered',
+    key: 'createdAt',
+    map: (dateString: string) => new Date(dateString || '2024/06/07').toLocaleDateString(),
+  },
   { title: 'Role', key: 'role' },
 ];
 

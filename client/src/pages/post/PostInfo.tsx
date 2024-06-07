@@ -193,7 +193,11 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
           <span className='label'>Genres:</span>
           {post?.genres.map((genre) => {
             return (
-              <span key={genre._id} className='genre'>
+              <span
+                key={genre._id}
+                className='genre'
+                onClick={() => navigate(`/genres/${genre._id}`)}
+              >
                 {genre.name}
               </span>
             );

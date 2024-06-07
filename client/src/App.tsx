@@ -25,6 +25,9 @@ import Statistics from './pages/admin/Statistics';
 import Users from './pages/admin/Users';
 import { getAllGenres } from './store/slices/genresSlice';
 import { getAllStudios } from './store/slices/studiosSlice';
+import QueryPosts from './pages/QueryPosts';
+import Profile from './pages/Profile';
+import ProtectedRoute from './pages/ProtectedRoute';
 TimeAgo.addDefaultLocale(en);
 
 function App() {
@@ -53,16 +56,114 @@ function App() {
     <BrowserRouter>
       <ScrollToTop>
         <Routes>
-          <Route path='/' element={<SharedLayout />}>
+          <Route key='/for-all' path='/' element={<SharedLayout />}>
             <Route path='' element={<Navigate to='home' replace />} />
             <Route path='home' element={<Home />} />
-            <Route path='posts/:postId' element={<PostInfo key=':postId' />} />
+            <Route path='posts/:postId' element={<PostInfo />} />
             <Route path='posts/:postId/episodes' element={<PostMain />} />
+            <Route
+              path='recently-updated'
+              element={
+                <SingleQueryPosts
+                  key='updated'
+                  option={{
+                    season: 'all',
+                    sort: 'updated',
+                    status: 'all',
+                    type: 'all',
+                  }}
+                  pageName='Recently Updated'
+                />
+              }
+            />
+            <Route
+              path='tv'
+              element={
+                <SingleQueryPosts
+                  key='tv'
+                  option={{
+                    season: 'all',
+                    sort: 'updated',
+                    status: 'all',
+                    type: 'tv',
+                  }}
+                  pageName='TV'
+                />
+              }
+            />
+            <Route
+              path='movie'
+              element={
+                <SingleQueryPosts
+                  key='movie'
+                  option={{
+                    season: 'all',
+                    sort: 'updated',
+                    status: 'all',
+                    type: 'movie',
+                  }}
+                  pageName='Movie'
+                />
+              }
+            />
+            <Route
+              path='ova'
+              element={
+                <SingleQueryPosts
+                  key='ova'
+                  option={{
+                    season: 'all',
+                    sort: 'updated',
+                    status: 'all',
+                    type: 'ova',
+                  }}
+                  pageName='OVA'
+                />
+              }
+            />
+            <Route
+              path='ona'
+              element={
+                <SingleQueryPosts
+                  key='ona'
+                  option={{
+                    season: 'all',
+                    sort: 'updated',
+                    status: 'all',
+                    type: 'ona',
+                  }}
+                  pageName='ONA'
+                />
+              }
+            />
+            <Route
+              path='genres/:genreId'
+              element={<SingleQueryPosts pageName='Genre' key='genre' />}
+            />
+            <Route path='filter' element={<QueryPosts />} />
+          </Route>
+          <Route
+            path='/'
+            key='/protected-route'
+            element={
+              <ProtectedRoute type='both' key='both'>
+                <SharedLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route path='histories' element={<Histories />} />
             <Route path='favorites' element={<Favorites />} />
-            <Route path='recently-updated' element={<SingleQueryPosts />} />
+            <Route path='profile' element={<Profile />} />
           </Route>
-          <Route path='/admin' element={<SharedAdminLayout />}>
+          <Route
+            path='/admin'
+            key='/protected-route-admin'
+            element={
+              <ProtectedRoute type='admin' key='admin'>
+                <SharedAdminLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route path='posts' element={<AllPosts />} />
             <Route path='posts/:postId' element={<Post key='post-update' />} />
             <Route path='posts/:postId/episodes' element={<Episodes />} />

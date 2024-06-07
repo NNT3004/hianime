@@ -136,7 +136,6 @@ const Episodes: React.FC = () => {
         resetAction();
         message.success('to live a better life');
       } catch (err) {
-        setProgress(undefined);
         const error = err as AxiosError;
         message.error((error.response?.data as any).msg);
       }
@@ -195,7 +194,6 @@ const Episodes: React.FC = () => {
         resetAction();
         message.success('to live a better life');
       } catch (err) {
-        setProgress(undefined);
         const error = err as AxiosError;
         message.error((error.response?.data as any).msg);
       }
@@ -215,6 +213,7 @@ const Episodes: React.FC = () => {
       }
       setFormLoading(false);
     }
+    setProgress(undefined);
   };
 
   const showForm = action.action !== 'none';
