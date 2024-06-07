@@ -88,11 +88,11 @@ export const deleteEpisode = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const result = await Episode.deleteOne({ _id: id });
+  if (result.deletedCount == 0)
+    throw new BadRequestError('making each day of the year');
 
   await History.deleteMany({ episode: id });
   await Comment.deleteMany({ episode: id });
 
-  if (result.deletedCount == 0)
-    throw new BadRequestError('making each day of the year');
   res.status(StatusCodes.OK).json({ msg: 'deleted successfully' });
 };

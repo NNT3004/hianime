@@ -9,6 +9,10 @@ interface IUser {
   password: string;
   role: string;
   avtPath?: string;
+  setting: {
+    autoPlay: boolean;
+    autoNext: boolean;
+  };
 }
 
 interface IUserMethods {
@@ -47,6 +51,16 @@ const schema = new Schema<IUser, UserModel, IUserMethods>(
       required: true,
     },
     avtPath: { type: String, required: false },
+    setting: {
+      type: {
+        autoNext: Boolean,
+        autoPlay: Boolean,
+      },
+      default: {
+        autoNext: true,
+        autoPlay: true,
+      },
+    },
   },
   { timestamps: true }
 );

@@ -26,14 +26,42 @@ const Wrapper = styled.div`
         bottom: 0;
         left: 0;
       }
-      .player {
+      .what-do-we-do {
         background-color: #1a1e21;
         flex-grow: 1;
-        .frame {
+        position: relative;
+        .frame,
+        .player {
           aspect-ratio: 16/9;
           border-radius: 0;
           background-color: #000;
         }
+      }
+    }
+  }
+  .ads {
+    z-index: 100;
+    position: absolute;
+    top: 0;
+    bottom: 56px;
+    left: 0;
+    right: 0;
+    .delayed-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 140px;
+      padding: 10px 0;
+      border: none;
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: #eeeeee;
+      cursor: pointer;
+      font-size: 0.865rem;
+      &:disabled {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #eeeeee;
+        cursor: default;
       }
     }
   }

@@ -6,15 +6,17 @@ const Wrapper = styled.aside`
   padding: 10px 10px;
   margin-top: -10px;
   user-select: none;
-  li {
-    list-style-type: none;
+  section {
     display: flex;
   }
   .setting {
     .btn {
+      background-color: transparent;
+      border: none;
       font-size: 0.865rem;
       width: 110px;
       cursor: pointer;
+      color: #eeeeee;
       .on {
         color: var(--primary-500);
       }
@@ -29,7 +31,9 @@ const Wrapper = styled.aside`
   }
   .nav {
     .btn {
-      color: var(--white);
+      background-color: transparent;
+      border: none;
+      color: #eeeeee;
       &:hover {
         color: var(--primary-500);
       }
@@ -49,8 +53,8 @@ const Wrapper = styled.aside`
       }
     }
   }
-  .btn.disabled,
-  .btn.disabled:hover {
+  .btn:disabled,
+  .btn:disabled:hover {
     color: var(--grey-800);
     cursor: default;
   }

@@ -4,23 +4,25 @@ import EpisodeList from '../../components/EpisodeList';
 import PlayerNav from '../../components/PlayerNav';
 import { GoDotFill } from 'react-icons/go';
 import RatingContainer from '../../components/RatingContainer';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { client, getAuthClient } from '../../api/client';
-import '@vidstack/react/player/styles/base.css';
-import '@vidstack/react/player/styles/plyr/theme.css';
+import '@vidstack/react/player/styles/default/theme.css';
+import '@vidstack/react/player/styles/default/layouts/video.css';
 import {
   MediaPlayer,
-  MediaPlayerInstance,
   MediaProvider,
   type MediaTimeUpdateEventDetail,
+  type MediaPlayerInstance,
 } from '@vidstack/react';
 import {
-  PlyrLayout,
-  plyrLayoutIcons,
-} from '@vidstack/react/player/layouts/plyr';
+  defaultLayoutIcons,
+  DefaultVideoLayout,
+} from '@vidstack/react/player/layouts/default';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../store/slices/authSlice';
+import { selectSetting, selectUser } from '../../store/slices/authSlice';
 import CommentSection from '../../components/CommentSection';
+import { message } from 'antd';
+import { AxiosError } from 'axios';
 
 interface Episode {
   _id: string;
@@ -33,136 +35,167 @@ interface Episode {
 }
 
 const PostMain: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
   const { postId } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const episode = searchParams.get('episode');
+
+  const [ads, setAds] = useState(false);
 
   const user = useSelector(selectUser);
-
-  const [status, setStatus] = useState<
-    'idle' | 'loading' | 'succeeded' | 'failed'
-  >('idle');
+  const { autoNext, autoPlay } = useSelector(selectSetting);
 
   const [episodes, setEpisodes] = useState<Episode[]>([]);
-  const [curEpisode, setCurEpisode] = useState<Episode>();
-  const [initialPosition, setInitialPosition] = useState<number>();
-  const player = useRef<MediaPlayerInstance>(null);
-  const [autoPlay, setAutoPlay] = useState<boolean>(false);
-  const [autoNext, setAutoNext] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
 
-  const curIndex = episodes.findIndex(
-    (episode) => episode._id === curEpisode?._id
-  );
-  const disableNext = curIndex >= episodes.length - 1;
-  const disablePrev = curIndex <= 0;
+  const episodeIndex = episodes.findIndex((e) => e._id === episode);
+
+  const [iniPos, setIniPos] = useState<number>();
 
   useEffect(() => {
-    if (status === 'idle') {
-      const getEpisodes = async () => {
-        setStatus('loading');
-        try {
-          const { episodes } = (
-            await client.get(`/episodes/watch?post=${postId}`)
-          ).data;
-          setEpisodes(episodes);
+    const getEpisodes = async () => {
+      setLoading(true);
 
-          let history: { episode: string; position: number } | null = null;
-          if (user) {
-            history = (await getAuthClient().get(`/histories?post=${postId}`))
-              .data.history;
-          }
-
-          const episodeId = searchParams.get('episode');
-          if (episodeId) {
-            const episode = episodes.find(
-              (episode: Episode) => episode._id === episodeId
+      try {
+        const response = await client.get(`/episodes/watch?post=${postId}`);
+        const { episodes } = response.data;
+        setEpisodes(episodes);
+        if (user) {
+          try {
+            const response = await getAuthClient().get(
+              `/histories?post=${postId}`
             );
-            if (episode) {
-              setCurEpisode(episode);
-              if (history && history.episode === episode._id) {
-                setInitialPosition(history.position);
+            const { history } = response.data;
+            if (history) {
+              const { episode: ep, position } = history;
+              if (episode === ep) setIniPos(position);
+              if (!episode) {
+                setSearchParams({
+                  episode: ep,
+                });
+                setIniPos(position);
               }
-            } else {
-              setSearchParams();
             }
-          } else if (history) {
-            const episode = episodes.find(
-              (episode: Episode) => episode._id === history?.episode
+          } catch (err) {
+            message.error(
+              ((err as AxiosError).response?.data as any)?.msg || 'unknow error'
             );
-            setSearchParams({ episode: episode._id });
-            setCurEpisode(episode);
-            setInitialPosition(history.position);
-          } else {
-            const episode = episodes.length > 0 ? episodes[0] : undefined;
-            if (episode) setSearchParams({ episode: episode._id });
-            setCurEpisode(episode);
           }
-          setStatus('succeeded');
-        } catch (err) {
-          setStatus('failed');
+        } else if (!episode) {
+          if (episodes.length > 0) {
+            setSearchParams({
+              episode: episodes[0]._id,
+            });
+          }
         }
-      };
-      getEpisodes();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      } catch (err) {
+        message.error(
+          ((err as AxiosError).response?.data as any)?.msg || 'unknow error'
+        );
+      }
 
-  const onEpisodeChange = (episode: Episode) => {
-    setInitialPosition(undefined);
-    setCurEpisode(episode);
-    if (searchParams.get('episode') !== episode._id) {
-      setSearchParams({ episode: episode._id });
-    }
-  };
+      setLoading(false);
+    };
+    getEpisodes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postId]);
 
   const updateHistory = () => {
     let timeOutId: ReturnType<typeof setTimeout>;
-    let position = initialPosition || 0;
+    let position = iniPos || 0;
     return (e: MediaTimeUpdateEventDetail) => {
-      if (!curEpisode) return;
-      const currentTime = e.currentTime;
-      if (Math.abs(currentTime - position) > 10) {
-        position = currentTime;
+      if (Math.abs(e.currentTime - position) > 10) {
         clearTimeout(timeOutId);
+        position = e.currentTime;
         timeOutId = setTimeout(async () => {
-          await getAuthClient().post(`/histories?post=${postId}`, {
-            episode: curEpisode._id,
-            position: position,
-          });
+          try {
+            await getAuthClient().post(`/histories?post=${postId}`, {
+              episode: episode,
+              position: position,
+            });
+          } catch (err) {
+            message.error(
+              ((err as AxiosError).response?.data as any)?.msg || 'unknow error'
+            );
+          }
         }, 3000);
       }
     };
   };
 
+  const handleTimeUpdate = useMemo(
+    () => (user && episode ? updateHistory() : undefined),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [user, episode]
+  );
+
   const increasView = async () => {
     try {
       await client.post(`/posts/${postId}/watch`);
-    } catch (err) {}
+    } catch (err) {
+      message.error(
+        ((err as AxiosError).response?.data as any)?.msg || 'unknow error'
+      );
+    }
   };
 
-  const onVideoStarted = () => {
+  const handleVideoStarted = () => {
+    playerRef.current!.pause();
+    setAds(true);
     increasView();
-    if (initialPosition) {
-      player.current!.currentTime = initialPosition;
+  };
+
+  const playerRef = useRef<MediaPlayerInstance>(null);
+  const adsRef = useRef<MediaPlayerInstance>(null);
+
+  const handleVideoLoaded = () => {
+    if (iniPos) {
+      playerRef.current!.currentTime = iniPos;
     }
   };
 
-  const handleTimeUpdate = useMemo(
-    () => (user && curEpisode ? updateHistory() : undefined),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [user, curEpisode]
-  );
-
-  const nextEpisode = () => {
-    if (!disableNext) {
-      onEpisodeChange(episodes[curIndex + 1]);
+  const handleVideoEnded = () => {
+    setAds(false);
+    if (!autoNext) return;
+    if (episodeIndex < episodes.length - 1) {
+      setIniPos(undefined);
+      setSearchParams({
+        episode: episodes[episodeIndex + 1]._id,
+      });
     }
   };
 
-  const prevpisode = () => {
-    if (!disablePrev) {
-      onEpisodeChange(episodes[curIndex - 1]);
-    }
+  const handleChangeEpisode = (episodeId: string) => {
+    setAds(false);
+    setIniPos(undefined);
+    setSearchParams({
+      episode: episodeId,
+    });
   };
+
+  const handleNextEpisode = () => {
+    setAds(false);
+    setIniPos(undefined);
+    setSearchParams({
+      episode: episodes[episodeIndex + 1]._id,
+    });
+  };
+
+  const handlePrevEpisode = () => {
+    setAds(false);
+    setIniPos(undefined);
+    setSearchParams({
+      episode: episodes[episodeIndex - 1]._id,
+    });
+  };
+
+  const handleSkipAds = () => {
+    setAds(false);
+    playerRef.current!.play();
+  };
+
+  if (!loading && episodes.length === 0) {
+    return <Navigate to='/home' />;
+  }
 
   return (
     <Wrapper>
@@ -177,41 +210,53 @@ const PostMain: React.FC = () => {
         <section className='watch'>
           <EpisodeList
             className='episode-list'
-            curEpisode={curEpisode}
+            curEpisodeId={episode!}
             episodes={episodes}
-            onChangeEpisode={onEpisodeChange}
+            onChangeEpisode={handleChangeEpisode}
           />
-          <div className='player'>
-            {curEpisode ? (
-              <MediaPlayer
-                key={curEpisode._id}
-                title={curEpisode.title}
-                src={curEpisode.path}
-                className='frame'
-                onTimeUpdate={handleTimeUpdate}
-                ref={player}
-                onStarted={onVideoStarted}
-                autoPlay={autoPlay}
-                onEnded={() => {
-                  if (autoNext) nextEpisode();
-                }}
-                autoFocus
-              >
-                <MediaProvider />
-                <PlyrLayout icons={plyrLayoutIcons} />
-              </MediaPlayer>
-            ) : (
+          <div className='what-do-we-do'>
+            {!episodes[episodeIndex] ? (
               <div className='frame' />
+            ) : (
+              <>
+                <MediaPlayer
+                  title={episodes[episodeIndex].title}
+                  src={episodes[episodeIndex].path}
+                  key={episodes[episodeIndex]._id}
+                  ref={playerRef}
+                  className='player'
+                  onStarted={handleVideoStarted}
+                  onLoadedMetadata={handleVideoLoaded}
+                  autoPlay={autoPlay}
+                  onTimeUpdate={handleTimeUpdate}
+                  onEnded={handleVideoEnded}
+                >
+                  <MediaProvider />
+                  <DefaultVideoLayout icons={defaultLayoutIcons} />
+                </MediaPlayer>
+                {ads && (
+                  <aside className='ads'>
+                    <MediaPlayer
+                      title='Ads'
+                      src='/public/665b489f1221730bade0f24a-1717258400013/master.m3u8'
+                      key='ads'
+                      className='player'
+                      ref={adsRef}
+                      onEnded={handleSkipAds}
+                      autoPlay
+                    >
+                      <MediaProvider />
+                    </MediaPlayer>
+                    <DelayedButton onClick={handleSkipAds} />
+                  </aside>
+                )}
+              </>
             )}
             <PlayerNav
-              autoNext={autoNext}
-              autoPlay={autoPlay}
-              disabledNext={disableNext}
-              disabledPrev={disablePrev}
-              onClickAutoNext={() => setAutoNext((v) => !v)}
-              onClickAutoPlay={() => setAutoPlay((v) => !v)}
-              onNextClicked={nextEpisode}
-              onPrevClicked={prevpisode}
+              disabledNext={episodeIndex >= episodes.length - 1}
+              disabledPrev={episodeIndex <= 0}
+              onNextClicked={handleNextEpisode}
+              onPrevClicked={handlePrevEpisode}
             />
           </div>
         </section>
@@ -219,6 +264,36 @@ const PostMain: React.FC = () => {
       </div>
       <CommentSection key={searchParams.get('episode')} />
     </Wrapper>
+  );
+};
+
+interface DelayedButtonProps {
+  onClick: () => void;
+}
+
+const DelayedButton: React.FC<DelayedButtonProps> = ({ onClick }) => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(5);
+
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setRemainingTime((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timerInterval);
+          setIsEnabled(true);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timerInterval);
+  }, []);
+
+  return (
+    <button onClick={onClick} disabled={!isEnabled} className='delayed-btn'>
+      {isEnabled ? 'Skip' : `Wait ${remainingTime} seconds`}
+    </button>
   );
 };
 

@@ -19,6 +19,10 @@ export interface AuthState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   gettingUser: boolean;
   error: string | null;
+  setting: {
+    autoPlay: boolean;
+    autoNext: boolean;
+  };
 }
 
 const initialState: AuthState = {
@@ -26,6 +30,12 @@ const initialState: AuthState = {
   error: null,
   status: 'idle',
   gettingUser: true,
+  setting: {
+    autoPlay:
+      localStorage.getItem('autoPlay') === 'true' ? true : false || false,
+    autoNext:
+      localStorage.getItem('autoNext') === 'true' ? true : false || false,
+  },
 };
 
 export const authSlice = createSlice({
@@ -45,6 +55,11 @@ export const authSlice = createSlice({
         state.user.avtPath = action.payload.avtPath;
       }
     },
+    setSetting(state, action) {
+      const { autoPlay, autoNext } = action.payload;
+      state.setting.autoPlay = autoPlay;
+      state.setting.autoNext = autoNext;
+    },
   },
   extraReducers(builder) {
     builder
@@ -60,6 +75,10 @@ export const authSlice = createSlice({
           role: user.role,
           name: user.name,
           avtPath: user.avtPath,
+        };
+        state.setting = user.setting || {
+          autoNext: false,
+          autoPlay: false,
         };
         setAuthClient(token);
       })
@@ -81,6 +100,10 @@ export const authSlice = createSlice({
           name: user.name,
           avtPath: user.avtPath,
         };
+        state.setting = user.setting || {
+          autoNext: false,
+          autoPlay: false,
+        };
         setAuthClient(token);
       })
       .addCase(register.rejected, (state, action) => {
@@ -97,6 +120,10 @@ export const authSlice = createSlice({
           role: user.role,
           name: user.name,
           avtPath: user.avtPath,
+        };
+        state.setting = user.setting || {
+          autoNext: false,
+          autoPlay: false,
         };
       })
       .addCase(getUser.rejected, (state, action) => {
@@ -161,7 +188,9 @@ export const getUser = createAsyncThunk(
   }
 );
 
-export const { resetStatus, logoutUser, setAtvPath } = authSlice.actions;
+export const { resetStatus, logoutUser, setAtvPath, setSetting } =
+  authSlice.actions;
 export const selectUser = (state: RootState) => state.auth.user;
+export const selectSetting = (state: RootState) => state.auth.setting;
 
 export default authSlice.reducer;

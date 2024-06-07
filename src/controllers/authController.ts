@@ -91,3 +91,20 @@ export const changePassword = async (req: Request, res: Response) => {
 
   res.status(StatusCodes.OK).json();
 };
+
+export const updateSetting = async (req: Request, res: Response) => {
+  const user = req.user.userId;
+  const { autoPlay, autoNext } = req.body;
+
+  await User.updateOne(
+    { _id: user },
+    {
+      setting: {
+        autoNext,
+        autoPlay,
+      },
+    }
+  );
+
+  res.status(StatusCodes.OK).json();
+};

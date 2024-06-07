@@ -14,13 +14,13 @@ interface Episode {
 
 interface EpisodeListProps {
   episodes: Episode[];
-  curEpisode?: Episode;
-  onChangeEpisode: (episode: Episode) => void;
+  curEpisodeId: string;
+  onChangeEpisode: (episodeId: string) => void;
   className?: string;
 }
 
 const EpisodeList: React.FC<EpisodeListProps> = ({
-  curEpisode,
+  curEpisodeId,
   episodes,
   onChangeEpisode,
   className,
@@ -35,14 +35,12 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
           return (
             <ul
               key={episode._id}
-              onClick={() => onChangeEpisode(episode)}
-              className={
-                episode._id === curEpisode?._id ? 'activate' : 'watched'
-              }
+              onClick={() => onChangeEpisode(episode._id)}
+              className={episode._id === curEpisodeId ? 'activate' : 'watched'}
             >
               <span className='episode'>{episode.episodeNumber}</span>
               <span className='title'>{episode.title}</span>
-              {episode._id === curEpisode?._id && (
+              {episode._id === curEpisodeId && (
                 <FaPlayCircle className='play-icon' />
               )}
             </ul>
