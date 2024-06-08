@@ -74,6 +74,12 @@ const PostMain: React.FC = () => {
                 });
                 setIniPos(position);
               }
+            } else if (!episode) {
+              if (episodes.length > 0) {
+                setSearchParams({
+                  episode: episodes[0]._id,
+                });
+              }
             }
           } catch (err) {
             message.error(

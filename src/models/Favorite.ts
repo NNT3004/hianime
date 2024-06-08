@@ -3,6 +3,7 @@ import { Schema, model, Model, Types } from 'mongoose';
 interface IFavorite {
   user: Types.ObjectId;
   post: Types.ObjectId;
+  list: string;
 }
 
 interface IFavoriteMethods {}
@@ -18,6 +19,11 @@ const schema = new Schema<IFavorite, FavoriteModel, IFavoriteMethods>({
   post: {
     type: Schema.Types.ObjectId,
     ref: 'Post',
+    required: true,
+  },
+  list: {
+    type: String,
+    enum: ['fav', 'later', 'current', 'arch'],
     required: true,
   },
 });

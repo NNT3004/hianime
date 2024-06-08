@@ -10,29 +10,30 @@ export const createFavorite = async (req: Request, res: Response) => {
   const { post } = req.query;
   if (!post) throw new BadRequestError('post is missing');
 
-  const favorite = await Favorite.create({ user, post });
+  const { list } = req.body;
+
+  await Favorite.updateOne({ user, post }, { list }, { upsert: true });
 
   res.status(StatusCodes.OK).json();
 };
 
-export const isFavorited = async (req: Request, res: Response) => {
+export const getFavorite = async (req: Request, res: Response) => {
   const user = req.user.userId;
 
   const { post } = req.query;
   if (!post) throw new BadRequestError('post is missing');
 
-  const favorite = await Favorite.exists({ user, post });
+  const favorite = await Favorite.findOne({ user, post });
 
-  const isFavorited = favorite !== null;
-
-  res.status(StatusCodes.OK).json({ isFavorited });
+  res.status(StatusCodes.OK).json({ list: favorite?.list || 'none' });
 };
 
 export const getAllFavorites = async (req: Request, res: Response) => {
   const user = req.user.userId;
+  const list = req.query.list;
 
   const favorites = await Favorite.aggregate([
-    { $match: { user: new Types.ObjectId(user) } },
+    { $match: { user: new Types.ObjectId(user), list } },
     {
       $lookup: {
         from: 'posts',

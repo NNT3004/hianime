@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Wrapper from '../../assets/wrappers/PostInfo';
 import { GoDotFill } from 'react-icons/go';
-import { FaClosedCaptioning, FaPlay, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaClosedCaptioning, FaPlay } from 'react-icons/fa';
 import PrimaryButton from '../../components/PrimaryButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import { client, getAuthClient } from '../../api/client';
@@ -40,7 +40,9 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
   const [loading, setLoading] = useState(true);
 
   const [post, setPost] = useState<Post>();
-  const [isFavorited, setFavorited] = useState(false);
+  const [list, setList] = useState<
+    'fav' | 'later' | 'current' | 'arch' | 'none'
+  >('none');
   const [actionLoading, setActionLoaind] = useState(false);
 
   useEffect(() => {
@@ -51,10 +53,10 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
         setPost(response.data.post);
 
         if (user) {
-          const { isFavorited } = (
-            await getAuthClient().get(`/favorites/isFavorited?post=${postId}`)
+          const { list } = (
+            await getAuthClient().get(`/favorites/my-list?post=${postId}`)
           ).data;
-          setFavorited(isFavorited);
+          setList(list);
         }
       } catch (err) {
         navigate('/home');
@@ -65,13 +67,13 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postId]);
 
-  const deleteFavorite = async (post?: string) => {
+  const deleteList = async (post?: string) => {
     if (!post) return;
     setActionLoaind(true);
 
     try {
       await getAuthClient().delete(`/favorites?post=${post}`);
-      setFavorited(false);
+      setList('none');
     } catch (err) {
       const error = err as AxiosError;
       message.error((error.response?.data as any).msg);
@@ -80,13 +82,22 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
     setActionLoaind(false);
   };
 
-  const addFavorite = async (post?: string) => {
+  const addTolist = async (
+    li: 'fav' | 'later' | 'current' | 'arch',
+    post?: string
+  ) => {
     if (!post) return;
+
+    if (li === list) {
+      await deleteList(post);
+      return;
+    }
+
     setActionLoaind(true);
 
     try {
-      await getAuthClient().post(`/favorites?post=${post}`);
-      setFavorited(true);
+      await getAuthClient().post(`/favorites?post=${post}`, { list: li });
+      setList(li);
     } catch (err) {
       const error = err as AxiosError;
       message.error((error.response?.data as any).msg);
@@ -94,6 +105,28 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
 
     setActionLoaind(false);
   };
+
+  const [showAddList, setShowAddList] = useState(false);
+  const addListRef = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      addListRef.current &&
+      !addListRef.current.contains(event.target as Node)
+    ) {
+      setShowAddList(false);
+    }
+  };
+  useEffect(() => {
+    if (showAddList) {
+      document.addEventListener('mouseup', handleClickOutside);
+    } else {
+      document.removeEventListener('mouseup', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mouseup', handleClickOutside);
+    };
+  }, [showAddList]);
 
   if (loading) {
     return (
@@ -145,25 +178,45 @@ const PostInfo: React.FC<PostInfoProps> = ({ className }) => {
           >
             Watch now
           </PrimaryButton>
-          {isFavorited ? (
-            <PrimaryButton
-              startIcon={FaTrash}
-              className='btn-red btn'
-              onClick={() => deleteFavorite(postId)}
-              disabled={actionLoading}
-            >
-              Favorited
-            </PrimaryButton>
-          ) : (
-            <PrimaryButton
-              startIcon={FaPlus}
-              className='btn-white btn'
-              onClick={() => addFavorite(postId)}
-              disabled={actionLoading}
-            >
-              Favorite
-            </PrimaryButton>
-          )}
+          <div
+            className='add-list-btn'
+            onClick={(e) => {
+              if (e.currentTarget === e.target) setShowAddList((prev) => !prev);
+            }}
+            ref={addListRef}
+          >
+            Add to list
+            <aside className={`${showAddList ? 'show ' : ''}btn-menu`}>
+              <button
+                className={`${list === 'fav' ? 'activated ' : ''} btn-item`}
+                onClick={() => addTolist('fav', postId)}
+                disabled={actionLoading}
+              >
+                Favorite
+              </button>
+              <button
+                className={`${list === 'later' ? 'activated ' : ''} btn-item`}
+                onClick={() => addTolist('later', postId)}
+                disabled={actionLoading}
+              >
+                Watch later
+              </button>
+              <button
+                className={`${list === 'current' ? 'activated ' : ''} btn-item`}
+                onClick={() => addTolist('current', postId)}
+                disabled={actionLoading}
+              >
+                Watching
+              </button>
+              <button
+                className={`${list === 'arch' ? 'activated ' : ''} btn-item`}
+                onClick={() => addTolist('arch', postId)}
+                disabled={actionLoading}
+              >
+                Archive
+              </button>
+            </aside>
+          </div>
         </div>
         <p className='description'>{post?.description}</p>
       </div>

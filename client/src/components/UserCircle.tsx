@@ -61,7 +61,7 @@ const UserCircle: React.FC<UserCircleProps> = ({ className }) => {
           </div>
           <div className='menu-item' onClick={() => navigate('/favorites')}>
             <FaHeart className='icon' />
-            <span className='text'>My favorites</span>
+            <span className='text'>My list</span>
           </div>
           <div className='menu-item' onClick={() => navigate('/histories')}>
             <FaHistory className='icon' />

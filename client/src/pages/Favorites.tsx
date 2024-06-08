@@ -5,7 +5,7 @@ import Loading from '../components/Loading';
 import PostCardI from '../components/postcard/PostCardI';
 import Wrapper from '../assets/wrappers/Favorites';
 import { FaTimes, FaHeart } from 'react-icons/fa';
-import { message } from 'antd';
+import { Radio, message } from 'antd';
 import { AxiosError } from 'axios';
 
 interface FavoritesProps {
@@ -24,31 +24,27 @@ interface Post {
 const Favorites: React.FC<FavoritesProps> = ({ className }) => {
   const navigate = useNavigate();
 
-  const [status, setStatus] = useState<
-    'idle' | 'loading' | 'succeeded' | 'failed'
-  >('idle');
+  const [loading, setLoading] = useState(true);
 
   const [actionLoading, setActionLoaing] = useState(false);
 
-  const loading = status === 'idle' || status === 'loading';
-
   const [favorites, setFavorites] = useState<Post[]>([]);
 
+  const [listType, setListType] = useState('fav');
+
   useEffect(() => {
-    if (status === 'idle') {
-      const getMyFavorites = async () => {
-        setStatus('loading');
-        try {
-          const response = await getAuthClient().get(`/favorites`);
-          setFavorites(response.data.favorites);
-          setStatus('succeeded');
-        } catch (err) {
-          setStatus('failed');
-        }
-      };
-      getMyFavorites();
-    }
-  }, [status]);
+    const getMyFavorites = async () => {
+      setLoading(true);
+      try {
+        const response = await getAuthClient().get(
+          `/favorites?list=${listType}`
+        );
+        setFavorites(response.data.favorites);
+      } catch (err) {}
+      setLoading(false);
+    };
+    getMyFavorites();
+  }, [listType]);
 
   const deleteFavorite = async (post: string) => {
     setActionLoaing(true);
@@ -70,8 +66,18 @@ const Favorites: React.FC<FavoritesProps> = ({ className }) => {
         <span className='fav-icon'>
           <FaHeart />
         </span>
-        <p>my favorites</p>
+        <p>my list</p>
       </header>
+      <Radio.Group
+        defaultValue='fav'
+        style={{ marginLeft: '18px' }}
+        onChange={(e) => setListType(e.target.value)}
+      >
+        <Radio.Button value='fav'>Favorite</Radio.Button>
+        <Radio.Button value='later'>Watch later</Radio.Button>
+        <Radio.Button value='current'>Watching</Radio.Button>
+        <Radio.Button value='arch'>Archive</Radio.Button>
+      </Radio.Group>
       {loading ? (
         <Loading
           style={{
