@@ -47,6 +47,7 @@ const Wrapper = styled.div`
     left: 0;
     right: 0;
     .delayed-btn {
+      z-index: 120;
       position: absolute;
       bottom: 20px;
       right: 20px;

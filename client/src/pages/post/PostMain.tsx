@@ -171,6 +171,8 @@ const PostMain: React.FC = () => {
   };
 
   const handleChangeEpisode = (episodeId: string) => {
+    if (episode === episodeId) return;
+
     setAds(false);
     setIniPos(undefined);
     setSearchParams({
@@ -279,7 +281,7 @@ interface DelayedButtonProps {
 
 const DelayedButton: React.FC<DelayedButtonProps> = ({ onClick }) => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(5);
+  const [remainingTime, setRemainingTime] = useState(15);
 
   useEffect(() => {
     const timerInterval = setInterval(() => {
